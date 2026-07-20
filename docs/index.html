@@ -17,7 +17,7 @@
   --ink:#000000; --ink-2:rgba(60,60,67,.60); --muted:#8e8e93;
   --grid:#e5e5ea; --axis:#c7c7cc; --border:rgba(0,0,0,.04);
   --accent:#007aff; --accent-soft:rgba(0,122,255,.13);
-  --good:#248a3d; --warn:#b25000; --crit:#d70015;
+  --good:#248a3d; --warn:#b25000; --crit:#d70015; --alt:#af52de;
   --bar:rgba(249,249,249,.85);
 }
 @media (prefers-color-scheme: dark){
@@ -27,7 +27,7 @@
     --ink:#ffffff; --ink-2:rgba(235,235,245,.60); --muted:#98989e;
     --grid:#2c2c2e; --axis:#3a3a3c; --border:rgba(255,255,255,.06);
     --accent:#0a84ff; --accent-soft:rgba(10,132,255,.22);
-    --good:#30d158; --warn:#ffd60a; --crit:#ff453a;
+    --good:#30d158; --warn:#ffd60a; --crit:#ff453a; --alt:#bf5af2;
     --bar:rgba(22,22,24,.85);
   }
 }
@@ -138,6 +138,12 @@ table.blok td{padding:6px;text-align:right;font-variant-numeric:tabular-nums;bor
 .tip b{font-variant-numeric:tabular-nums}
 .note{font-size:12px;color:var(--muted);margin-top:8px}
 .msg{font-size:13px;color:var(--good);min-height:18px;margin-top:6px}
+.tile .v.date{font-size:22px;line-height:1.35;padding:2px 0}
+.mini{margin:4px 0 10px}
+.mini .mt{font-size:13px;font-weight:600;color:var(--ink-2)}
+.mini svg{display:block;width:100%;height:auto}
+.guard-ok{color:var(--good)}
+.guard-warn{color:var(--crit)}
 </style>
 </head>
 <body>
@@ -152,6 +158,8 @@ table.blok td{padding:6px;text-align:right;font-variant-numeric:tabular-nums;bor
       <div class="tile"><div class="l" id="t-tdee-l">TDEE (hypothese)</div><div class="v" id="t-tdee">–</div><div class="s" id="t-tdee-s">kcal</div></div>
       <div class="tile"><div class="l">Gewicht</div><div class="v" id="t-kg">–</div><div class="s" id="t-kg-s">kg</div></div>
       <div class="tile"><div class="l">Nog te gaan</div><div class="v" id="t-togo">–</div><div class="s" id="t-togo-s">kg tot doel</div></div>
+      <div class="tile"><div class="l">Plandatum</div><div class="v date" id="t-plan">–</div><div class="s" id="t-plan-s">bij het ingestelde tempo</div></div>
+      <div class="tile"><div class="l">Prognose</div><div class="v date" id="t-prog">–</div><div class="s" id="t-prog-s">op je gemeten trend</div></div>
     </div>
 
     <h2>Gewichtscorridor</h2>
@@ -160,8 +168,11 @@ table.blok td{padding:6px;text-align:right;font-variant-numeric:tabular-nums;bor
         <svg id="chart" viewBox="0 0 340 190" role="img" aria-label="Gewicht per dag met verwachte corridor"></svg>
         <div class="tip" id="tip"></div>
       </div>
-      <div class="note">Blauw: gemeten gewicht. Grijze band: verwacht tempo (<span id="c-tempo">–</span> g/week) ± 0,7 kg.</div>
+      <div class="note">Blauw: gemeten gewicht. Grijze band: verwacht tempo (<span id="c-tempo">–</span> g/week) ± 0,7 kg, tot aan je doel.</div>
     </div>
+
+    <h2>Lichaamssamenstelling</h2>
+    <div class="card" id="comp-card"></div>
 
     <h2>Vandaag invoeren</h2>
     <div class="card">
@@ -189,8 +200,11 @@ table.blok td{padding:6px;text-align:right;font-variant-numeric:tabular-nums;bor
         <div><label for="s-start">Startgewicht (kg)</label><input type="number" step="0.1" id="s-start"></div>
         <div><label for="s-doel">Doelgewicht (kg)</label><input type="number" step="0.1" id="s-doel"></div>
       </div>
-      <label for="s-startdate">Startdatum</label>
-      <input type="date" id="s-startdate">
+      <div class="row">
+        <div><label for="s-vetdoel">Doelvet % (optioneel)</label><input type="number" step="0.5" inputmode="decimal" id="s-vetdoel" placeholder="bijv. 15"></div>
+        <div><label for="s-startdate">Startdatum</label><input type="date" id="s-startdate"></div>
+      </div>
+      <div class="note">Vul je een doelvet% in, dan rekent de app je doelgewicht zelf uit op basis van je gemeten vetvrije massa — behoud je meer spier, dan schuift je doelgewicht mee omhoog.</div>
       <div class="btnrow"><button id="btn-settings">Bewaar instellingen</button></div>
       <div class="note" id="tdee-note"></div>
     </div>
@@ -276,7 +290,7 @@ const RECIPES = [{"id":"b1","name":"Kwark met havermout en bessen","slot":"break
 const KEY = "afval-v1";
 const DEFAULTS = {
   settings: { targetKcal: 1900, tempo: 500, startWeight: 84.4, goalWeight: 75,
-              startDate: null },
+              goalFatPct: null, startDate: null },
   days: {},        // "2026-07-20" -> {kg, kcal, vet, taille}
   planSeed: 1,
   checked: {},     // ingredientID -> true
@@ -299,6 +313,11 @@ const dayMs = 86400000;
 function todayStr(){ return new Date().toLocaleDateString("sv-SE"); } // YYYY-MM-DD lokaal
 function toDate(s){ return new Date(s + "T12:00:00"); }
 function fmtShort(s){ return toDate(s).toLocaleDateString("nl-NL", {day:"numeric", month:"short"}); }
+function fmtDate(d){
+  const o = { day:"numeric", month:"short" };
+  if(d.getFullYear() !== new Date().getFullYear()) o.year = "2-digit";
+  return d.toLocaleDateString("nl-NL", o);
+}
 function fmtDay(d){ return d.toLocaleDateString("nl-NL", {weekday:"short", day:"numeric", month:"short"}); }
 if(!state.settings.startDate){ state.settings.startDate = todayStr(); save(); }
 
@@ -383,47 +402,188 @@ function weightRows(){
     .map(([d,v]) => ({ date:d, kg:+v.kg }))
     .sort((a,b) => a.date < b.date ? -1 : 1);
 }
+
+/* vetvrije massa: gemiddelde over de laatste 7 dagen met gewicht + vet% */
+function latestLean(){
+  const rows = Object.entries(state.days)
+    .filter(([,v]) => v.kg != null && v.vet != null)
+    .map(([d,v]) => ({ t: toDate(d).getTime(), lean: v.kg*(1 - v.vet/100) }))
+    .sort((a,b) => a.t - b.t);
+  if(!rows.length) return null;
+  const rec = rows.filter(r => r.t >= rows[rows.length-1].t - 7*dayMs);
+  return rec.reduce((a,r) => a + r.lean, 0) / rec.length;
+}
+
+/* doelgewicht: uit doelvet% + gemeten vetvrije massa, anders het vaste getal */
+function goalW(){
+  const s = state.settings;
+  if(s.goalFatPct){
+    const lean = latestLean();
+    if(lean) return lean / (1 - s.goalFatPct/100);
+  }
+  return s.goalWeight;
+}
+
+/* gewichtstrend: regressie over de laatste 28 dagen, minimaal 8 metingen */
+function trendSlope(){
+  const cutoff = Date.now() - 28*dayMs;
+  const rows = weightRows()
+    .map(r => ({ t: toDate(r.date).getTime(), kg: r.kg }))
+    .filter(r => r.t >= cutoff);
+  if(rows.length < 8) return null;
+  const n = rows.length;
+  const mt = rows.reduce((a,r)=>a+r.t,0)/n, mk = rows.reduce((a,r)=>a+r.kg,0)/n;
+  let num=0, den=0;
+  for(const r of rows){ num += (r.t-mt)*(r.kg-mk); den += (r.t-mt)**2; }
+  if(!den) return null;
+  const slope = num/den;
+  const lastT = rows[n-1].t;
+  return { perDay: slope*dayMs, nowKg: mk + slope*(lastT-mt), lastT };
+}
+
 function renderMeten(){
   const s = state.settings;
   document.getElementById("t-target").textContent = s.targetKcal;
+  const g = goalW();
+  const derived = s.goalFatPct && g !== s.goalWeight;
   const cal = calibrate();
+  let note;
   if(cal.tdee){
     document.getElementById("t-tdee-l").textContent = "TDEE (gemeten)";
     document.getElementById("t-tdee").textContent = cal.tdee;
     document.getElementById("t-tdee-s").textContent = `kcal, ${cal.n} dagen data`;
     const adv = cal.tdee - Math.round(s.tempo*7.7/7);
-    document.getElementById("tdee-note").textContent =
-      `Gemeten TDEE ${cal.tdee} kcal. Voor ${s.tempo} g/week is het advies-target ${adv} kcal.`;
+    note = `Gemeten TDEE ${cal.tdee} kcal. Voor ${s.tempo} g/week is het advies-target ${adv} kcal.`;
   }else{
     document.getElementById("t-tdee-l").textContent = "TDEE (hypothese)";
     document.getElementById("t-tdee").textContent = "±" + (s.targetKcal + Math.round(s.tempo*7.7/7));
     document.getElementById("t-tdee-s").textContent = "kcal";
-    document.getElementById("tdee-note").textContent =
-      `Nog ${Math.max(0, 14-(cal.n||0))} dagen met gewicht én kcal nodig, dan vervangt de gemeten TDEE de formule.`;
+    note = `Nog ${Math.max(0, 14-(cal.n||0))} dagen met gewicht én kcal nodig, dan vervangt de gemeten TDEE de formule.`;
   }
+  if(derived)
+    note += ` Doelgewicht bij ${s.goalFatPct}% vet: ${g.toFixed(1)} kg, berekend uit je gemeten vetvrije massa.`;
+  document.getElementById("tdee-note").textContent = note;
+
   const rows = weightRows();
   const last = rows[rows.length-1];
   document.getElementById("t-kg").textContent = last ? last.kg.toFixed(1) : "–";
   document.getElementById("t-kg-s").textContent = last ? "kg op " + fmtShort(last.date) : "kg";
-  document.getElementById("t-togo").textContent = last ? Math.max(0, last.kg - s.goalWeight).toFixed(1) : "–";
-  document.getElementById("t-togo-s").textContent = "kg tot " + s.goalWeight + " kg";
+  document.getElementById("t-togo").textContent = last ? Math.max(0, last.kg - g).toFixed(1) : "–";
+  document.getElementById("t-togo-s").textContent =
+    `kg tot ${g.toFixed(1)} kg` + (derived ? ` (${s.goalFatPct}% vet)` : "");
+
+  // plandatum: wanneer ben je er bij het ingestelde tempo
+  const weeks = (s.startWeight - g) / (s.tempo/1000);
+  if(weeks > 0){
+    const plan = new Date(toDate(s.startDate).getTime() + weeks*7*dayMs);
+    document.getElementById("t-plan").textContent = fmtDate(plan);
+    document.getElementById("t-plan-s").textContent = `bij ${s.tempo} g/week`;
+  }else{
+    document.getElementById("t-plan").textContent = "–";
+    document.getElementById("t-plan-s").textContent = "doel ligt boven startgewicht";
+  }
+
+  // prognose: wanneer ben je er op je werkelijke trend
+  const tr = trendSlope();
+  const progEl = document.getElementById("t-prog"), progS = document.getElementById("t-prog-s");
+  if(tr && tr.nowKg <= g){
+    progEl.textContent = "🎉"; progS.textContent = "doel bereikt";
+  }else if(tr && tr.perDay < -0.005){
+    const prog = new Date(tr.lastT + (tr.nowKg - g)/(-tr.perDay)*dayMs);
+    progEl.textContent = fmtDate(prog);
+    progS.textContent = `op trend van ${Math.round(-tr.perDay*7000)} g/week`;
+  }else{
+    progEl.textContent = "–";
+    progS.textContent = tr ? "trend is vlak — nog geen prognose" : "vanaf ±2 weken metingen";
+  }
+
   document.getElementById("c-tempo").textContent = s.tempo;
-  renderChart(rows);
+  renderChart(rows, g);
+  renderComp();
+}
+
+/* ---------- lichaamssamenstelling: weektrends + spierbehoud-bewaker ---------- */
+function weekBuckets(pick){
+  const acc = {};
+  for(const [d,v] of Object.entries(state.days)){
+    const val = pick(v);
+    if(val == null || isNaN(val)) continue;
+    const t = toDate(d);
+    const ws = t.getTime() - ((t.getDay()+6)%7)*dayMs;   // maandag van die week
+    (acc[ws] ??= []).push(val);
+  }
+  return Object.entries(acc)
+    .map(([t,a]) => ({ t:+t, v: a.reduce((x,y)=>x+y,0)/a.length }))
+    .sort((a,b) => a.t - b.t);
+}
+
+function miniChart(title, data, unit, color){
+  const W=300, H=88, mL=8, mR=52, mT=10, mB=16;
+  const t0 = data[0].t, t1 = data[data.length-1].t;
+  const vs = data.map(d=>d.v);
+  let lo = Math.min(...vs), hi = Math.max(...vs);
+  const pad = Math.max((hi-lo)*0.25, 0.3); lo -= pad; hi += pad;
+  const X = t => t1===t0 ? mL : mL + (t-t0)/(t1-t0)*(W-mL-mR);
+  const Y = v => mT + (hi-v)/(hi-lo)*(H-mT-mB);
+  const pts = data.map(d => ({ x:X(d.t), y:Y(d.v), v:d.v }));
+  const lp = pts[pts.length-1];
+  const wk = t => new Date(t).toLocaleDateString("nl-NL",{day:"numeric",month:"short"});
+  return `<div class="mini"><div class="mt">${title}</div>
+    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${title}">
+      <line x1="${mL}" y1="${H-mB}" x2="${W-mR}" y2="${H-mB}" stroke="var(--grid)"/>
+      <polyline points="${pts.map(p=>p.x.toFixed(1)+","+p.y.toFixed(1)).join(" ")}"
+        fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round"/>
+      ${pts.map(p=>`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="2.5" fill="${color}"/>`).join("")}
+      <text x="${(lp.x+7).toFixed(1)}" y="${(lp.y+4).toFixed(1)}" font-size="11" font-weight="600" fill="var(--ink)">${lp.v.toFixed(1)}${unit}</text>
+      <text x="${mL}" y="${H-4}" font-size="9" fill="var(--muted)">wk ${wk(t0)}</text>
+      <text x="${W-mR}" y="${H-4}" text-anchor="end" font-size="9" fill="var(--muted)">wk ${wk(t1)}</text>
+    </svg></div>`;
+}
+
+function renderComp(){
+  const fat   = weekBuckets(v => v.kg!=null && v.vet!=null ? v.kg*v.vet/100 : null);
+  const lean  = weekBuckets(v => v.kg!=null && v.vet!=null ? v.kg*(1-v.vet/100) : null);
+  const waist = weekBuckets(v => v.taille!=null ? +v.taille : null);
+  let html = "";
+  if(fat.length  >= 2) html += miniChart("Vetmassa (weekgemiddelde)", fat, " kg", "var(--accent)");
+  if(lean.length >= 2) html += miniChart("Vetvrije massa (weekgemiddelde)", lean, " kg", "var(--good)");
+  if(waist.length>= 2) html += miniChart("Taille (weekgemiddelde)", waist, " cm", "var(--alt)");
+  if(lean.length >= 3){
+    const recent = lean[lean.length-1].v;
+    const base = lean.slice(Math.max(0, lean.length-4), lean.length-1);
+    const drop = base.reduce((a,b)=>a+b.v,0)/base.length - recent;
+    if(drop > 0.5)
+      html += `<div class="note guard-warn">Vetvrije massa daalt (−${drop.toFixed(1)} kg t.o.v. de weken ervoor). Check je eiwit en training, of verlaag het tempo.</div>`;
+    else if(drop < 0.2)
+      html += `<div class="note guard-ok">Vetvrije massa blijft behouden — het verlies komt uit vet.</div>`;
+    else
+      html += `<div class="note">Vetvrije massa vrijwel stabiel (−${drop.toFixed(1)} kg).</div>`;
+  }
+  if(!html)
+    html = `<div class="note">Meet een paar keer per week gewicht + vet% (Omron) en taille; vanaf twee weken zie je hier vetmassa en vetvrije massa als weektrend. Op dagwaarden stuur je niet — die zijn te ruizig.</div>`;
+  document.getElementById("comp-card").innerHTML = html;
 }
 
 /* gewichtsgrafiek: één reeks + corridor, hover-tooltip */
 let chartPts = [];
-function renderChart(rows){
+let chartCorr = null;
+function renderChart(rows, goal){
   const svg = document.getElementById("chart");
   const s = state.settings;
+  const g = goal ?? goalW();
   const W=340, H=190, mL=34, mR=8, mT=10, mB=22;
   const start = toDate(s.startDate).getTime();
   const lastT = rows.length ? toDate(rows[rows.length-1].date).getTime() : start;
-  const end = Math.max(start + 21*dayMs, lastT + 3*dayMs);
+  // x-as loopt door tot de plandatum (plus marge), zodat je de einddatum ziet
+  const weeksPlan = (s.startWeight - g) / (s.tempo/1000);
+  const planEnd = weeksPlan > 0 ? start + (weeksPlan*7 + 14)*dayMs : start + 21*dayMs;
+  const end = Math.min(Math.max(planEnd, lastT + 3*dayMs), start + 420*dayMs);
   const span = end - start;
-  const expAt = t => s.startWeight - (s.tempo/1000/7) * ((t-start)/dayMs);
+  // verwachte lijn, afgekapt op het doel: verder dalen hoeft niet
+  const expAt = t => Math.max(g, s.startWeight - (s.tempo/1000/7) * ((t-start)/dayMs));
+  chartCorr = expAt;
   const band = 0.7;
-  const ys = rows.map(r=>r.kg).concat([expAt(start)+band, expAt(end)-band]);
+  const ys = rows.map(r=>r.kg).concat([expAt(start)+band, expAt(end)-band, g]);
   let yMin = Math.min(...ys)-0.4, yMax = Math.max(...ys)+0.4;
   const X = t => mL + (t-start)/span * (W-mL-mR);
   const Y = v => mT + (yMax-v)/(yMax-yMin) * (H-mT-mB);
@@ -439,13 +599,17 @@ function renderChart(rows){
     const d = new Date(t);
     out += `<text x="${X(t)}" y="${H-6}" text-anchor="middle" font-size="9" fill="var(--muted)">${d.toLocaleDateString("nl-NL",{day:"numeric",month:"short"})}</text>`;
   }
-  // corridor
-  out += `<polygon points="${X(start)},${Y(expAt(start)+band)} ${X(end)},${Y(expAt(end)+band)} ${X(end)},${Y(expAt(end)-band)} ${X(start)},${Y(expAt(start)-band)}" fill="var(--grid)" opacity="0.55"/>`;
-  out += `<line x1="${X(start)}" y1="${Y(expAt(start))}" x2="${X(end)}" y2="${Y(expAt(end))}" stroke="var(--axis)" stroke-width="1.5" stroke-dasharray="4 4"/>`;
+  // corridor met knik waar de verwachte lijn het doel bereikt
+  const tGoal = start + (s.startWeight - g)/(s.tempo/1000/7)*dayMs;
+  const anchors = [start, ...(tGoal > start && tGoal < end ? [tGoal] : []), end];
+  const up = anchors.map(t => `${X(t)},${Y(expAt(t)+band)}`);
+  const lo = anchors.slice().reverse().map(t => `${X(t)},${Y(expAt(t)-band)}`);
+  out += `<polygon points="${up.join(" ")} ${lo.join(" ")}" fill="var(--grid)" opacity="0.55"/>`;
+  out += `<polyline points="${anchors.map(t => `${X(t)},${Y(expAt(t))}`).join(" ")}" fill="none" stroke="var(--axis)" stroke-width="1.5" stroke-dasharray="4 4"/>`;
   // doellijn
-  if(s.goalWeight > yMin && s.goalWeight < yMax){
-    out += `<line x1="${mL}" y1="${Y(s.goalWeight)}" x2="${W-mR}" y2="${Y(s.goalWeight)}" stroke="var(--axis)" stroke-width="1" stroke-dasharray="2 3"/>`;
-    out += `<text x="${W-mR}" y="${Y(s.goalWeight)-3}" text-anchor="end" font-size="9" fill="var(--muted)">doel ${s.goalWeight}</text>`;
+  if(g > yMin && g < yMax){
+    out += `<line x1="${mL}" y1="${Y(g)}" x2="${W-mR}" y2="${Y(g)}" stroke="var(--axis)" stroke-width="1" stroke-dasharray="2 3"/>`;
+    out += `<text x="${W-mR}" y="${Y(g)-3}" text-anchor="end" font-size="9" fill="var(--muted)">doel ${g.toFixed(1)}</text>`;
   }
   // meetreeks
   chartPts = rows.map(r => ({ x: X(toDate(r.date).getTime()), y: Y(r.kg), date: r.date, kg: r.kg }));
@@ -467,7 +631,8 @@ function renderChart(rows){
     let best = chartPts[0];
     for(const p of chartPts) if(Math.abs(p.x-px) < Math.abs(best.x-px)) best = p;
     tip.style.display = "block";
-    tip.innerHTML = `${fmtShort(best.date)}: <b>${best.kg.toFixed(1)} kg</b> · corridor ${ (state.settings.startWeight - state.settings.tempo/7000*((toDate(best.date)-toDate(state.settings.startDate))/dayMs)).toFixed(1) } kg`;
+    const corr = chartCorr ? ` · corridor ${chartCorr(toDate(best.date).getTime()).toFixed(1)} kg` : "";
+    tip.innerHTML = `${fmtShort(best.date)}: <b>${best.kg.toFixed(1)} kg</b>${corr}`;
     const bx = best.x/340*r.width;
     tip.style.left = Math.min(Math.max(bx-40, 0), r.width-120) + "px";
     tip.style.top = (best.y/190*r.height - 40) + "px";
@@ -497,6 +662,7 @@ function fillSettings(){
   document.getElementById("s-tempo").value = s.tempo;
   document.getElementById("s-start").value = s.startWeight;
   document.getElementById("s-doel").value = s.goalWeight;
+  document.getElementById("s-vetdoel").value = s.goalFatPct ?? "";
   document.getElementById("s-startdate").value = s.startDate;
 }
 document.getElementById("btn-settings").onclick = () => {
@@ -505,6 +671,8 @@ document.getElementById("btn-settings").onclick = () => {
   s.tempo = +document.getElementById("s-tempo").value || s.tempo;
   s.startWeight = +document.getElementById("s-start").value || s.startWeight;
   s.goalWeight = +document.getElementById("s-doel").value || s.goalWeight;
+  const gv = document.getElementById("s-vetdoel").value;
+  s.goalFatPct = gv === "" ? null : Math.min(60, Math.max(3, +gv));
   s.startDate = document.getElementById("s-startdate").value || s.startDate;
   save(); renderAll();
 };
