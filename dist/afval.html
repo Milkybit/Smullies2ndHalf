@@ -6,70 +6,87 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Afval">
-<meta name="theme-color" content="#fcfcfb" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥦</text></svg>">
 <title>Afval</title>
 <style>
 :root{
   color-scheme: light;
-  --page:#f9f9f7; --surface:#fcfcfb;
-  --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
-  --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,.10);
-  --accent:#2a78d6; --accent-soft:rgba(42,120,214,.12);
-  --good:#006300; --warn:#c98500; --crit:#d03b3b;
+  --page:#f2f2f7; --surface:#ffffff; --field:rgba(118,118,128,.12);
+  --ink:#000000; --ink-2:rgba(60,60,67,.60); --muted:#8e8e93;
+  --grid:#e5e5ea; --axis:#c7c7cc; --border:rgba(0,0,0,.04);
+  --accent:#007aff; --accent-soft:rgba(0,122,255,.13);
+  --good:#248a3d; --warn:#b25000; --crit:#d70015;
+  --bar:rgba(249,249,249,.85);
 }
 @media (prefers-color-scheme: dark){
   :root{
     color-scheme: dark;
-    --page:#0d0d0d; --surface:#1a1a19;
-    --ink:#ffffff; --ink-2:#c3c2b7; --muted:#898781;
-    --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
-    --accent:#3987e5; --accent-soft:rgba(57,135,229,.18);
-    --good:#0ca30c; --warn:#fab219; --crit:#e66767;
+    --page:#000000; --surface:#1c1c1e; --field:rgba(118,118,128,.24);
+    --ink:#ffffff; --ink-2:rgba(235,235,245,.60); --muted:#98989e;
+    --grid:#2c2c2e; --axis:#3a3a3c; --border:rgba(255,255,255,.06);
+    --accent:#0a84ff; --accent-soft:rgba(10,132,255,.22);
+    --good:#30d158; --warn:#ffd60a; --crit:#ff453a;
+    --bar:rgba(22,22,24,.85);
   }
 }
 *{box-sizing:border-box;margin:0}
 html{-webkit-text-size-adjust:100%}
 body{
-  font:16px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;
+  font:16px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,sans-serif;
   background:var(--page); color:var(--ink);
-  padding-bottom:calc(64px + env(safe-area-inset-bottom));
+  padding-bottom:calc(88px + env(safe-area-inset-bottom));
 }
-main{max-width:560px;margin:0 auto;padding:12px 12px 24px}
-h1{font-size:20px;padding:14px 4px 2px}
-h2{font-size:15px;color:var(--ink-2);margin:18px 0 8px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px}
-.tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.tile{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 12px}
-.tile .v{font-size:24px;font-weight:650}
-.tile .l{font-size:12px;color:var(--muted)}
-.tile .s{font-size:12px;color:var(--ink-2)}
-label{display:block;font-size:12px;color:var(--ink-2);margin:8px 0 2px}
+main{max-width:560px;margin:0 auto;padding:calc(10px + env(safe-area-inset-top)) 16px 24px}
+.kicker{font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--muted);padding-top:8px}
+h1{font-size:34px;font-weight:800;letter-spacing:-.02em;padding:0 0 14px}
+h2{
+  font-size:13px;font-weight:600;color:var(--ink-2);
+  text-transform:uppercase;letter-spacing:.06em;
+  margin:26px 0 8px;padding-left:16px;
+}
+.card{background:var(--surface);border-radius:16px;padding:14px 16px;margin-bottom:12px;border:1px solid var(--border)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{background:var(--surface);border-radius:16px;padding:12px 14px;border:1px solid var(--border)}
+.tile .v{font-size:28px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.tile .l{font-size:13px;color:var(--ink-2)}
+.tile .s{font-size:13px;color:var(--muted)}
+label{display:block;font-size:13px;color:var(--ink-2);margin:10px 0 4px}
 input,select,textarea{
-  width:100%;padding:9px 10px;font:inherit;border-radius:8px;
-  border:1px solid var(--axis);background:var(--surface);color:var(--ink);
+  width:100%;padding:11px 12px;font:inherit;font-size:16px;border-radius:10px;
+  border:none;background:var(--field);color:var(--ink);
 }
-.row{display:flex;gap:8px}
+input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:-1px}
+.row{display:flex;gap:10px}
 .row>*{flex:1;min-width:0}
 button{
-  font:inherit;font-weight:600;padding:10px 14px;border-radius:9px;cursor:pointer;
-  border:1px solid var(--axis);background:var(--surface);color:var(--ink);
+  font:inherit;font-size:15px;font-weight:600;padding:11px 16px;border-radius:12px;
+  cursor:pointer;border:none;background:var(--accent-soft);color:var(--accent);
+  -webkit-tap-highlight-color:transparent;
 }
-button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-button.small{padding:5px 10px;font-size:13px;font-weight:500}
-.btnrow{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+button:active{opacity:.55}
+button.primary{background:var(--accent);color:#fff}
+button.small{padding:6px 13px;font-size:13px;border-radius:999px;white-space:nowrap}
+.btnrow{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.btnrow button{flex:1}
 nav{
   position:fixed;bottom:0;left:0;right:0;display:flex;z-index:10;
-  background:var(--surface);border-top:1px solid var(--border);
-  padding-bottom:env(safe-area-inset-bottom);
+  background:var(--bar);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
+  box-shadow:0 -.5px 0 var(--axis);
+  padding:7px 8px calc(7px + env(safe-area-inset-bottom));
 }
 nav button{
-  flex:1;border:0;border-radius:0;background:none;color:var(--muted);
-  padding:10px 0 8px;font-size:12px;font-weight:600;
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  border:0;border-radius:0;background:none;color:var(--muted);
+  padding:3px 0;font-size:11px;font-weight:600;letter-spacing:.01em;
 }
 nav button.on{color:var(--accent)}
-nav button .ic{display:block;font-size:20px;line-height:1.2}
+nav button svg{
+  width:26px;height:26px;stroke:currentColor;fill:none;
+  stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
+}
 section{display:none}
 section.on{display:block}
 .meal{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;padding:7px 0;border-top:1px solid var(--grid)}
@@ -85,12 +102,21 @@ details.recipe{margin-top:4px}
 details.recipe summary{font-size:12px;color:var(--accent);cursor:pointer;list-style:none}
 details.recipe ul{font-size:13px;color:var(--ink-2);margin:6px 0 4px 18px}
 details.recipe p{font-size:13px;color:var(--ink-2);margin:4px 0}
-.aisle{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:14px 0 4px}
-.item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--grid)}
-.item input{width:22px;height:22px;flex:0 0 22px;accent-color:var(--accent)}
+.aisle{font-size:13px;font-weight:600;color:var(--ink-2);text-transform:uppercase;letter-spacing:.06em;margin:18px 0 2px}
+.aisle:first-child{margin-top:2px}
+.item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:.5px solid var(--grid)}
+.item:last-of-type{border-bottom:none}
+.item input{
+  appearance:none;-webkit-appearance:none;width:24px;height:24px;flex:0 0 24px;margin:0;padding:0;
+  border:1.5px solid var(--axis);border-radius:50%;background:transparent;
+}
+.item input:checked{
+  border-color:var(--accent);
+  background:var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4 10-10'/%3E%3C/svg%3E") center/14px no-repeat;
+}
 .item.done .nm{color:var(--muted);text-decoration:line-through}
-.item .nm{flex:1;font-size:15px}
-.item .g{font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.item .nm{flex:1;font-size:16px}
+.item .g{font-size:14px;color:var(--ink-2);font-variant-numeric:tabular-nums}
 .sess{display:flex;gap:10px;align-items:baseline;padding:7px 0;border-bottom:1px solid var(--grid);font-size:14px}
 .sess .dt{flex:0 0 84px;color:var(--muted);font-size:12px}
 .sess .ty{flex:1}
@@ -106,8 +132,8 @@ table.blok td{padding:6px;text-align:right;font-variant-numeric:tabular-nums;bor
 .chartwrap svg{display:block;width:100%;height:auto}
 .tip{
   position:absolute;pointer-events:none;display:none;z-index:5;
-  background:var(--surface);border:1px solid var(--border);border-radius:8px;
-  padding:6px 9px;font-size:12px;box-shadow:0 2px 10px rgba(0,0,0,.15);white-space:nowrap;
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:7px 10px;font-size:12px;box-shadow:0 4px 16px rgba(0,0,0,.18);white-space:nowrap;
 }
 .tip b{font-variant-numeric:tabular-nums}
 .note{font-size:12px;color:var(--muted);margin-top:8px}
@@ -116,7 +142,8 @@ table.blok td{padding:6px;text-align:right;font-variant-numeric:tabular-nums;bor
 </head>
 <body>
 <main>
-  <h1 id="title">Afval</h1>
+  <div class="kicker">AFVAL</div>
+  <h1 id="pagetitle">Meten</h1>
 
   <!-- ================= METEN ================= -->
   <section id="tab-meten">
@@ -235,10 +262,10 @@ table.blok td{padding:6px;text-align:right;font-variant-numeric:tabular-nums;bor
 </main>
 
 <nav>
-  <button data-tab="meten"><span class="ic">📏</span>Meten</button>
-  <button data-tab="menu"><span class="ic">🍽️</span>Menu</button>
-  <button data-tab="lijst"><span class="ic">🛒</span>Lijst</button>
-  <button data-tab="training"><span class="ic">🏋️</span>Training</button>
+  <button data-tab="meten" aria-label="Meten"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 20.5h17"/><polyline points="4.5 15.5 9.5 10 13.5 13 20 5.5"/><circle cx="20" cy="5.5" r="1.4" fill="currentColor" stroke="none"/></svg>Meten</button>
+  <button data-tab="menu" aria-label="Weekmenu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 3.5v5.5a2 2 0 0 0 4 0V3.5"/><path d="M9.5 3.5v17"/><path d="M17 3.5c-1.9 3.2-1.9 6.8 0 9v8"/></svg>Menu</button>
+  <button data-tab="lijst" aria-label="Boodschappen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 4.5h2.2l2.4 10.5h10.4l2-7.5H6.2"/><circle cx="9.3" cy="19.5" r="1.4" fill="currentColor" stroke="none"/><circle cx="17.3" cy="19.5" r="1.4" fill="currentColor" stroke="none"/></svg>Lijst</button>
+  <button data-tab="training" aria-label="Training"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7.5v9M17 7.5v9M3.5 10v4M20.5 10v4M7 12h10"/></svg>Training</button>
 </nav>
 
 <script>
@@ -655,8 +682,10 @@ function renderTraining(){
 
 /* ---------- tabs & hash (#lijst opent direct de boodschappenlijst) ---------- */
 const TABS = ["meten","menu","lijst","training"];
+const TITLES = { meten:"Meten", menu:"Weekmenu", lijst:"Boodschappen", training:"Training" };
 function show(tab){
   if(!TABS.includes(tab)) tab = "meten";
+  document.getElementById("pagetitle").textContent = TITLES[tab];
   TABS.forEach(t => {
     document.getElementById("tab-"+t).classList.toggle("on", t===tab);
     document.querySelector(`nav [data-tab="${t}"]`).classList.toggle("on", t===tab);
