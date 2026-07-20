@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Afval">
+<meta name="theme-color" content="#fcfcfb" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥦</text></svg>">
+<title>Afval</title>
+<style>
+:root{
+  color-scheme: light;
+  --page:#f9f9f7; --surface:#fcfcfb;
+  --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+  --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,.10);
+  --accent:#2a78d6; --accent-soft:rgba(42,120,214,.12);
+  --good:#006300; --warn:#c98500; --crit:#d03b3b;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    color-scheme: dark;
+    --page:#0d0d0d; --surface:#1a1a19;
+    --ink:#ffffff; --ink-2:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+    --accent:#3987e5; --accent-soft:rgba(57,135,229,.18);
+    --good:#0ca30c; --warn:#fab219; --crit:#e66767;
+  }
+}
+*{box-sizing:border-box;margin:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font:16px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:var(--page); color:var(--ink);
+  padding-bottom:calc(64px + env(safe-area-inset-bottom));
+}
+main{max-width:560px;margin:0 auto;padding:12px 12px 24px}
+h1{font-size:20px;padding:14px 4px 2px}
+h2{font-size:15px;color:var(--ink-2);margin:18px 0 8px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tile{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 12px}
+.tile .v{font-size:24px;font-weight:650}
+.tile .l{font-size:12px;color:var(--muted)}
+.tile .s{font-size:12px;color:var(--ink-2)}
+label{display:block;font-size:12px;color:var(--ink-2);margin:8px 0 2px}
+input,select,textarea{
+  width:100%;padding:9px 10px;font:inherit;border-radius:8px;
+  border:1px solid var(--axis);background:var(--surface);color:var(--ink);
+}
+.row{display:flex;gap:8px}
+.row>*{flex:1;min-width:0}
+button{
+  font:inherit;font-weight:600;padding:10px 14px;border-radius:9px;cursor:pointer;
+  border:1px solid var(--axis);background:var(--surface);color:var(--ink);
+}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button.small{padding:5px 10px;font-size:13px;font-weight:500}
+.btnrow{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+nav{
+  position:fixed;bottom:0;left:0;right:0;display:flex;z-index:10;
+  background:var(--surface);border-top:1px solid var(--border);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+nav button{
+  flex:1;border:0;border-radius:0;background:none;color:var(--muted);
+  padding:10px 0 8px;font-size:12px;font-weight:600;
+}
+nav button.on{color:var(--accent)}
+nav button .ic{display:block;font-size:20px;line-height:1.2}
+section{display:none}
+section.on{display:block}
+.meal{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;padding:7px 0;border-top:1px solid var(--grid)}
+.meal:first-of-type{border-top:0}
+.meal .slot{flex:0 0 52px;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.meal .nm{flex:1 1 160px;font-size:14px}
+.meal .fx{font-size:12px;color:var(--ink-2)}
+.daytotal{font-size:12px;color:var(--ink-2);margin-top:6px;padding-top:6px;border-top:1px solid var(--grid)}
+.daytotal b{color:var(--ink)}
+.dayhead{display:flex;justify-content:space-between;align-items:baseline}
+.dayhead .dt{font-size:12px;color:var(--muted)}
+details.recipe{margin-top:4px}
+details.recipe summary{font-size:12px;color:var(--accent);cursor:pointer;list-style:none}
+details.recipe ul{font-size:13px;color:var(--ink-2);margin:6px 0 4px 18px}
+details.recipe p{font-size:13px;color:var(--ink-2);margin:4px 0}
+.aisle{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:14px 0 4px}
+.item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--grid)}
+.item input{width:22px;height:22px;flex:0 0 22px;accent-color:var(--accent)}
+.item.done .nm{color:var(--muted);text-decoration:line-through}
+.item .nm{flex:1;font-size:15px}
+.item .g{font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.sess{display:flex;gap:10px;align-items:baseline;padding:7px 0;border-bottom:1px solid var(--grid);font-size:14px}
+.sess .dt{flex:0 0 84px;color:var(--muted);font-size:12px}
+.sess .ty{flex:1}
+.sess .mi{color:var(--ink-2);font-size:13px;font-variant-numeric:tabular-nums}
+.sess button{border:0;background:none;color:var(--crit);font-size:13px;padding:0 4px}
+table.blok{width:100%;border-collapse:collapse;font-size:14px}
+table.blok th{font-size:12px;color:var(--muted);font-weight:500;text-align:right;padding:4px 6px;border-bottom:1px solid var(--grid)}
+table.blok th:first-child,table.blok td:first-child{text-align:left}
+table.blok td{padding:6px;text-align:right;font-variant-numeric:tabular-nums;border-bottom:1px solid var(--grid)}
+.delta-up{color:var(--good);font-weight:600}
+.delta-down{color:var(--crit);font-weight:600}
+.chartwrap{position:relative}
+.chartwrap svg{display:block;width:100%;height:auto}
+.tip{
+  position:absolute;pointer-events:none;display:none;z-index:5;
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:6px 9px;font-size:12px;box-shadow:0 2px 10px rgba(0,0,0,.15);white-space:nowrap;
+}
+.tip b{font-variant-numeric:tabular-nums}
+.note{font-size:12px;color:var(--muted);margin-top:8px}
+.msg{font-size:13px;color:var(--good);min-height:18px;margin-top:6px}
+</style>
+</head>
+<body>
+<main>
+  <h1 id="title">Afval</h1>
+
+  <!-- ================= METEN ================= -->
+  <section id="tab-meten">
+    <div class="tiles">
+      <div class="tile"><div class="l">Dagtarget</div><div class="v" id="t-target">–</div><div class="s">kcal</div></div>
+      <div class="tile"><div class="l" id="t-tdee-l">TDEE (hypothese)</div><div class="v" id="t-tdee">–</div><div class="s" id="t-tdee-s">kcal</div></div>
+      <div class="tile"><div class="l">Gewicht</div><div class="v" id="t-kg">–</div><div class="s" id="t-kg-s">kg</div></div>
+      <div class="tile"><div class="l">Nog te gaan</div><div class="v" id="t-togo">–</div><div class="s" id="t-togo-s">kg tot doel</div></div>
+    </div>
+
+    <h2>Gewichtscorridor</h2>
+    <div class="card">
+      <div class="chartwrap" id="chartwrap">
+        <svg id="chart" viewBox="0 0 340 190" role="img" aria-label="Gewicht per dag met verwachte corridor"></svg>
+        <div class="tip" id="tip"></div>
+      </div>
+      <div class="note">Blauw: gemeten gewicht. Grijze band: verwacht tempo (<span id="c-tempo">–</span> g/week) ± 0,7 kg.</div>
+    </div>
+
+    <h2>Vandaag invoeren</h2>
+    <div class="card">
+      <label for="in-date">Datum</label>
+      <input type="date" id="in-date">
+      <div class="row">
+        <div><label for="in-kg">Gewicht (kg)</label><input type="number" step="0.1" inputmode="decimal" id="in-kg" placeholder="84,4"></div>
+        <div><label for="in-kcal">Gegeten (kcal)</label><input type="number" step="10" inputmode="numeric" id="in-kcal" placeholder="1900"></div>
+      </div>
+      <div class="row">
+        <div><label for="in-vet">Vet % (Omron)</label><input type="number" step="0.1" inputmode="decimal" id="in-vet" placeholder="—"></div>
+        <div><label for="in-taille">Taille (cm, meetlint)</label><input type="number" step="0.5" inputmode="decimal" id="in-taille" placeholder="—"></div>
+      </div>
+      <div class="btnrow"><button class="primary" id="btn-save">Opslaan</button></div>
+      <div class="msg" id="save-msg"></div>
+    </div>
+
+    <h2>Instellingen</h2>
+    <div class="card">
+      <div class="row">
+        <div><label for="s-target">Dagtarget (kcal)</label><input type="number" step="10" id="s-target"></div>
+        <div><label for="s-tempo">Tempo (g/week)</label><input type="number" step="50" id="s-tempo"></div>
+      </div>
+      <div class="row">
+        <div><label for="s-start">Startgewicht (kg)</label><input type="number" step="0.1" id="s-start"></div>
+        <div><label for="s-doel">Doelgewicht (kg)</label><input type="number" step="0.1" id="s-doel"></div>
+      </div>
+      <label for="s-startdate">Startdatum</label>
+      <input type="date" id="s-startdate">
+      <div class="btnrow"><button id="btn-settings">Bewaar instellingen</button></div>
+      <div class="note" id="tdee-note"></div>
+    </div>
+
+    <h2>Reservekopie</h2>
+    <div class="card">
+      <div class="btnrow">
+        <button id="btn-export">Exporteer alles</button>
+        <button id="btn-import">Importeer</button>
+        <input type="file" id="file-import" accept="application/json" hidden>
+      </div>
+      <div class="note">localStorage is geen back-up. Exporteer eens per maand en zet het bestand in OneDrive.</div>
+      <div class="msg" id="backup-msg"></div>
+    </div>
+  </section>
+
+  <!-- ================= MENU ================= -->
+  <section id="tab-menu">
+    <div class="card">
+      <div class="dayhead">
+        <div>Weekmenu, geschaald op <b id="menu-target">–</b> kcal/dag</div>
+        <button class="small" id="btn-shuffle">Nieuw menu</button>
+      </div>
+      <div class="note">Zetmeel (cursief) is de flexibele component: de grammen schuiven mee met je target. Tik op ↻ om een maaltijd te wisselen.</div>
+    </div>
+    <div id="menu-days"></div>
+  </section>
+
+  <!-- ================= LIJST ================= -->
+  <section id="tab-lijst">
+    <div class="card">
+      <div class="dayhead">
+        <div>Boodschappen voor 7 dagen</div>
+        <button class="small" id="btn-reset-checks">Reset vinkjes</button>
+      </div>
+      <div class="note">Gesorteerd per schap, in de looproute van de meeste supermarkten.</div>
+    </div>
+    <div id="list-body"></div>
+  </section>
+
+  <!-- ================= TRAINING ================= -->
+  <section id="tab-training">
+    <div class="card">
+      <label for="tr-date">Datum</label>
+      <input type="date" id="tr-date">
+      <div class="row">
+        <div>
+          <label for="tr-type">Type</label>
+          <select id="tr-type">
+            <option>Kracht A</option><option>Kracht B</option>
+            <option>Cardio</option><option>Wandelen</option><option>Anders</option>
+          </select>
+        </div>
+        <div><label for="tr-min">Minuten</label><input type="number" step="5" inputmode="numeric" id="tr-min" placeholder="45"></div>
+      </div>
+      <label for="tr-note">Notitie (optioneel)</label>
+      <input type="text" id="tr-note" placeholder="bijv. squat 5×5 60 kg">
+      <div class="btnrow"><button class="primary" id="btn-tr-save">Log sessie</button></div>
+    </div>
+
+    <h2>Blokvergelijking (4 weken)</h2>
+    <div class="card"><div id="blok"></div>
+      <div class="note">Laatste 4 weken naast de 4 weken ervoor. Geen correlatiecoëfficiënt — dit is robuuster en eerlijker. Trainingscalorieën gaan nooit terug in het caloriedoel.</div>
+    </div>
+
+    <h2>Sessies</h2>
+    <div class="card" id="tr-list"></div>
+  </section>
+</main>
+
+<nav>
+  <button data-tab="meten"><span class="ic">📏</span>Meten</button>
+  <button data-tab="menu"><span class="ic">🍽️</span>Menu</button>
+  <button data-tab="lijst"><span class="ic">🛒</span>Lijst</button>
+  <button data-tab="training"><span class="ic">🏋️</span>Training</button>
+</nav>
+
+<script>
+"use strict";
+const RECIPES = __RECIPES__;
+
+/* ---------- opslag ---------- */
+const KEY = "afval-v1";
+const DEFAULTS = {
+  settings: { targetKcal: 1900, tempo: 500, startWeight: 84.4, goalWeight: 75,
+              startDate: null },
+  days: {},        // "2026-07-20" -> {kg, kcal, vet, taille}
+  planSeed: 1,
+  checked: {},     // ingredientID -> true
+  training: []     // {id, date, type, min, note}
+};
+let state = load();
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    if(!raw) return structuredClone(DEFAULTS);
+    const s = JSON.parse(raw);
+    return { ...structuredClone(DEFAULTS), ...s,
+             settings: { ...DEFAULTS.settings, ...(s.settings||{}) } };
+  }catch(e){ return structuredClone(DEFAULTS); }
+}
+function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+
+/* ---------- datum ---------- */
+const dayMs = 86400000;
+function todayStr(){ return new Date().toLocaleDateString("sv-SE"); } // YYYY-MM-DD lokaal
+function toDate(s){ return new Date(s + "T12:00:00"); }
+function fmtShort(s){ return toDate(s).toLocaleDateString("nl-NL", {day:"numeric", month:"short"}); }
+function fmtDay(d){ return d.toLocaleDateString("nl-NL", {weekday:"short", day:"numeric", month:"short"}); }
+if(!state.settings.startDate){ state.settings.startDate = todayStr(); save(); }
+
+/* ---------- menuplanner: zelfde schaling als solve_day in build_recipes.py ---------- */
+function solveDay(meals, target){
+  let kcal=0, prot=0, fib=0, fixedK=0;
+  for(const m of meals) for(const p of m.fixed){
+    const f = p.grams/100;
+    fixedK += p.kcalPer100g*f; prot += p.proteinPer100g*f; fib += p.fiberPer100g*f;
+  }
+  kcal = fixedK;
+  const flex = meals.filter(m => m.flexible);
+  const defTotal = flex.reduce((a,m)=>a+m.flexible.grams, 0);
+  const remaining = Math.max(0, target - fixedK);
+  const grams = {};
+  if(defTotal > 0) for(const m of flex){
+    const fx = m.flexible;
+    const share = fx.grams/defTotal;
+    const raw = (remaining*share)/(fx.kcalPer100g/100);
+    const g = Math.round(raw/5)*5;
+    grams[m.id] = g;
+    const f = g/100;
+    kcal += fx.kcalPer100g*f; prot += fx.proteinPer100g*f; fib += fx.fiberPer100g*f;
+  }
+  return { kcal, prot, fib, grams };
+}
+
+/* deterministische shuffle zodat het menu stabiel blijft tot je op Nieuw menu drukt */
+function rng(seed){
+  return function(){
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function shuffled(arr, rand){
+  const a = arr.slice();
+  for(let i=a.length-1; i>0; i--){
+    const j = Math.floor(rand()*(i+1)); [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+const bySlot = slot => RECIPES.filter(r => r.slot === slot);
+function weekPlan(seed){
+  const rand = rng(seed);
+  const B = shuffled(bySlot("breakfast"), rand),
+        L = shuffled(bySlot("lunch"), rand),
+        D = shuffled(bySlot("dinner"), rand),
+        S = shuffled(bySlot("snack"), rand);
+  const days = [];
+  for(let i=0; i<7; i++)
+    days.push({ b:B[i%B.length].id, l:L[i%L.length].id, d:D[i].id, s:S[i%S.length].id });
+  return days;
+}
+const byId = Object.fromEntries(RECIPES.map(r => [r.id, r]));
+
+/* ---------- TDEE-kalibratie ---------- */
+/* Vanaf 14 dagen met gewicht én kcal vervangt de meting de hypothese.
+   TDEE = gemiddelde inname − gewichtshelling × 7700. Training zit daar al in. */
+function calibrate(){
+  const win = 28;
+  const cutoff = Date.now() - win*dayMs;
+  const rows = Object.entries(state.days)
+    .filter(([d,v]) => v.kg != null && v.kcal != null && toDate(d).getTime() >= cutoff)
+    .map(([d,v]) => ({ t: toDate(d).getTime()/dayMs, kg:+v.kg, kcal:+v.kcal }))
+    .sort((a,b)=>a.t-b.t);
+  if(rows.length < 14) return { n: rows.length };
+  const n = rows.length;
+  const mt = rows.reduce((a,r)=>a+r.t,0)/n, mk = rows.reduce((a,r)=>a+r.kg,0)/n;
+  let num=0, den=0;
+  for(const r of rows){ num += (r.t-mt)*(r.kg-mk); den += (r.t-mt)**2; }
+  const slope = den ? num/den : 0;                 // kg per dag
+  const avgIn = rows.reduce((a,r)=>a+r.kcal,0)/n;
+  return { n, tdee: Math.round(avgIn - slope*7700), slope };
+}
+
+/* ---------- Meten ---------- */
+function weightRows(){
+  return Object.entries(state.days)
+    .filter(([,v]) => v.kg != null)
+    .map(([d,v]) => ({ date:d, kg:+v.kg }))
+    .sort((a,b) => a.date < b.date ? -1 : 1);
+}
+function renderMeten(){
+  const s = state.settings;
+  document.getElementById("t-target").textContent = s.targetKcal;
+  const cal = calibrate();
+  if(cal.tdee){
+    document.getElementById("t-tdee-l").textContent = "TDEE (gemeten)";
+    document.getElementById("t-tdee").textContent = cal.tdee;
+    document.getElementById("t-tdee-s").textContent = `kcal, ${cal.n} dagen data`;
+    const adv = cal.tdee - Math.round(s.tempo*7.7/7);
+    document.getElementById("tdee-note").textContent =
+      `Gemeten TDEE ${cal.tdee} kcal. Voor ${s.tempo} g/week is het advies-target ${adv} kcal.`;
+  }else{
+    document.getElementById("t-tdee-l").textContent = "TDEE (hypothese)";
+    document.getElementById("t-tdee").textContent = "±" + (s.targetKcal + Math.round(s.tempo*7.7/7));
+    document.getElementById("t-tdee-s").textContent = "kcal";
+    document.getElementById("tdee-note").textContent =
+      `Nog ${Math.max(0, 14-(cal.n||0))} dagen met gewicht én kcal nodig, dan vervangt de gemeten TDEE de formule.`;
+  }
+  const rows = weightRows();
+  const last = rows[rows.length-1];
+  document.getElementById("t-kg").textContent = last ? last.kg.toFixed(1) : "–";
+  document.getElementById("t-kg-s").textContent = last ? "kg op " + fmtShort(last.date) : "kg";
+  document.getElementById("t-togo").textContent = last ? Math.max(0, last.kg - s.goalWeight).toFixed(1) : "–";
+  document.getElementById("t-togo-s").textContent = "kg tot " + s.goalWeight + " kg";
+  document.getElementById("c-tempo").textContent = s.tempo;
+  renderChart(rows);
+}
+
+/* gewichtsgrafiek: één reeks + corridor, hover-tooltip */
+let chartPts = [];
+function renderChart(rows){
+  const svg = document.getElementById("chart");
+  const s = state.settings;
+  const W=340, H=190, mL=34, mR=8, mT=10, mB=22;
+  const start = toDate(s.startDate).getTime();
+  const lastT = rows.length ? toDate(rows[rows.length-1].date).getTime() : start;
+  const end = Math.max(start + 21*dayMs, lastT + 3*dayMs);
+  const span = end - start;
+  const expAt = t => s.startWeight - (s.tempo/1000/7) * ((t-start)/dayMs);
+  const band = 0.7;
+  const ys = rows.map(r=>r.kg).concat([expAt(start)+band, expAt(end)-band]);
+  let yMin = Math.min(...ys)-0.4, yMax = Math.max(...ys)+0.4;
+  const X = t => mL + (t-start)/span * (W-mL-mR);
+  const Y = v => mT + (yMax-v)/(yMax-yMin) * (H-mT-mB);
+  let out = "";
+  // gridlijnen + y-labels
+  const step = (yMax-yMin) > 6 ? 2 : 1;
+  for(let v = Math.ceil(yMin); v <= yMax; v += step){
+    out += `<line x1="${mL}" y1="${Y(v)}" x2="${W-mR}" y2="${Y(v)}" stroke="var(--grid)" stroke-width="1"/>`;
+    out += `<text x="${mL-5}" y="${Y(v)+3.5}" text-anchor="end" font-size="9" fill="var(--muted)">${v}</text>`;
+  }
+  // x-labels: start, midden, eind
+  for(const t of [start, (start+end)/2, end]){
+    const d = new Date(t);
+    out += `<text x="${X(t)}" y="${H-6}" text-anchor="middle" font-size="9" fill="var(--muted)">${d.toLocaleDateString("nl-NL",{day:"numeric",month:"short"})}</text>`;
+  }
+  // corridor
+  out += `<polygon points="${X(start)},${Y(expAt(start)+band)} ${X(end)},${Y(expAt(end)+band)} ${X(end)},${Y(expAt(end)-band)} ${X(start)},${Y(expAt(start)-band)}" fill="var(--grid)" opacity="0.55"/>`;
+  out += `<line x1="${X(start)}" y1="${Y(expAt(start))}" x2="${X(end)}" y2="${Y(expAt(end))}" stroke="var(--axis)" stroke-width="1.5" stroke-dasharray="4 4"/>`;
+  // doellijn
+  if(s.goalWeight > yMin && s.goalWeight < yMax){
+    out += `<line x1="${mL}" y1="${Y(s.goalWeight)}" x2="${W-mR}" y2="${Y(s.goalWeight)}" stroke="var(--axis)" stroke-width="1" stroke-dasharray="2 3"/>`;
+    out += `<text x="${W-mR}" y="${Y(s.goalWeight)-3}" text-anchor="end" font-size="9" fill="var(--muted)">doel ${s.goalWeight}</text>`;
+  }
+  // meetreeks
+  chartPts = rows.map(r => ({ x: X(toDate(r.date).getTime()), y: Y(r.kg), date: r.date, kg: r.kg }));
+  if(chartPts.length > 1)
+    out += `<polyline points="${chartPts.map(p=>p.x+","+p.y).join(" ")}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/>`;
+  for(const p of chartPts)
+    out += `<circle cx="${p.x}" cy="${p.y}" r="3" fill="var(--accent)" stroke="var(--surface)" stroke-width="1.5"/>`;
+  if(!rows.length)
+    out += `<text x="${(W+mL-mR)/2}" y="${H/2}" text-anchor="middle" font-size="11" fill="var(--muted)">Nog geen metingen — voer je gewicht in</text>`;
+  svg.innerHTML = out;
+}
+(function hookTip(){
+  const wrap = document.getElementById("chartwrap"), tip = document.getElementById("tip"),
+        svg = document.getElementById("chart");
+  function move(ev){
+    if(!chartPts.length) return;
+    const r = svg.getBoundingClientRect();
+    const px = (ev.clientX - r.left) / r.width * 340;
+    let best = chartPts[0];
+    for(const p of chartPts) if(Math.abs(p.x-px) < Math.abs(best.x-px)) best = p;
+    tip.style.display = "block";
+    tip.innerHTML = `${fmtShort(best.date)}: <b>${best.kg.toFixed(1)} kg</b> · corridor ${ (state.settings.startWeight - state.settings.tempo/7000*((toDate(best.date)-toDate(state.settings.startDate))/dayMs)).toFixed(1) } kg`;
+    const bx = best.x/340*r.width;
+    tip.style.left = Math.min(Math.max(bx-40, 0), r.width-120) + "px";
+    tip.style.top = (best.y/190*r.height - 40) + "px";
+  }
+  wrap.addEventListener("pointermove", move);
+  wrap.addEventListener("pointerleave", () => tip.style.display = "none");
+})();
+
+/* invoer */
+document.getElementById("in-date").value = todayStr();
+document.getElementById("btn-save").onclick = () => {
+  const d = document.getElementById("in-date").value;
+  if(!d) return;
+  const row = state.days[d] || {};
+  for(const [id,k] of [["in-kg","kg"],["in-kcal","kcal"],["in-vet","vet"],["in-taille","taille"]]){
+    const v = document.getElementById(id).value.replace(",", ".");
+    if(v !== "") row[k] = +v;
+  }
+  state.days[d] = row; save();
+  document.getElementById("save-msg").textContent = "Opgeslagen ✓";
+  setTimeout(()=>document.getElementById("save-msg").textContent="", 2500);
+  renderMeten();
+};
+function fillSettings(){
+  const s = state.settings;
+  document.getElementById("s-target").value = s.targetKcal;
+  document.getElementById("s-tempo").value = s.tempo;
+  document.getElementById("s-start").value = s.startWeight;
+  document.getElementById("s-doel").value = s.goalWeight;
+  document.getElementById("s-startdate").value = s.startDate;
+}
+document.getElementById("btn-settings").onclick = () => {
+  const s = state.settings;
+  s.targetKcal = +document.getElementById("s-target").value || s.targetKcal;
+  s.tempo = +document.getElementById("s-tempo").value || s.tempo;
+  s.startWeight = +document.getElementById("s-start").value || s.startWeight;
+  s.goalWeight = +document.getElementById("s-doel").value || s.goalWeight;
+  s.startDate = document.getElementById("s-startdate").value || s.startDate;
+  save(); renderAll();
+};
+
+/* reservekopie */
+document.getElementById("btn-export").onclick = () => {
+  const blob = new Blob([JSON.stringify(state, null, 1)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "afval-backup-" + todayStr() + ".json";
+  a.click(); URL.revokeObjectURL(a.href);
+  document.getElementById("backup-msg").textContent = "Zet dit bestand even in OneDrive.";
+};
+document.getElementById("btn-import").onclick = () => document.getElementById("file-import").click();
+document.getElementById("file-import").onchange = ev => {
+  const f = ev.target.files[0]; if(!f) return;
+  f.text().then(t => {
+    try{
+      const s = JSON.parse(t);
+      if(!s.settings || !s.days) throw 0;
+      state = { ...structuredClone(DEFAULTS), ...s,
+                settings: { ...DEFAULTS.settings, ...s.settings } };
+      save(); renderAll();
+      document.getElementById("backup-msg").textContent = "Import gelukt ✓";
+    }catch(e){ document.getElementById("backup-msg").textContent = "Dat is geen geldige back-up."; }
+  });
+};
+
+/* ---------- Menu ---------- */
+function planned(){
+  if(!state.plan || state.planSeed !== state.plan.seed)
+    state.plan = { seed: state.planSeed, days: weekPlan(state.planSeed) };
+  return state.plan.days;
+}
+function mealsOf(day){ return [byId[day.b], byId[day.l], byId[day.d], byId[day.s]]; }
+const SLOTLBL = { breakfast:"ontbijt", lunch:"lunch", dinner:"diner", snack:"snack" };
+function renderMenu(){
+  const target = state.settings.targetKcal;
+  document.getElementById("menu-target").textContent = target;
+  const days = planned();
+  const monday = (()=>{ const d = new Date(); const off = (d.getDay()+6)%7; return new Date(d.getTime()-off*dayMs); })();
+  let html = "";
+  days.forEach((day, i) => {
+    const meals = mealsOf(day);
+    const sol = solveDay(meals, target);
+    const dt = new Date(monday.getTime() + i*dayMs);
+    html += `<div class="card"><div class="dayhead"><b>${fmtDay(dt)}</b>
+      <span class="dt">${Math.round(sol.kcal)} kcal · ${Math.round(sol.prot)} g eiwit · ${Math.round(sol.fib)} g vezels</span></div>`;
+    for(const m of meals){
+      const fg = sol.grams[m.id];
+      const fxTxt = !m.flexible ? "" :
+        fg > 0 ? `<i>${fg} g ${m.flexible.name.toLowerCase()}</i>`
+               : `<i style="color:var(--muted)">zonder ${m.flexible.name.toLowerCase()} — dag zit al op target</i>`;
+      html += `<div class="meal"><span class="slot">${SLOTLBL[m.slot]}</span>
+        <span class="nm">${m.name}
+          <details class="recipe"><summary>recept · ${m.prepMinutes} min</summary>
+            <ul>${m.fixed.map(p=>`<li>${p.grams} g ${p.name}</li>`).join("")}
+                ${m.flexible && fg > 0 ? `<li><i>${fg} g ${m.flexible.name}</i></li>` : ""}</ul>
+            <p>${m.instructions}</p>
+          </details>
+        </span>
+        ${fxTxt ? `<span class="fx">${fxTxt}</span>` : ""}
+        <button class="small" data-swap="${i}:${m.slot}" title="wissel">↻</button></div>`;
+    }
+    html += `</div>`;
+  });
+  document.getElementById("menu-days").innerHTML = html;
+  document.querySelectorAll("[data-swap]").forEach(b => b.onclick = () => {
+    const [di, slot] = b.dataset.swap.split(":");
+    const day = state.plan.days[+di];
+    const key = { breakfast:"b", lunch:"l", dinner:"d", snack:"s" }[slot];
+    const opts = bySlot(slot);
+    const cur = opts.findIndex(r => r.id === day[key]);
+    day[key] = opts[(cur+1)%opts.length].id;
+    save(); renderMenu(); renderList();
+  });
+}
+document.getElementById("btn-shuffle").onclick = () => {
+  state.planSeed = (state.planSeed + 1) | 0;
+  state.plan = null; save(); renderMenu(); renderList();
+};
+
+/* ---------- Lijst ---------- */
+const AISLE_ORDER = ["Groente","Fruit","Brood","Ontbijt","Zuivel","Vlees","Vis","Vegetarisch",
+  "Diepvries","Conserven","Peulvruchten","Pasta en rijst","Wereldkeuken","Noten","Olie"];
+function renderList(){
+  const target = state.settings.targetKcal;
+  const need = {}; // ingredientID -> {name, aisle, grams}
+  for(const day of planned()){
+    const meals = mealsOf(day);
+    const sol = solveDay(meals, target);
+    for(const m of meals){
+      for(const p of m.fixed){
+        (need[p.ingredientID] ??= { name:p.name, aisle:p.aisle, g:0 }).g += p.grams;
+      }
+      if(m.flexible && sol.grams[m.id] > 0){
+        const p = m.flexible;
+        (need[p.ingredientID] ??= { name:p.name, aisle:p.aisle, g:0 }).g += sol.grams[m.id];
+      }
+    }
+  }
+  const groups = {};
+  for(const [id,v] of Object.entries(need)) (groups[v.aisle] ??= []).push({ id, ...v });
+  let html = "";
+  const aisles = AISLE_ORDER.filter(a => groups[a])
+    .concat(Object.keys(groups).filter(a => !AISLE_ORDER.includes(a)).sort());
+  for(const a of aisles){
+    html += `<div class="aisle">${a}</div>`;
+    for(const it of groups[a].sort((x,y)=>x.name.localeCompare(y.name,"nl"))){
+      const done = state.checked[it.id] ? " done" : "";
+      const chk = state.checked[it.id] ? "checked" : "";
+      html += `<label class="item${done}"><input type="checkbox" data-chk="${it.id}" ${chk}>
+        <span class="nm">${it.name}</span><span class="g">${Math.round(it.g)} g</span></label>`;
+    }
+  }
+  document.getElementById("list-body").innerHTML = `<div class="card">${html}</div>`;
+  document.querySelectorAll("[data-chk]").forEach(c => c.onchange = () => {
+    if(c.checked) state.checked[c.dataset.chk] = true;
+    else delete state.checked[c.dataset.chk];
+    save(); c.closest(".item").classList.toggle("done", c.checked);
+  });
+}
+document.getElementById("btn-reset-checks").onclick = () => {
+  state.checked = {}; save(); renderList();
+};
+
+/* ---------- Training ---------- */
+document.getElementById("tr-date").value = todayStr();
+document.getElementById("btn-tr-save").onclick = () => {
+  const min = +document.getElementById("tr-min").value;
+  if(!min) return;
+  state.training.push({
+    id: Date.now(),
+    date: document.getElementById("tr-date").value || todayStr(),
+    type: document.getElementById("tr-type").value,
+    min,
+    note: document.getElementById("tr-note").value.trim()
+  });
+  save();
+  document.getElementById("tr-min").value = "";
+  document.getElementById("tr-note").value = "";
+  renderTraining();
+};
+function renderTraining(){
+  const list = state.training.slice().sort((a,b)=> a.date < b.date ? 1 : -1);
+  document.getElementById("tr-list").innerHTML = list.length
+    ? list.slice(0,20).map(t => `<div class="sess"><span class="dt">${fmtShort(t.date)}</span>
+        <span class="ty">${t.type}${t.note?` <span style="color:var(--muted)">· ${t.note}</span>`:""}</span>
+        <span class="mi">${t.min} min</span>
+        <button data-del="${t.id}" aria-label="verwijder">✕</button></div>`).join("")
+    : `<div class="note">Nog geen sessies gelogd.</div>`;
+  document.querySelectorAll("[data-del]").forEach(b => b.onclick = () => {
+    state.training = state.training.filter(t => t.id !== +b.dataset.del);
+    save(); renderTraining();
+  });
+  // blokvergelijking: laatste 28 dagen vs de 28 ervoor
+  const now = Date.now();
+  const inWin = (t, from, to) => { const ms = toDate(t.date).getTime(); return ms >= from && ms < to; };
+  const A = state.training.filter(t => inWin(t, now-28*dayMs, now+dayMs));
+  const B = state.training.filter(t => inWin(t, now-56*dayMs, now-28*dayMs));
+  const sum = arr => arr.reduce((a,t)=>a+t.min, 0);
+  const kracht = arr => arr.filter(t => t.type.startsWith("Kracht")).length;
+  const delta = (a,b) => {
+    if(a===b) return "=";
+    const cls = a>b ? "delta-up" : "delta-down";
+    return `<span class="${cls}">${a>b?"▲":"▼"} ${Math.abs(a-b)}</span>`;
+  };
+  document.getElementById("blok").innerHTML = `<table class="blok">
+    <tr><th></th><th>Vorig blok</th><th>Dit blok</th><th>Δ</th></tr>
+    <tr><td>Sessies</td><td>${B.length}</td><td>${A.length}</td><td>${delta(A.length,B.length)}</td></tr>
+    <tr><td>Waarvan kracht</td><td>${kracht(B)}</td><td>${kracht(A)}</td><td>${delta(kracht(A),kracht(B))}</td></tr>
+    <tr><td>Minuten totaal</td><td>${sum(B)}</td><td>${sum(A)}</td><td>${delta(sum(A),sum(B))}</td></tr>
+  </table>`;
+}
+
+/* ---------- tabs & hash (#lijst opent direct de boodschappenlijst) ---------- */
+const TABS = ["meten","menu","lijst","training"];
+function show(tab){
+  if(!TABS.includes(tab)) tab = "meten";
+  TABS.forEach(t => {
+    document.getElementById("tab-"+t).classList.toggle("on", t===tab);
+    document.querySelector(`nav [data-tab="${t}"]`).classList.toggle("on", t===tab);
+  });
+  if(location.hash !== "#"+tab) history.replaceState(null, "", "#"+tab);
+  window.scrollTo(0,0);
+}
+document.querySelectorAll("nav [data-tab]").forEach(b => b.onclick = () => show(b.dataset.tab));
+window.addEventListener("hashchange", () => show(location.hash.slice(1)));
+
+function renderAll(){ fillSettings(); renderMeten(); renderMenu(); renderList(); renderTraining(); }
+renderAll();
+show(location.hash.slice(1) || "meten");
+</script>
+</body>
+</html>

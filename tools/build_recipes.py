@@ -480,6 +480,11 @@ def build_webapp() -> None:
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(html, encoding="utf-8")
     print(f"Webapp:     {out}  ({out.stat().st_size // 1024} KB)")
+    # zelfde bestand als docs/index.html: GitHub Pages kan die map direct serveren
+    pages = root / "docs" / "index.html"
+    pages.parent.mkdir(parents=True, exist_ok=True)
+    pages.write_text(html, encoding="utf-8")
+    print(f"Pages:      {pages}")
 
 
 if __name__ == "__main__":
