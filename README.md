@@ -15,11 +15,21 @@ hele app.
 
 ## Op je telefoon zetten
 
-1. Maak een publieke repo op GitHub, zet `dist/afval.html` erin als `index.html`
-2. Settings -> Pages -> deploy from branch `main`, map `/ (root)`
-3. Open de URL in **Safari** op je iPhone (niet Chrome — daar werkt
+De build schrijft hetzelfde bestand ook naar `docs/index.html`, dus deze repo
+kan zichzelf hosten — geen tweede repo nodig:
+
+1. Zet de repo op publiek (Settings -> General -> Danger Zone -> Change
+   visibility), of houd hem privé als je GitHub Pro hebt
+2. Settings -> Pages -> Source: **Deploy from a branch** -> branch `main`,
+   map **`/docs`** -> Save
+3. Na een minuut staat de app op
+   `https://<gebruikersnaam>.github.io/<reponaam>/`
+4. Open die URL in **Safari** op je iPhone (niet Chrome — daar werkt
    Beginscherm-installatie niet goed)
-4. Deelknop -> Zet op beginscherm
+5. Deelknop -> Zet op beginscherm
+
+Liever een losse repo? Dan werkt het oude recept ook: maak een publieke repo,
+zet `dist/afval.html` erin als `index.html`, en deploy vanaf root.
 
 Nu draait hij schermvullend, zonder adresbalk, met een eigen icoon.
 Azure Static Web Apps werkt net zo goed als je liever daar zit.
