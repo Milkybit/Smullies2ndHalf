@@ -49,9 +49,11 @@ vr+za+zo.
 
 ## Deploy (GitHub Pages)
 
-De workflow `.github/workflows/doel1.yml` test, bouwt en publiceert naar
-GitHub Pages. Eénmalig instellen: repo-Settings → Pages → Source:
-**GitHub Actions**. De app staat daarna op
+De workflow `.github/workflows/doel1.yml` test en bouwt op elke push van
+de doel1-branch, en publiceert naar GitHub Pages zodra de wijzigingen op
+de default branch staan (de github-pages-environment laat alleen die
+branch deployen). De Pages-bron is al automatisch op GitHub Actions
+gezet. De app staat na de merge op
 `https://<gebruikersnaam>.github.io/Smullies2ndHalf/` — open die URL in
 Safari op iPhone en kies Deelknop → Zet op beginscherm.
 
