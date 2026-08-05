@@ -3,7 +3,6 @@ name: Doel1 — test, build, deploy
 on:
   push:
     branches: [claude/doel1-pwa-app-pu2xvh, claude/recipes-json-generator-7smhsz, main]
-    paths: ['doel1/**', '.github/workflows/doel1.yml']
   workflow_dispatch:
 
 permissions:
@@ -18,9 +17,6 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: doel1
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -34,7 +30,7 @@ jobs:
           enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: doel1/dist
+          path: dist
 
   # De github-pages-environment laat alleen de default branch deployen;
   # op andere branches draait alleen build+test.

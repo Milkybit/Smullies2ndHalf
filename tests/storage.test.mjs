@@ -72,6 +72,20 @@ test('droge dagen: één tik per dag, tweede tik haalt weg', () => {
   assert.deepEqual(storage.getDrogeDagen(), ['2026-08-04'])
 })
 
+test('export en import: alle tabellen komen ongeschonden terug', () => {
+  storage.saveSessie({ datum: '2026-08-03', anker: 'ma', mini: true })
+  storage.saveMeting({ datum: '2026-08-01', gewicht: 84.6, vet_pct: 24.4 })
+  storage.toggleDroog('2026-08-04')
+  const kopie = storage.exportData()
+
+  versStorage()
+  storage.importData(kopie)
+  assert.equal(storage.getSessies()[0].mini, true)
+  assert.equal(storage.getMetingen()[0].gewicht, 84.6)
+  assert.deepEqual(storage.getDrogeDagen(), ['2026-08-04'])
+  assert.equal(storage.getGerechten().length, 12)
+})
+
 test('doelen: opslaan en teruglezen', () => {
   storage.saveDoel({ domein: 'voeding', omschrijving: '−200 kcal correctie' })
   const doelen = storage.getDoelen()

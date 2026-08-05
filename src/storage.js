@@ -174,6 +174,27 @@ export function toggleDroog(datum) {
     : alles.concat({ datum }))
 }
 
+// ---- export / import -------------------------------------------------------
+
+const TABELLEN = ['gerechten', 'weekmenu', 'boodschappen', 'sessies',
+  'metingen', 'droge_dagen', 'doelen', 'instellingen']
+
+// Reservekopie van alle data als één JSON-object (localStorage is geen back-up).
+export function exportData() {
+  const data = {}
+  for (const tabel of TABELLEN) {
+    const ruw = globalThis.localStorage.getItem(PREFIX + tabel)
+    if (ruw !== null) data[tabel] = JSON.parse(ruw)
+  }
+  return data
+}
+
+export function importData(data) {
+  for (const tabel of TABELLEN) {
+    if (tabel in data) schrijf(tabel, data[tabel])
+  }
+}
+
 // ---- doelen ----------------------------------------------------------------
 
 export function getDoelen() {

@@ -1,109 +1,63 @@
-# Afval — een enkel HTML-bestand
+# Doel1
 
-Geen build, geen Node, geen App Store, geen Apple Developer-account.
-Een bestand van 66 KB dat je op je iPhone naar je beginscherm zet.
+Mobiel-eerst PWA voor één gebruiker: voedingsschema, sportweek en voortgang.
+Nederlandstalige UI. De app telt geen calorieën en velt geen oordelen —
+het schema is de waarheid, de app voert het uit.
 
-## Bouwen
+## Ontwikkelen
 
-```powershell
-python tools/build_recipes.py
+```bash
+npm install
+npm run dev     # ontwikkelserver
+npm test        # node --test, geen extra dependencies
+npm run build   # productie-build (base: /Smullies2ndHalf/)
+npm run icons   # PWA-iconen opnieuw genereren
 ```
 
-Dat doet twee dingen: het schrijft `assets/recipes.json` en bakt die recepten
-in `web/index.template.html` tot **`dist/afval.html`** — dat ene bestand is de
-hele app.
+## Schermen
 
-## Op je telefoon zetten
-
-De build schrijft hetzelfde bestand ook naar `docs/index.html`, dus deze repo
-kan zichzelf hosten — geen tweede repo nodig:
-
-1. Zet de repo op publiek (Settings -> General -> Danger Zone -> Change
-   visibility), of houd hem privé als je GitHub Pro hebt
-2. Settings -> Pages -> Source: **Deploy from a branch** -> branch `main`,
-   map **`/docs`** -> Save
-3. Na een minuut staat de app op
-   `https://<gebruikersnaam>.github.io/<reponaam>/`
-4. Open die URL in **Safari** op je iPhone (niet Chrome — daar werkt
-   Beginscherm-installatie niet goed)
-5. Deelknop -> Zet op beginscherm
-
-Liever een losse repo? Dan werkt het oude recept ook: maak een publieke repo,
-zet `dist/afval.html` erin als `index.html`, en deploy vanaf root.
-
-Nu draait hij schermvullend, zonder adresbalk, met een eigen icoon.
-Azure Static Web Apps werkt net zo goed als je liever daar zit.
-
-## Geofencing via Shortcuts
-
-De webapp kan geen achtergrondlocatie — Safari heeft daar simpelweg geen API
-voor. Dat lost je op buiten de app:
-
-Opdrachten -> Automatisering -> Nieuwe -> **Aankomst** -> kies je Albert Heijn
--> Direct uitvoeren -> actie **Open URL** -> `https://jouwnaam.github.io/afval/#lijst`
-
-De `#lijst`-hash opent de app direct op je boodschappenlijst. Je krijgt dus een
-melding met je lijst zodra je de winkel binnenloopt — precies de functie die je
-wilde, zonder één regel native code. Herhaal per winkel.
-
-## Wat erin zit
-
-| Scherm | Wat |
+| Tab | Wat |
 |---|---|
-| Meten | Dagtarget, gewichtscorridor, invoer, Omron naast meetlint |
-| Menu | Weekplan van 7 dagen, geschaald op je target |
-| Lijst | Boodschappen per schap, afvinkbaar |
-| Training | Sessies loggen, blokvergelijking van 4 weken |
+| Vandaag | Dag-anker met tik-knop (ma: vol/mini), plus-blok, diner uit de rotatie, droog-knop |
+| Week | Vijf anker-tegels, weekstatus, streak met vlam, verdien-sloten, vorige weken |
+| Eten | Rotatieweek (1–4, week 5 = week 1), boodschappenlijst maken en afvinken |
+| Voortgang | Zaterdagmeting, trendlijnen, droge-dagen-reeks, 4-weken-evaluatie |
 
-## Reservekopie — lees dit wel even
+De domeinregels staan in `CLAUDE.md` en zijn niet onderhandelbaar; de
+constanten ervan staan in `src/domein.js`.
 
-De app slaat alles op in `localStorage` op je telefoon. Dat is snel en werkt
-offline, maar het is **geen back-up**: Safari kan opslag opruimen, en als je je
-telefoon wist ben je alles kwijt.
+## Data
 
-Gebruik de exportknop op het Meten-scherm. Doe dat eens per maand en zet het
-bestand in OneDrive. Het is twee tikken en het scheelt je een half jaar data.
+Alles staat lokaal in localStorage, achter de vaste interface van
+`src/storage.js`. Tabel- en veldnamen volgen het datamodel dat in fase 6
+letterlijk naar `supabase/schema.sql` gaat — schermen praten uitsluitend
+met `storage.js`, dus de Supabase-implementatie schuift er straks achter
+zonder schermwijzigingen.
 
-## Startwaarden
+De 12 rotatie-gerechten en de vaste boodschappenlijst in `src/seed.js`
+komen uit de receptenbibliotheek van dit repo (`assets/recipes.json`) en
+zijn een startpunt: vervang ze door de inhoud van het 4-wekenplan (PDF)
+zodra die definitief is. Ook de invulling van de plus-blokken
+(`src/domein.js`) is een startpunt.
 
-| | |
-|---|---|
-| Target | 1.900 kcal |
-| Eiwit | 150 g |
-| Vet | 76 g |
-| Koolhydraten | 150 g |
-| Vezels | 35 g |
-| Tempo | ~500 g/week (0,6 %) |
-| 84,4 -> 75 kg | ~20 weken |
+Twee interpretaties die vastgelegd zijn in code (aanpasbaar als het plan
+anders zegt): de 4-weken-evaluatie rekent over 5 zaterdagmetingen en geeft
+de −200 kcal-suggestie alleen als alle vier tussenliggende weken binnen
+waren; het standaard-weekmenu verdeelt de 3 gerechten als ma+di / wo+do /
+vr+za+zo.
 
-Behandel 1.900 als hypothese. Vanaf 14 dagen data vervangt de app de formule
-door je eigen gemeten TDEE, en pas dan weet je wat je werkelijk verbruikt.
+## Deploy (GitHub Pages)
 
-## Receptenbibliotheek
+De workflow `.github/workflows/doel1.yml` test en bouwt op elke push van
+de doel1-branch, en publiceert naar GitHub Pages zodra de wijzigingen op
+de default branch staan (de github-pages-environment laat alleen die
+branch deployen). De Pages-bron is al automatisch op GitHub Actions
+gezet. De app staat na de merge op
+`https://<gebruikersnaam>.github.io/Smullies2ndHalf/` — open die URL in
+Safari op iPhone en kies Deelknop → Zet op beginscherm.
 
-34 recepten: 4 ontbijten, 5 lunches, 20 diners, 5 snacks. Ingredienten staan
-een keer in `ING` in `tools/build_recipes.py`, recepten verwijzen ernaar.
-Corrigeer je een macrowaarde tegen NEVO (RIVM), dan werkt dat overal door.
+Bij hosting onder een ander pad: `BASE_PATH=/ander-pad/ npm run build`.
 
-De validatie controleert alle 2.000 dagcombinaties:
+## Nieuwe ideeën
 
-```
-laagste eiwit  : 165 g   (target 150 g)
-laagste vezels :  30 g   (minimum 30 g)
-combinaties onder target: 0
-```
-
-> De macrowaarden zijn representatief maar **niet geverifieerd**. Controleer ze
-> tegen NEVO of de verpakking — je kalibratie leunt op accurate inname.
-
-## Drie ontwerpregels
-
-**1. Trainingscalorieen gaan nooit terug in het caloriedoel.** De kalibratie
-meet je totale verbruik al, training inbegrepen. Erbij optellen is dubbeltellen,
-en schattingen voor krachttraining zitten er routinematig een factor 2 tot 3 naast.
-
-**2. Geen correlatiecoefficient.** Twintig ruizige datapunten met ongemeten
-confounders. De blokvergelijking van vier weken is robuuster en eerlijker.
-
-**3. Geen verbodsmelding bij de supermarkt.** De Shortcut opent je lijst, niet
-een waarschuwing. Verbodsframing bij de winkelingang werkt averechts.
+Buiten de v1-scope: noteren in `IDEAS.md`, niet bouwen.
