@@ -11,8 +11,19 @@ const TABS = [
   { id: 'voortgang', label: 'Voortgang', Scherm: Voortgang, icoon: IcoonTrend },
 ]
 
+// #week, #eten of #voortgang in de URL opent die tab direct — handig voor
+// een snelkoppeling of Shortcut (bijv. de boodschappenlijst bij de winkel).
+function tabUitHash() {
+  const hash = window.location.hash.replace('#', '')
+  return TABS.some((t) => t.id === hash) ? hash : 'vandaag'
+}
+
 export default function App() {
-  const [actief, setActief] = useState('vandaag')
+  const [actief, setActiefState] = useState(tabUitHash)
+  const setActief = (id) => {
+    window.location.hash = id
+    setActiefState(id)
+  }
   const { Scherm } = TABS.find((t) => t.id === actief)
   return (
     <>

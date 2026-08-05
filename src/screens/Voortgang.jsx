@@ -4,6 +4,7 @@ import { vierWekenEvaluatie, drogeReeks, EVALUATIE_DREMPEL } from '../logic/eval
 import {
   getMetingen, saveMeting, getSessies,
   getDrogeDagen, getInstellingen, zetInstelling, saveDoel,
+  exportData, importData,
 } from '../storage.js'
 
 function laatsteZaterdag(nu) {
@@ -142,8 +143,41 @@ export default function Voortgang() {
           <span className="zacht">{reeks === 1 ? 'dag droog' : 'dagen droog'} aaneengesloten</span>
         </div>
       </div>
+
+      <div className="kaart">
+        <div className="kaart-titel">Reservekopie</div>
+        <p className="klein zacht" style={{ marginTop: 0 }}>
+          Alles staat lokaal op dit apparaat. Exporteer af en toe een kopie.
+        </p>
+        <div className="knoppenrij">
+          <button className="knop" onClick={downloadExport}>Exporteren</button>
+          <label className="knop" style={{ textAlign: 'center' }}>
+            Importeren
+            <input type="file" accept="application/json" style={{ display: 'none' }}
+              onChange={(e) => leesImport(e, ververs)} />
+          </label>
+        </div>
+      </div>
     </div>
   )
+}
+
+function downloadExport() {
+  const blob = new Blob([JSON.stringify(exportData(), null, 2)], { type: 'application/json' })
+  const a = document.createElement('a')
+  a.href = URL.createObjectURL(blob)
+  a.download = `doel1-backup-${datumKey(new Date())}.json`
+  a.click()
+  URL.revokeObjectURL(a.href)
+}
+
+function leesImport(event, klaar) {
+  const bestand = event.target.files[0]
+  if (!bestand) return
+  bestand.text().then((tekst) => {
+    importData(JSON.parse(tekst))
+    klaar()
+  })
 }
 
 // Kleine SVG-trendlijn zonder dependencies: punten op tijdsvolgorde,
