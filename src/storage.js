@@ -117,7 +117,8 @@ export function getRotatieWeek(weekKey) {
 }
 
 // Levert het weekmenu van een week; bestaat het nog niet, dan wordt het
-// standaardmenu uit de rotatie gegenereerd en bewaard.
+// standaardmenu uit de rotatie gegenereerd en bewaard. Oudere rijen zonder
+// porties tellen als 1 portie.
 export function getWeekmenu(weekKey) {
   const alles = lees('weekmenu', [])
   let rijen = alles.filter((r) => r.jaar_week === weekKey)
@@ -125,7 +126,31 @@ export function getWeekmenu(weekKey) {
     rijen = standaardWeekmenu(weekKey, getGerechten(), getRotatieWeek(weekKey))
     schrijf('weekmenu', alles.concat(rijen))
   }
-  return rijen
+  return rijen.map((r) => ({ porties: 1, ...r }))
+}
+
+function wijzigWeekmenu(weekKey, dag, wijziging) {
+  getWeekmenu(weekKey) // garandeert dat de rijen bestaan
+  const alles = lees('weekmenu', [])
+  const rij = alles.find((r) => r.jaar_week === weekKey && r.dag === dag)
+  Object.assign(rij, wijziging)
+  schrijf('weekmenu', alles)
+}
+
+// Zelf een gerecht kiezen voor een dag (null = geen diner gepland).
+export function zetWeekmenuGerecht(weekKey, dag, gerechtId) {
+  wijzigWeekmenu(weekKey, dag, { gerecht_id: gerechtId })
+}
+
+// Porties voor een dag ophogen of verlagen (1–9), voor een exacte lijst.
+export function zetWeekmenuPorties(weekKey, dag, porties) {
+  wijzigWeekmenu(weekKey, dag, { porties: Math.max(1, Math.min(9, porties)) })
+}
+
+// Terug naar het rotatievoorstel voor deze week.
+export function herstelWeekmenu(weekKey) {
+  schrijf('weekmenu', lees('weekmenu', []).filter((r) => r.jaar_week !== weekKey))
+  return getWeekmenu(weekKey)
 }
 
 // ---- boodschappen ----------------------------------------------------------

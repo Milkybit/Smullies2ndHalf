@@ -29,6 +29,19 @@ export default function Voortgang() {
   const isZaterdag = dagCode(new Date(datum + 'T12:00:00')) === 'za'
   const kanOpslaan = isZaterdag && gewicht !== ''
 
+  // Dashboard: voortgang van eerste meting naar doel.
+  const instellingen = getInstellingen()
+  const doelGewicht = instellingen.doel_gewicht ?? null
+  const doelVet = instellingen.doel_vet_pct ?? null
+  const vetMetingen = metingen.filter((m) => m.vet_pct != null)
+  const gewichtNu = metingen.length ? metingen[metingen.length - 1].gewicht : null
+  const vetNu = vetMetingen.length ? vetMetingen[vetMetingen.length - 1].vet_pct : null
+
+  function zetDoel(naam, waarde) {
+    zetInstelling(naam, waarde === '' ? null : Number(waarde))
+    ververs()
+  }
+
   function bewaar() {
     saveMeting({
       datum,
@@ -53,6 +66,40 @@ export default function Voortgang() {
   return (
     <div>
       <h1>Voortgang</h1>
+
+      <div className="kaart">
+        <div className="kaart-titel">Dashboard</div>
+        <div className="donuts">
+          <Donut
+            titel="Vet %"
+            kleur="#C98A2D"
+            huidig={vetNu}
+            start={vetMetingen.length ? vetMetingen[0].vet_pct : null}
+            doel={doelVet}
+            eenheid="%"
+          />
+          <Donut
+            titel="Gewicht"
+            kleur="#24382F"
+            huidig={gewichtNu}
+            start={metingen.length ? metingen[0].gewicht : null}
+            doel={doelGewicht}
+            eenheid=" kg"
+          />
+        </div>
+        <div className="doel-velden">
+          <div>
+            <label>Doel vet %</label>
+            <input type="number" step="0.5" inputMode="decimal" value={doelVet ?? ''}
+              onChange={(e) => zetDoel('doel_vet_pct', e.target.value)} />
+          </div>
+          <div>
+            <label>Doel gewicht (kg)</label>
+            <input type="number" step="0.5" inputMode="decimal" value={doelGewicht ?? ''}
+              onChange={(e) => zetDoel('doel_gewicht', e.target.value)} />
+          </div>
+        </div>
+      </div>
 
       <div className="kaart">
         <div className="kaart-titel">Zaterdagmeting</div>
@@ -178,6 +225,42 @@ function leesImport(event, klaar) {
     importData(JSON.parse(tekst))
     klaar()
   })
+}
+
+// Donut-meter: voortgang van startwaarde (eerste meting) naar doel.
+// Zonder doel of meting blijft de ring leeg met een korte uitleg.
+function Donut({ titel, kleur, huidig, start, doel, eenheid }) {
+  const R = 34
+  const OMTREK = 2 * Math.PI * R
+  const klaar = huidig != null && start != null && doel != null && start !== doel
+  const aandeel = klaar ? Math.max(0, Math.min(1, (start - huidig) / (start - doel))) : 0
+  const nog = klaar ? Math.max(0, huidig - doel) : null
+  return (
+    <div className="donut-blok">
+      <svg width="96" height="96" viewBox="0 0 96 96" role="img"
+        aria-label={`${titel}: ${huidig ?? 'geen meting'}, doel ${doel ?? 'niet gezet'}`}>
+        <circle cx="48" cy="48" r={R} fill="none" stroke="#D9DCD1" strokeWidth="10" />
+        {klaar && (
+          <circle
+            cx="48" cy="48" r={R} fill="none" stroke={kleur} strokeWidth="10"
+            strokeLinecap="round"
+            strokeDasharray={`${(aandeel * OMTREK).toFixed(1)} ${OMTREK.toFixed(1)}`}
+            transform="rotate(-90 48 48)"
+          />
+        )}
+        <text x="48" y="53" textAnchor="middle"
+          style={{ fontFamily: 'Fraunces, serif', fontSize: '15px', fill: '#24382F' }}>
+          {huidig != null ? `${huidig}${eenheid}` : '—'}
+        </text>
+      </svg>
+      <div className="waarde">{titel}</div>
+      <div className="sub">
+        {klaar
+          ? `${Math.round(aandeel * 100)}% · nog ${nog.toFixed(1)}${eenheid} naar ${doel}${eenheid}`
+          : huidig == null ? 'nog geen meting' : 'zet een doel hieronder'}
+      </div>
+    </div>
+  )
 }
 
 // Kleine SVG-trendlijn zonder dependencies: punten op tijdsvolgorde,

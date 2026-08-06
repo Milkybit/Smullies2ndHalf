@@ -20,7 +20,8 @@ export default function Vandaag() {
   const droog = getDrogeDagen().includes(vandaag)
 
   const menu = getWeekmenu(weekKey)
-  const diner = getGerecht((menu.find((r) => r.dag === dag) || {}).gerecht_id)
+  const menuVandaag = menu.find((r) => r.dag === dag) || {}
+  const diner = getGerecht(menuVandaag.gerecht_id)
   const rotatieNr = getRotatieWeek(weekKey)
 
   // Kracht A tikt door: niet → vol → mini → niet; de rest is aan/uit.
@@ -104,7 +105,10 @@ export default function Vandaag() {
           <>
             <h2>{diner.naam}</h2>
             <p className="klein zacht">{diner.porties_tekst}</p>
-            <p className="klein" style={{ margin: 0 }}>±{diner.kcal} kcal · basis: {diner.basis}</p>
+            <p className="klein" style={{ margin: 0 }}>
+              ±{diner.kcal} kcal per portie · basis: {diner.basis}
+              {menuVandaag.porties > 1 ? ` · ${menuVandaag.porties} porties` : ''}
+            </p>
           </>
         ) : (
           <p className="zacht" style={{ margin: 0 }}>Geen diner gepland.</p>

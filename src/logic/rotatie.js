@@ -21,11 +21,12 @@ export function standaardWeekmenu(weekKey, gerechten, rotatieNr) {
     jaar_week: weekKey,
     dag,
     gerecht_id: drie[i] ? drie[i].id : null,
+    porties: 1,
   }))
 }
 
 // Boodschappenlijst = vaste lijst + weekaanvulling uit het weekmenu.
-// Ingrediënten van hetzelfde gerecht tellen per gepland aantal dagen mee;
+// Ingrediënten van hetzelfde gerecht tellen per geplande dag × porties mee;
 // gelijke ingrediënten (zelfde naam + eenheid) worden samengevoegd.
 export function bouwBoodschappenlijst(weekKey, weekmenu, gerechten, vasteLijst) {
   const items = []
@@ -34,20 +35,23 @@ export function bouwBoodschappenlijst(weekKey, weekmenu, gerechten, vasteLijst) 
   }
   const perGerecht = new Map()
   for (const r of weekmenu) {
-    if (r.gerecht_id) perGerecht.set(r.gerecht_id, (perGerecht.get(r.gerecht_id) || 0) + 1)
+    if (r.gerecht_id) {
+      const porties = r.porties || 1
+      perGerecht.set(r.gerecht_id, (perGerecht.get(r.gerecht_id) || 0) + porties)
+    }
   }
   const samengevoegd = new Map()
-  for (const [gerechtId, dagen] of perGerecht) {
+  for (const [gerechtId, porties] of perGerecht) {
     const gerecht = gerechten.find((g) => g.id === gerechtId)
     if (!gerecht) continue
     for (const ing of gerecht.ingredienten || []) {
       const sleutel = `${ing.naam}|${ing.eenheid}`
       const bestaand = samengevoegd.get(sleutel)
-      if (bestaand) bestaand.hoeveelheid += ing.hoeveelheid * dagen
+      if (bestaand) bestaand.hoeveelheid += ing.hoeveelheid * porties
       else samengevoegd.set(sleutel, {
         jaar_week: weekKey,
         naam: ing.naam,
-        hoeveelheid: ing.hoeveelheid * dagen,
+        hoeveelheid: ing.hoeveelheid * porties,
         eenheid: ing.eenheid,
         categorie: ing.categorie,
         vast: false,
