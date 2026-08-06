@@ -13,6 +13,14 @@ export default function Eten() {
   const menu = getWeekmenu(weekKey)
   const gerechten = getGerechten()
 
+  // Elke menuwijziging rekent direct door in een al gemaakte lijst
+  // (vinkjes blijven staan).
+  function wijzigMenu(wijziging) {
+    wijziging()
+    if (getBoodschappen(weekKey).length > 0) maakBoodschappen(weekKey)
+    ververs()
+  }
+
   // De gerechten die deze week op het menu staan, met totaal porties.
   const opHetMenu = new Map()
   for (const rij of menu) {
@@ -42,10 +50,7 @@ export default function Eten() {
             <span className="anker-dag">{rij.dag}</span>
             <select
               value={rij.gerecht_id || ''}
-              onChange={(e) => {
-                zetWeekmenuGerecht(weekKey, rij.dag, e.target.value || null)
-                ververs()
-              }}
+              onChange={(e) => wijzigMenu(() => zetWeekmenuGerecht(weekKey, rij.dag, e.target.value || null))}
             >
               <option value="">— geen —</option>
               {gerechten.map((g) => (
@@ -58,13 +63,13 @@ export default function Eten() {
               <button
                 className="knop"
                 disabled={!rij.gerecht_id || rij.porties <= 1}
-                onClick={() => { zetWeekmenuPorties(weekKey, rij.dag, rij.porties - 1); ververs() }}
+                onClick={() => wijzigMenu(() => zetWeekmenuPorties(weekKey, rij.dag, rij.porties - 1))}
               >−</button>
               <span>{rij.gerecht_id ? rij.porties : '·'}</span>
               <button
                 className="knop"
                 disabled={!rij.gerecht_id || rij.porties >= 9}
-                onClick={() => { zetWeekmenuPorties(weekKey, rij.dag, rij.porties + 1); ververs() }}
+                onClick={() => wijzigMenu(() => zetWeekmenuPorties(weekKey, rij.dag, rij.porties + 1))}
               >+</button>
             </div>
           </div>
@@ -72,7 +77,7 @@ export default function Eten() {
         <button
           className="knop"
           style={{ width: '100%', marginTop: '0.5rem' }}
-          onClick={() => { herstelWeekmenu(weekKey); ververs() }}
+          onClick={() => wijzigMenu(() => herstelWeekmenu(weekKey))}
         >
           Herstel rotatievoorstel (week {rotatieNr})
         </button>
@@ -103,12 +108,13 @@ export default function Eten() {
           style={{ width: '100%' }}
           onClick={() => { maakBoodschappen(weekKey); ververs() }}
         >
-          {lijst.length === 0 ? 'Boodschappenlijst maken' : 'Lijst opnieuw maken (na menuwijziging)'}
+          {lijst.length === 0 ? 'Boodschappenlijst maken' : 'Lijst opnieuw maken'}
         </button>
         {lijst.length > 0 && (
           <>
             <p className="klein zacht" style={{ margin: '0.6rem 0 0' }}>
-              Vaste lijst + ingrediënten van het weekmenu × porties · {klaar}/{lijst.length} afgevinkt
+              Vaste lijst + ingrediënten × porties, rekent mee met het menu ·
+              {' '}{klaar}/{lijst.length} afgevinkt
             </p>
             {[...perCategorie.entries()].map(([categorie, items]) => (
               <div key={categorie}>
