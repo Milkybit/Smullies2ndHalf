@@ -17,11 +17,11 @@ Bouw een mobiel-eerst PWA ("Doel1") voor één gebruiker die zijn voedingsschema
 
 ## Domeinregels (niet onderhandelbaar)
 
-1. Sportweek = 5 ankers: ma Kracht A · di Kickboksen · wo Tennis · vr Kracht B · za Racefiets. Maandag kent drie standen: niet / vol / mini — vol én mini tellen allebei.
-2. Week binnen = maandag gedaan (vol of mini) én ≥2 andere ankers. Streak = aantal aaneengesloten weken binnen.
+1. Sportweek = 5 sporten: Kracht A · Kickboksen · Tennis · Kracht B · Racefiets — vrij over de week te plannen; per dag registreer je zelf welke sessie(s) je deed (meerdere op één dag kan). Kracht A kent drie standen: niet / vol / mini — vol én mini tellen allebei. (Aangepast op verzoek van de gebruiker, aug 2026; eerst vaste weekdag-ankers.)
+2. Week binnen = alle 5 sporten die week gedaan. Streak = aantal aaneengesloten weken binnen.
 3. Geen schaamte-UI, nooit. Een gemiste week toont exact één neutrale zin: "Vorige week niet binnen — data, geen vonnis. Deze week telt gewoon opnieuw." Geen rood, geen gebroken-streak-animaties.
 4. Verdien-sloten: streak ≥4 → "banden verdiend"; maand ≥ oktober én streak ≥4 → "Tacx verdiend". Tot die tijd zichtbaar als slot.
-5. Plus-blokken horen bij ankers (S op ma/vr, M op di/wo, L op za) en verschijnen alleen op de dag van dat anker. Geen sessie = geen blok.
+5. Plus-blokken horen bij sporten (S bij Kracht A/B, M bij Kickboksen/Tennis, L bij Racefiets) en verschijnen alleen op de dag dat die sessie is geregistreerd. Geen sessie = geen blok. In de sessies-tabel blijven de anker-codes ('ma'…'za') de sport-id's, los van de weekdag.
 6. De app telt géén calorieën per maaltijd. Het schema ís de waarheid: de app toont de standaarddag, het diner van vandaag (rotatie week 1-4) en het plus-blok. Geen invoervelden voor eten.
 7. Meting alleen op zaterdag (gewicht + vet%); de grafiek toont de trend; de 4-weken-evaluatie geeft een súggestie (gemiddelde ≥0,4 kg/wk → niets doen; lager terwijl weken binnen waren → "overweeg −200 kcal, één knop") — de app beslist nooit zelf.
 8. Droge-dagen-teller: één tik per dag, aaneengesloten reeks.
@@ -36,8 +36,8 @@ Seed-data: de 12 rotatie-gerechten (3 per week, met porties en ±kcal) en de vas
 
 ## Schermen (v1 — vier tabs)
 
-1. Vandaag — dag-anker met tik-knop (ma: keuze vol/mini), het plus-blok van vandaag, het diner van vandaag (uit de rotatie), knop "vandaag droog".
-2. Week — vijf anker-tegels afvinkbaar, weekstatus-regel ("maandag staat · nog X van 2"), streakteller met vlam, verdien-sloten, navigatie naar vorige weken.
+1. Vandaag — keuzelijst van de 5 sporten om de sessie(s) van vandaag te registreren (Kracht A: vol/mini), de plus-blokken van vandaag, het diner van vandaag (uit de rotatie), knop "vandaag droog".
+2. Week — vijf sport-tegels met weekstatus-regel ("X van 5 · nog Y te gaan"), achteraf bij te werken, streakteller met vlam, verdien-sloten, navigatie naar vorige weken.
 3. Eten — huidige rotatieweek met de drie gerechten (porties + kcal), knop "boodschappenlijst maken" (vaste lijst + weekaanvulling, samengevoegd), afvinkbaar in de winkel.
 4. Voortgang — zaterdagmeting invoeren, trendlijn (gewicht en vet%), droge-dagen-reeks, 4-weken-evaluatiekaart met de suggestieregel.
 
