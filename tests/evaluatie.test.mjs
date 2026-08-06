@@ -9,18 +9,16 @@ function metingen(gewichten) {
   return ZATERDAGEN.map((datum, i) => ({ datum, gewicht: gewichten[i], vet_pct: 24 }))
 }
 
-// Sessies die de week van de gegeven maandag binnen maken.
+// Sessies die de week van de gegeven maandag binnen maken (alle 5 sporten).
 function weekBinnen(maandag) {
   const [j, m, d] = maandag.split('-').map(Number)
   const dag = (n) => {
     const dt = new Date(j, m - 1, d + n)
     return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`
   }
-  return [
-    { datum: dag(0), anker: 'ma', mini: false },
-    { datum: dag(1), anker: 'di', mini: false },
-    { datum: dag(4), anker: 'vr', mini: false },
-  ]
+  return ['ma', 'di', 'wo', 'vr', 'za'].map((code, i) => (
+    { datum: dag(i), anker: code, mini: false }
+  ))
 }
 
 // Maandagen van de vier geëvalueerde weken (W28…W31).

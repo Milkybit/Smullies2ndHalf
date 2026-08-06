@@ -1,10 +1,10 @@
 // Pure datum- en weeklogica: ISO-weken, weekstatus, streak en verdien-sloten.
 // Domeinregels:
-// - Week binnen = maandag gedaan (vol of mini) én ≥2 andere ankers.
+// - Week binnen = alle 5 sporten die week gedaan (Kracht A vol of mini telt).
 // - Streak = aantal aaneengesloten weken binnen.
 // - streak ≥4 → banden verdiend; maand ≥ oktober én streak ≥4 → Tacx verdiend.
 
-import { ANKER_DAGEN } from '../domein.js'
+import { SPORT_CODES } from '../domein.js'
 
 const DAG_CODES = ['zo', 'ma', 'di', 'wo', 'do', 'vr', 'za']
 
@@ -74,16 +74,16 @@ function sessiesVanWeek(sessies, weekKey) {
   return sessies.filter((s) => jaarWeekKey(new Date(s.datum + 'T12:00:00')) === weekKey)
 }
 
-// Maandag kent drie standen: 'niet' / 'vol' / 'mini' — vol én mini tellen allebei.
+// Per sport de sessies van die week; binnen zodra alle 5 sporten minstens
+// één sessie hebben ('extra' telt niet mee). Kracht A vol of mini telt allebei.
 export function weekStatus(sessies, weekKey) {
   const week = sessiesVanWeek(sessies, weekKey)
-  const ma = week.find((s) => s.anker === 'ma')
-  const maandag = !ma ? 'niet' : ma.mini ? 'mini' : 'vol'
-  const andereAnkers = new Set(
-    week.filter((s) => s.anker !== 'ma' && ANKER_DAGEN.includes(s.anker)).map((s) => s.anker)
-  ).size
-  const binnen = maandag !== 'niet' && andereAnkers >= 2
-  return { maandag, andereAnkers, binnen }
+  const perSport = {}
+  for (const code of SPORT_CODES) {
+    perSport[code] = week.filter((s) => s.anker === code)
+  }
+  const aantal = SPORT_CODES.filter((code) => perSport[code].length > 0).length
+  return { perSport, aantal, binnen: aantal === SPORT_CODES.length }
 }
 
 // Streak telt aaneengesloten weken binnen, eindigend bij deze week (als die

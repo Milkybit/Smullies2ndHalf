@@ -1,5 +1,5 @@
 import React, { useReducer, useState } from 'react'
-import { ANKERS, GEMISTE_WEEK_ZIN } from '../domein.js'
+import { SPORTEN, GEMISTE_WEEK_ZIN } from '../domein.js'
 import {
   jaarWeekKey, weekDagen, dagCode, datumKey,
   vorigeWeekKey, volgendeWeekKey,
@@ -30,31 +30,28 @@ export default function Week() {
   const tacx = nuVerdiend.tacx || !!instellingen.tacx_verdiend
 
   const dagen = weekDagen(weekKey)
-  const dagDatum = Object.fromEntries(dagen.map((d) => [dagCode(d), datumKey(d)]))
 
-  function tikAnker(dag) {
-    const datum = dagDatum[dag]
-    const bestaand = sessies.find((s) => s.datum === datum && s.anker === dag)
-    if (dag === 'ma') {
-      // driestand: niet → vol → mini → niet
-      if (!bestaand) saveSessie({ datum, anker: dag, mini: false })
-      else if (!bestaand.mini) saveSessie({ datum, anker: dag, mini: true })
-      else verwijderSessie(datum, dag)
-    } else if (bestaand) {
-      verwijderSessie(datum, dag)
+  // Afvinken op weekniveau: aanzetten registreert een sessie op vandaag
+  // (in de huidige week) of op de maandag van de bekeken week; uitzetten
+  // haalt alle sessies van die sport in die week weg.
+  function tikSport(code) {
+    const rijen = status.perSport[code]
+    if (rijen.length > 0) {
+      if (code === 'ma' && !rijen[0].mini) {
+        saveSessie({ datum: rijen[0].datum, anker: code, mini: true })
+      } else {
+        for (const rij of rijen) verwijderSessie(rij.datum, code)
+      }
     } else {
-      saveSessie({ datum, anker: dag, mini: false })
+      const datum = weekKey === huidigeKey ? datumKey(nu) : datumKey(dagen[0])
+      saveSessie({ datum, anker: code, mini: false })
     }
     ververs()
   }
 
-  const nogNodig = Math.max(0, 2 - status.andereAnkers)
-  const maandagTekst = status.maandag === 'niet' ? 'maandag nog open'
-    : status.maandag === 'mini' ? 'maandag staat (mini)' : 'maandag staat'
-  const ankersTekst = status.binnen ? 'week binnen'
-    : nogNodig > 0 ? `nog ${nogNodig} van 2` : '2 van 2 binnen'
-
-  const maTekst = dagDatum.ma && weekDatumTekst(dagen[0], dagen[6])
+  const nogNodig = 5 - status.aantal
+  const statusTekst = status.binnen ? 'alle 5 binnen — week binnen'
+    : `${status.aantal} van 5 · nog ${nogNodig} te gaan`
 
   return (
     <div>
@@ -64,7 +61,7 @@ export default function Week() {
         <button className="knop" onClick={() => setWeekKey(vorigeWeekKey(weekKey))}>←</button>
         <div style={{ textAlign: 'center' }}>
           <strong>{weekKey === huidigeKey ? 'Deze week' : `Week ${weekKey.split('-W')[1]}`}</strong>
-          <div className="klein zacht">{maTekst}</div>
+          <div className="klein zacht">{weekDatumTekst(dagen[0], dagen[6])}</div>
         </div>
         <button
           className="knop"
@@ -79,28 +76,32 @@ export default function Week() {
 
       <div className="kaart">
         <div className="kaart-titel">Weekstatus</div>
-        <p style={{ margin: 0 }}>{maandagTekst} · {ankersTekst}</p>
+        <p style={{ margin: 0 }}>{statusTekst}</p>
       </div>
 
-      {ANKERS.map((a) => {
-        const datum = dagDatum[a.dag]
-        const sessie = sessies.find((s) => s.datum === datum && s.anker === a.dag)
-        const label = a.dag === 'ma' && sessie ? (sessie.mini ? 'mini' : 'vol') : ''
+      {SPORTEN.map((sport) => {
+        const rijen = status.perSport[sport.code]
+        const gedaan = rijen.length > 0
+        const dagLabel = rijen
+          .map((r) => dagCode(new Date(r.datum + 'T12:00:00')))
+          .join(' · ')
+        const miniLabel = sport.code === 'ma' && gedaan ? (rijen[0].mini ? 'mini' : 'vol') : ''
         return (
           <div
-            key={a.dag}
-            className={'anker-tegel' + (sessie ? ' gedaan' : '')}
-            onClick={() => tikAnker(a.dag)}
+            key={sport.code}
+            className={'anker-tegel' + (gedaan ? ' gedaan' : '')}
+            onClick={() => tikSport(sport.code)}
           >
             <span className="vink">✓</span>
-            <span className="anker-dag">{a.dag}</span>
-            <span>{a.naam}</span>
-            {label && <span className="klein zacht" style={{ marginLeft: 'auto' }}>{label}</span>}
+            <span>{sport.naam}</span>
+            <span className="klein zacht" style={{ marginLeft: 'auto' }}>
+              {[miniLabel, dagLabel].filter(Boolean).join(' · ')}
+            </span>
           </div>
         )
       })}
       <p className="klein zacht" style={{ margin: '0.2rem 0 0.9rem' }}>
-        Tik op maandag wisselt: niet → vol → mini.
+        Registreren doe je op Vandaag; hier kun je een week ook achteraf bijwerken.
       </p>
 
       <div className="kaart">

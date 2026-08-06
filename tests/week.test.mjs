@@ -20,34 +20,47 @@ function sessie(datum, anker, mini = false) {
   return { datum, anker, mini }
 }
 
-// Week 2026-W32: ma 3 aug … zo 9 aug.
-test('week binnen = maandag (vol of mini) én ≥2 andere ankers', () => {
-  // maandag vol + 2 ankers → binnen
-  let s = [sessie('2026-08-03', 'ma'), sessie('2026-08-04', 'di'), sessie('2026-08-05', 'wo')]
-  assert.deepEqual(weekStatus(s, '2026-W32'), { maandag: 'vol', andereAnkers: 2, binnen: true })
-
-  // mini-maandag telt ook
-  s = [sessie('2026-08-03', 'ma', true), sessie('2026-08-04', 'di'), sessie('2026-08-08', 'za')]
-  assert.equal(weekStatus(s, '2026-W32').maandag, 'mini')
-  assert.equal(weekStatus(s, '2026-W32').binnen, true)
-
-  // geen maandag → niet binnen, ook met 4 andere ankers
-  s = [sessie('2026-08-04', 'di'), sessie('2026-08-05', 'wo'), sessie('2026-08-07', 'vr'), sessie('2026-08-08', 'za')]
-  assert.equal(weekStatus(s, '2026-W32').binnen, false)
-
-  // maandag + 1 anker → nog niet binnen; 'extra' telt niet als anker
-  s = [sessie('2026-08-03', 'ma'), sessie('2026-08-04', 'di'), sessie('2026-08-06', 'extra')]
-  assert.equal(weekStatus(s, '2026-W32').binnen, false)
-})
-
+// Alle 5 sporten in de week van de gegeven maandag, verdeeld over dagen.
 function volleWeek(maandagDatum) {
   const [j, m, d] = maandagDatum.split('-').map(Number)
   const dag = (n) => {
     const dt = new Date(j, m - 1, d + n)
     return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`
   }
-  return [sessie(dag(0), 'ma'), sessie(dag(1), 'di'), sessie(dag(4), 'vr')]
+  return [
+    sessie(dag(0), 'ma'), sessie(dag(1), 'di'), sessie(dag(2), 'wo'),
+    sessie(dag(4), 'vr'), sessie(dag(5), 'za'),
+  ]
 }
+
+// Week 2026-W32: ma 3 aug … zo 9 aug.
+test('week binnen = alle 5 sporten die week gedaan, op welke dag dan ook', () => {
+  // alle 5 op zelfgekozen dagen (Kracht A op donderdag, twee op zaterdag) → binnen
+  let s = [
+    sessie('2026-08-06', 'ma'), sessie('2026-08-04', 'di'), sessie('2026-08-08', 'wo'),
+    sessie('2026-08-08', 'vr'), sessie('2026-08-09', 'za'),
+  ]
+  assert.deepEqual(
+    { aantal: weekStatus(s, '2026-W32').aantal, binnen: weekStatus(s, '2026-W32').binnen },
+    { aantal: 5, binnen: true }
+  )
+
+  // Kracht A als mini telt ook
+  s = [sessie('2026-08-06', 'ma', true), ...s.slice(1)]
+  assert.equal(weekStatus(s, '2026-W32').binnen, true)
+
+  // 4 van 5 → niet binnen; 'extra' vult het gat niet
+  s = [
+    sessie('2026-08-03', 'ma'), sessie('2026-08-04', 'di'), sessie('2026-08-05', 'wo'),
+    sessie('2026-08-07', 'vr'), sessie('2026-08-08', 'extra'),
+  ]
+  assert.equal(weekStatus(s, '2026-W32').aantal, 4)
+  assert.equal(weekStatus(s, '2026-W32').binnen, false)
+
+  // dezelfde sport twee keer telt als één
+  s = [sessie('2026-08-03', 'di'), sessie('2026-08-05', 'di')]
+  assert.equal(weekStatus(s, '2026-W32').aantal, 1)
+})
 
 test('streak telt aaneengesloten weken binnen', () => {
   // weken W29, W30, W31 binnen; vandaag in W32 (nog leeg) → streak 3
@@ -66,8 +79,8 @@ test('streak telt aaneengesloten weken binnen', () => {
   assert.equal(sloten(3, new Date(2026, 9, 1)).tacx, false)
 })
 
-test('gat in de reeks breekt de streak, en de gemiste week wordt gemeld', () => {
-  // W29 en W30 binnen, W31 niet, vandaag in W32
+test('onvolledige week breekt de streak, en de gemiste week wordt gemeld', () => {
+  // W29 en W30 binnen, W31 maar 1 sport, vandaag in W32
   const s = [...volleWeek('2026-07-13'), ...volleWeek('2026-07-20'), sessie('2026-07-28', 'di')]
   const vandaag = new Date(2026, 7, 5)
   assert.equal(berekenStreak(s, vandaag), 0)

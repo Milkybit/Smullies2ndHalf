@@ -18,8 +18,8 @@ npm run icons   # PWA-iconen opnieuw genereren
 
 | Tab | Wat |
 |---|---|
-| Vandaag | Dag-anker met tik-knop (ma: vol/mini), plus-blok, diner uit de rotatie, droog-knop |
-| Week | Vijf anker-tegels, weekstatus, streak met vlam, verdien-sloten, vorige weken |
+| Vandaag | Sessies van vandaag kiezen uit de 5 sporten (Kracht A: vol/mini), plus-blok, diner uit de rotatie, droog-knop |
+| Week | Vijf sport-tegels (week binnen = alle 5), weekstatus, streak met vlam, verdien-sloten, vorige weken |
 | Eten | Rotatieweek (1–4, week 5 = week 1), boodschappenlijst maken en afvinken |
 | Voortgang | Zaterdagmeting, trendlijnen, droge-dagen-reeks, 4-weken-evaluatie |
 
