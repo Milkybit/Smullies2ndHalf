@@ -60,6 +60,10 @@ test('week binnen = alle 5 sporten die week gedaan, op welke dag dan ook', () =>
   // dezelfde sport twee keer telt als één
   s = [sessie('2026-08-03', 'di'), sessie('2026-08-05', 'di')]
   assert.equal(weekStatus(s, '2026-W32').aantal, 1)
+
+  // een geregistreerde rustdag telt niet mee als sport
+  s = [sessie('2026-08-03', 'di'), sessie('2026-08-04', 'rust')]
+  assert.equal(weekStatus(s, '2026-W32').aantal, 1)
 })
 
 test('streak telt aaneengesloten weken binnen', () => {
