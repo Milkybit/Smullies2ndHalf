@@ -30,7 +30,7 @@ Bouw een mobiel-eerst PWA ("Doel1") voor één gebruiker die zijn voedingsschema
 
 Nu de vorm voor localStorage; in fase 6 letterlijk als `supabase/schema.sql`.
 
-Tabellen (alle met `user_id uuid default auth.uid()` + RLS): `gerechten` (naam, anker, kleur1, kleur2, basis, smaak, porties_tekst, kcal, rotatie_week 1-4), `weekmenu` (jaar_week, dag, gerecht_id), `boodschappen` (jaar_week, naam, hoeveelheid, eenheid, categorie, vast boolean, afgevinkt boolean), `sessies` (datum, anker check in ('ma','di','wo','vr','za','extra'), mini boolean), `metingen` (datum, gewicht, vet_pct), `droge_dagen` (datum), `doelen` (domein, omschrijving, meetlat, richtdatum, status).
+Tabellen (alle met `user_id uuid default auth.uid()` + RLS): `gerechten` (naam, anker, kleur1, kleur2, basis, smaak, porties_tekst, kcal, rotatie_week 1-4), `weekmenu` (jaar_week, dag, gerecht_id, porties int default 1), `boodschappen` (jaar_week, naam, hoeveelheid, eenheid, categorie, vast boolean, afgevinkt boolean), `sessies` (datum, anker check in ('ma','di','wo','vr','za','extra'), mini boolean), `metingen` (datum, gewicht, vet_pct), `droge_dagen` (datum), `doelen` (domein, omschrijving, meetlat, richtdatum, status).
 
 Seed-data: de 12 rotatie-gerechten (3 per week, met porties en ±kcal) en de vaste boodschappenlijst — vraag de gebruiker om de PDF-inhoud van zijn 4-wekenplan als die niet is meegeleverd, of laat een seed-script met placeholders achter.
 
@@ -38,8 +38,8 @@ Seed-data: de 12 rotatie-gerechten (3 per week, met porties en ±kcal) en de vas
 
 1. Vandaag — keuzelijst van de 5 sporten om de sessie(s) van vandaag te registreren (Kracht A: vol/mini), de plus-blokken van vandaag, het diner van vandaag (uit de rotatie), knop "vandaag droog".
 2. Week — vijf sport-tegels met weekstatus-regel ("X van 5 · nog Y te gaan"), achteraf bij te werken, streakteller met vlam, verdien-sloten, navigatie naar vorige weken.
-3. Eten — huidige rotatieweek met de drie gerechten (porties + kcal), knop "boodschappenlijst maken" (vaste lijst + weekaanvulling, samengevoegd), afvinkbaar in de winkel.
-4. Voortgang — zaterdagmeting invoeren, trendlijn (gewicht en vet%), droge-dagen-reeks, 4-weken-evaluatiekaart met de suggestieregel.
+3. Eten — weekmenu per dag zelf te kiezen uit alle 12 gerechten met porties-teller (rotatie als voorstel, herstelknop), gerechtkaarten (porties + kcal), knop "boodschappenlijst maken" (vaste lijst + ingrediënten × porties, samengevoegd), afvinkbaar in de winkel. (Menu-keuze en porties toegevoegd op verzoek van de gebruiker, aug 2026.)
+4. Voortgang — dashboard met donut-meters (vet% voorop, gewicht ernaast; doelen instelbaar, voortgang van eerste meting naar doel), zaterdagmeting invoeren, trendlijn (gewicht en vet%), droge-dagen-reeks, 4-weken-evaluatiekaart met de suggestieregel, export/import-reservekopie.
 
 ## Fasen & acceptatie
 

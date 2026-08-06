@@ -243,6 +243,62 @@ h2 { font-size: 1.15rem; }
   margin: 0.8rem 0 0.2rem;
 }
 
+/* Weekmenu-kiezer */
+.menurij {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--lijn);
+}
+
+.menurij:last-of-type { border-bottom: none; }
+
+.menurij select {
+  flex: 1;
+  min-width: 0;
+  font-family: 'Karla', sans-serif;
+  font-size: 0.9rem;
+  border: 1px solid var(--lijn);
+  border-radius: 8px;
+  padding: 0.4rem 0.5rem;
+  background: #fff;
+  color: var(--tekst);
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.stepper .knop {
+  padding: 0.15rem 0.6rem;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.stepper span { min-width: 1.1rem; text-align: center; }
+
+/* Donut-meters op het dashboard */
+.donuts {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.donut-blok { text-align: center; flex: 1; }
+.donut-blok .waarde {
+  font-family: 'Fraunces', serif;
+  font-size: 1.15rem;
+  color: var(--groen);
+}
+.donut-blok .sub { font-size: 0.78rem; color: var(--tekst-zacht); }
+
+.doel-velden { display: flex; gap: 0.6rem; margin-top: 0.8rem; }
+.doel-velden > div { flex: 1; }
+
 /* Formulieren */
 input[type='number'], input[type='date'] {
   font-family: 'Karla', sans-serif;

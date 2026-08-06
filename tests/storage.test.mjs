@@ -52,6 +52,33 @@ test('weekmenu: wordt gegenereerd uit de rotatie en daarna bewaard', () => {
   assert.deepEqual(storage.getWeekmenu(WEEK), menu)
 })
 
+test('weekmenu: gerecht kiezen en porties ophogen werkt door in de lijst', () => {
+  const menu = storage.getWeekmenu(WEEK)
+  assert.ok(menu.every((r) => r.porties === 1))
+
+  // donderdag een ander gerecht (uit rotatieweek 3) en 3 porties
+  storage.zetWeekmenuGerecht(WEEK, 'do', 'd10')
+  storage.zetWeekmenuPorties(WEEK, 'do', 3)
+  const aangepast = storage.getWeekmenu(WEEK)
+  const donderdag = aangepast.find((r) => r.dag === 'do')
+  assert.equal(donderdag.gerecht_id, 'd10')
+  assert.equal(donderdag.porties, 3)
+
+  // d10 (kipsaté): 200 g kipfilet × 3 porties in de lijst
+  const lijst = storage.maakBoodschappen(WEEK)
+  const kip = lijst.find((b) => b.naam === 'Kipfilet' && !b.vast)
+  assert.ok(kip.hoeveelheid >= 600)
+
+  // dag op '— geen —' zetten haalt het gerecht eruit
+  storage.zetWeekmenuGerecht(WEEK, 'do', null)
+  assert.equal(storage.getWeekmenu(WEEK).find((r) => r.dag === 'do').gerecht_id, null)
+
+  // herstel zet de rotatie terug
+  const hersteld = storage.herstelWeekmenu(WEEK)
+  assert.equal(hersteld.length, 7)
+  assert.ok(hersteld.every((r) => r.porties === 1))
+})
+
 test('boodschappen: vaste lijst + weekaanvulling, vinkje blijft staan', () => {
   const lijst = storage.maakBoodschappen(WEEK)
   assert.ok(lijst.some((b) => b.vast))
