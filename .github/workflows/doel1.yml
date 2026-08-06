@@ -10,8 +10,10 @@ permissions:
   pages: write
   id-token: write
 
+# Per branch een eigen groep: een run op de werk-branch mag nooit de
+# Pages-deploy van de default branch annuleren.
 concurrency:
-  group: doel1-pages
+  group: doel1-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
