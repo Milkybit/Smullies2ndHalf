@@ -1,5 +1,6 @@
 import React, { useReducer, useState } from 'react'
 import SyncKaart from './SyncKaart.jsx'
+import { MEETDAG, MEETDAG_NAAM } from '../domein.js'
 import { dagCode, datumKey } from '../logic/week.js'
 import { vierWekenEvaluatie, drogeReeks, EVALUATIE_DREMPEL } from '../logic/evaluatie.js'
 import {
@@ -8,16 +9,17 @@ import {
   exportData, importData,
 } from '../storage.js'
 
-function laatsteZaterdag(nu) {
+// Meest recente meetdag (donderdag = weekdag 4).
+function laatsteMeetdag(nu) {
   const d = new Date(nu.getFullYear(), nu.getMonth(), nu.getDate())
-  d.setDate(d.getDate() - ((d.getDay() + 1) % 7))
+  d.setDate(d.getDate() - ((d.getDay() - 4 + 7) % 7))
   return datumKey(d)
 }
 
 export default function Voortgang() {
   const [, ververs] = useReducer((n) => n + 1, 0)
   const nu = new Date()
-  const [datum, setDatum] = useState(laatsteZaterdag(nu))
+  const [datum, setDatum] = useState(laatsteMeetdag(nu))
   const [gewicht, setGewicht] = useState('')
   const [vet, setVet] = useState('')
 
@@ -27,8 +29,8 @@ export default function Voortgang() {
   const evaluatie = vierWekenEvaluatie(metingen, sessies)
   const correctie = getInstellingen().kcal_correctie || 0
 
-  const isZaterdag = dagCode(new Date(datum + 'T12:00:00')) === 'za'
-  const kanOpslaan = isZaterdag && gewicht !== ''
+  const isMeetdag = dagCode(new Date(datum + 'T12:00:00')) === MEETDAG
+  const kanOpslaan = isMeetdag && gewicht !== ''
 
   // Dashboard: voortgang van eerste meting naar doel.
   const instellingen = getInstellingen()
@@ -103,10 +105,10 @@ export default function Voortgang() {
       </div>
 
       <div className="kaart">
-        <div className="kaart-titel">Zaterdagmeting</div>
+        <div className="kaart-titel">Weekmeting ({MEETDAG_NAAM})</div>
         <div className="veldenrij">
           <div>
-            <label>Datum (zaterdag)</label>
+            <label>Datum ({MEETDAG_NAAM})</label>
             <input type="date" value={datum} onChange={(e) => setDatum(e.target.value)} />
           </div>
         </div>
@@ -122,9 +124,9 @@ export default function Voortgang() {
               onChange={(e) => setVet(e.target.value)} />
           </div>
         </div>
-        {!isZaterdag && (
+        {!isMeetdag && (
           <p className="klein zacht" style={{ margin: '0 0 0.5rem' }}>
-            Meten doe je op zaterdag — kies een zaterdag.
+            Meten doe je op {MEETDAG_NAAM} — kies een {MEETDAG_NAAM}.
           </p>
         )}
         <button className="knop primair" style={{ width: '100%' }} disabled={!kanOpslaan} onClick={bewaar}>
@@ -149,7 +151,7 @@ export default function Voortgang() {
         <div className="kaart-titel">4-weken-evaluatie</div>
         {evaluatie.status === 'te-weinig-data' && (
           <p className="zacht" style={{ margin: 0 }}>
-            Nog {evaluatie.nodig} {evaluatie.nodig === 1 ? 'zaterdagmeting' : 'zaterdagmetingen'} te
+            Nog {evaluatie.nodig} {evaluatie.nodig === 1 ? 'weekmeting' : 'weekmetingen'} te
             gaan, dan verschijnt hier de eerste evaluatie.
           </p>
         )}
