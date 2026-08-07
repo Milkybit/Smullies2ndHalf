@@ -11,7 +11,7 @@
 //   eiwit leidend). Keuzes vastgesteld door de gebruiker.
 // - Snack 16:00 en plus-blokken liggen vast; de vaste basislijst dekt ze.
 
-export const SEED_VERSIE = 7
+export const SEED_VERSIE = 8
 
 export const SEED_GERECHTEN =
 [
@@ -1176,6 +1176,165 @@ export const SEED_GERECHTEN =
       },
       {
         "naam": "bouillon, komijn, paprikapoeder",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
+        "categorie": "voorraad"
+      }
+    ]
+  },
+  {
+    "id": "l8",
+    "naam": "Tartaartje op volkoren",
+    "soort": "lunch",
+    "anker": null,
+    "kleur1": null,
+    "kleur2": null,
+    "basis": null,
+    "smaak": null,
+    "porties_tekst": "100 g rundertartaartje · 3 sneden volkorenbrood · 0.5 stuk rode ui · 1 stuk tomaat · 5 ml olijfolie · mosterd, peper naar smaak",
+    "kcal": 460,
+    "rotatie_week": null,
+    "kook_factor": 1,
+    "bereiding": "±30 g eiwit — tartaartje kort bakken, gebakken ui erover",
+    "ingredienten": [
+      {
+        "naam": "rundertartaartje",
+        "hoeveelheid": 100,
+        "eenheid": "g",
+        "categorie": "vlees-vis"
+      },
+      {
+        "naam": "volkorenbrood",
+        "hoeveelheid": 3,
+        "eenheid": "sneden",
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "rode ui",
+        "hoeveelheid": 0.5,
+        "eenheid": "stuk",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "tomaat",
+        "hoeveelheid": 1,
+        "eenheid": "stuk",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "olijfolie",
+        "hoeveelheid": 5,
+        "eenheid": "ml",
+        "categorie": "voorraad"
+      },
+      {
+        "naam": "mosterd, peper",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
+        "categorie": "voorraad"
+      }
+    ]
+  },
+  {
+    "id": "l9",
+    "naam": "Kip-caesar bowl",
+    "soort": "lunch",
+    "anker": null,
+    "kleur1": null,
+    "kleur2": null,
+    "basis": null,
+    "smaak": null,
+    "porties_tekst": "120 g gerookte kipfilet · 1 stuk gekookt ei · 100 g gemengde salade · 10 g parmezaan · 50 g griekse yoghurt · 2 sneden volkorenbrood · citroen, peper, knoflook naar smaak",
+    "kcal": 475,
+    "rotatie_week": null,
+    "kook_factor": 1,
+    "bereiding": "±38 g eiwit — gerookte kip + ei; yoghurtdressing i.p.v. caesardressing",
+    "ingredienten": [
+      {
+        "naam": "gerookte kipfilet",
+        "hoeveelheid": 120,
+        "eenheid": "g",
+        "categorie": "vlees-vis"
+      },
+      {
+        "naam": "gekookt ei",
+        "hoeveelheid": 1,
+        "eenheid": "stuk",
+        "categorie": "zuivel-eieren"
+      },
+      {
+        "naam": "gemengde salade",
+        "hoeveelheid": 100,
+        "eenheid": "g",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "parmezaan",
+        "hoeveelheid": 10,
+        "eenheid": "g",
+        "categorie": "zuivel-eieren"
+      },
+      {
+        "naam": "griekse yoghurt",
+        "hoeveelheid": 50,
+        "eenheid": "g",
+        "categorie": "zuivel-eieren"
+      },
+      {
+        "naam": "volkorenbrood",
+        "hoeveelheid": 2,
+        "eenheid": "sneden",
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "citroen, peper, knoflook",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
+        "categorie": "voorraad"
+      }
+    ]
+  },
+  {
+    "id": "l10",
+    "naam": "Gerookte makreel op volkoren",
+    "soort": "lunch",
+    "anker": null,
+    "kleur1": null,
+    "kleur2": null,
+    "basis": null,
+    "smaak": null,
+    "porties_tekst": "80 g gerookte makreel · 2 sneden volkorenbrood · 50 g huttenkase · 100 g komkommer · citroen, peper naar smaak",
+    "kcal": 470,
+    "rotatie_week": null,
+    "kook_factor": 1,
+    "bereiding": "±25 g eiwit — vetter dan de rest maar vol omega-3; hüttenkäse eronder",
+    "ingredienten": [
+      {
+        "naam": "gerookte makreel",
+        "hoeveelheid": 80,
+        "eenheid": "g",
+        "categorie": "vlees-vis"
+      },
+      {
+        "naam": "volkorenbrood",
+        "hoeveelheid": 2,
+        "eenheid": "sneden",
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "huttenkase",
+        "hoeveelheid": 50,
+        "eenheid": "g",
+        "categorie": "zuivel-eieren"
+      },
+      {
+        "naam": "komkommer",
+        "hoeveelheid": 100,
+        "eenheid": "g",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "citroen, peper",
         "hoeveelheid": null,
         "eenheid": "naar smaak",
         "categorie": "voorraad"
