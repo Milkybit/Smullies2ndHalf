@@ -1223,6 +1223,296 @@
             "categorie": "groente-fruit"
           }
         ]
+      },
+      {
+        "id": "l4",
+        "naam": "Zoete kwark-lunchbowl",
+        "kcal": 450,
+        "macro_notitie": "±35 g eiwit — de hoogste van de lunches; nul bereiding, lepel erin",
+        "ingredienten": [
+          {
+            "naam": "magere kwark",
+            "hoeveelheid": 300,
+            "eenheid": "g",
+            "categorie": "zuivel-eieren"
+          },
+          {
+            "naam": "havermout",
+            "hoeveelheid": 30,
+            "eenheid": "g",
+            "categorie": "koolhydraten-noten"
+          },
+          {
+            "naam": "banaan",
+            "hoeveelheid": 1,
+            "eenheid": "stuk",
+            "categorie": "groente-fruit"
+          },
+          {
+            "naam": "ongezouten noten",
+            "hoeveelheid": 10,
+            "eenheid": "g",
+            "categorie": "koolhydraten-noten"
+          },
+          {
+            "naam": "kaneel",
+            "hoeveelheid": null,
+            "eenheid": "naar smaak",
+            "categorie": "voorraad"
+          }
+        ]
+      },
+      {
+        "id": "l5",
+        "naam": "Eiersalade met yoghurt op volkoren",
+        "kcal": 465,
+        "macro_notitie": "±28 g eiwit — eiersalade op basis van griekse yoghurt i.p.v. mayonaise",
+        "ingredienten": [
+          {
+            "naam": "eieren",
+            "hoeveelheid": 2,
+            "eenheid": "stuks",
+            "categorie": "zuivel-eieren"
+          },
+          {
+            "naam": "griekse yoghurt",
+            "hoeveelheid": 50,
+            "eenheid": "g",
+            "categorie": "zuivel-eieren"
+          },
+          {
+            "naam": "volkorenbrood",
+            "hoeveelheid": 3,
+            "eenheid": "sneden",
+            "categorie": "koolhydraten-noten"
+          },
+          {
+            "naam": "tomaat",
+            "hoeveelheid": 1,
+            "eenheid": "stuk",
+            "categorie": "groente-fruit"
+          },
+          {
+            "naam": "bieslook, peper, mosterd",
+            "hoeveelheid": null,
+            "eenheid": "naar smaak",
+            "categorie": "voorraad"
+          }
+        ]
+      },
+      {
+        "id": "l6",
+        "naam": "Wrap met gerookte zalm",
+        "kcal": 440,
+        "macro_notitie": "±32 g eiwit — omega-3-optie; hüttenkäse als smeersel",
+        "ingredienten": [
+          {
+            "naam": "volkoren wrap",
+            "hoeveelheid": 1,
+            "eenheid": "stuk",
+            "categorie": "koolhydraten-noten"
+          },
+          {
+            "naam": "gerookte zalm",
+            "hoeveelheid": 100,
+            "eenheid": "g",
+            "categorie": "vlees-vis"
+          },
+          {
+            "naam": "huttenkase",
+            "hoeveelheid": 50,
+            "eenheid": "g",
+            "categorie": "zuivel-eieren"
+          },
+          {
+            "naam": "komkommer en rucola",
+            "hoeveelheid": null,
+            "eenheid": "naar smaak",
+            "categorie": "groente-fruit"
+          },
+          {
+            "naam": "citroen en peper",
+            "hoeveelheid": null,
+            "eenheid": "naar smaak",
+            "categorie": "voorraad"
+          }
+        ]
+      },
+      {
+        "id": "l7",
+        "naam": "Linzensoep met volkoren (meal-prep)",
+        "kcal": 435,
+        "macro_notitie": "±27 g eiwit — grote pan vooruit te koken, 3-4 porties; plantaardige optie",
+        "ingredienten": [
+          {
+            "naam": "rode linzen (droog)",
+            "hoeveelheid": 70,
+            "eenheid": "g",
+            "categorie": "voorraad"
+          },
+          {
+            "naam": "tomatenblokjes (blik)",
+            "hoeveelheid": 100,
+            "eenheid": "g",
+            "categorie": "voorraad"
+          },
+          {
+            "naam": "wortel",
+            "hoeveelheid": 100,
+            "eenheid": "g",
+            "categorie": "groente-fruit"
+          },
+          {
+            "naam": "volkorenbrood",
+            "hoeveelheid": 1,
+            "eenheid": "snee",
+            "categorie": "koolhydraten-noten"
+          },
+          {
+            "naam": "huttenkase",
+            "hoeveelheid": 50,
+            "eenheid": "g",
+            "categorie": "zuivel-eieren"
+          },
+          {
+            "naam": "bouillon, komijn, paprikapoeder",
+            "hoeveelheid": null,
+            "eenheid": "naar smaak",
+            "categorie": "voorraad"
+          }
+        ]
+      },
+      {
+        "id": "l8",
+        "naam": "Tartaartje op volkoren",
+        "kcal": 460,
+        "macro_notitie": "±30 g eiwit — tartaartje kort bakken, gebakken ui erover",
+        "ingredienten": [
+          {
+            "naam": "rundertartaartje",
+            "hoeveelheid": 100,
+            "eenheid": "g",
+            "categorie": "vlees-vis"
+          },
+          {
+            "naam": "volkorenbrood",
+            "hoeveelheid": 3,
+            "eenheid": "sneden",
+            "categorie": "koolhydraten-noten"
+          },
+          {
+            "naam": "rode ui",
+            "hoeveelheid": 0.5,
+            "eenheid": "stuk",
+            "categorie": "groente-fruit"
+          },
+          {
+            "naam": "tomaat",
+            "hoeveelheid": 1,
+            "eenheid": "stuk",
+            "categorie": "groente-fruit"
+          },
+          {
+            "naam": "olijfolie",
+            "hoeveelheid": 5,
+            "eenheid": "ml",
+            "categorie": "voorraad"
+          },
+          {
+            "naam": "mosterd, peper",
+            "hoeveelheid": null,
+            "eenheid": "naar smaak",
+            "categorie": "voorraad"
+          }
+        ]
+      },
+      {
+        "id": "l9",
+        "naam": "Kip-caesar bowl",
+        "kcal": 475,
+        "macro_notitie": "±38 g eiwit — gerookte kip + ei; yoghurtdressing i.p.v. caesardressing",
+        "ingredienten": [
+          {
+            "naam": "gerookte kipfilet",
+            "hoeveelheid": 120,
+            "eenheid": "g",
+            "categorie": "vlees-vis"
+          },
+          {
+            "naam": "gekookt ei",
+            "hoeveelheid": 1,
+            "eenheid": "stuk",
+            "categorie": "zuivel-eieren"
+          },
+          {
+            "naam": "gemengde salade",
+            "hoeveelheid": 100,
+            "eenheid": "g",
+            "categorie": "groente-fruit"
+          },
+          {
+            "naam": "parmezaan",
+            "hoeveelheid": 10,
+            "eenheid": "g",
+            "categorie": "zuivel-eieren"
+          },
+          {
+            "naam": "griekse yoghurt",
+            "hoeveelheid": 50,
+            "eenheid": "g",
+            "categorie": "zuivel-eieren"
+          },
+          {
+            "naam": "volkorenbrood",
+            "hoeveelheid": 2,
+            "eenheid": "sneden",
+            "categorie": "koolhydraten-noten"
+          },
+          {
+            "naam": "citroen, peper, knoflook",
+            "hoeveelheid": null,
+            "eenheid": "naar smaak",
+            "categorie": "voorraad"
+          }
+        ]
+      },
+      {
+        "id": "l10",
+        "naam": "Gerookte makreel op volkoren",
+        "kcal": 470,
+        "macro_notitie": "±25 g eiwit — vetter dan de rest maar vol omega-3; hüttenkäse eronder",
+        "ingredienten": [
+          {
+            "naam": "gerookte makreel",
+            "hoeveelheid": 80,
+            "eenheid": "g",
+            "categorie": "vlees-vis"
+          },
+          {
+            "naam": "volkorenbrood",
+            "hoeveelheid": 2,
+            "eenheid": "sneden",
+            "categorie": "koolhydraten-noten"
+          },
+          {
+            "naam": "huttenkase",
+            "hoeveelheid": 50,
+            "eenheid": "g",
+            "categorie": "zuivel-eieren"
+          },
+          {
+            "naam": "komkommer",
+            "hoeveelheid": 100,
+            "eenheid": "g",
+            "categorie": "groente-fruit"
+          },
+          {
+            "naam": "citroen, peper",
+            "hoeveelheid": null,
+            "eenheid": "naar smaak",
+            "categorie": "voorraad"
+          }
+        ]
       }
     ],
     "vaste_basislijst": [
