@@ -1,1350 +1,921 @@
-// Seed-data voor Doel1.
+// Seed-data voor Doel1 — rechtstreeks uit het definitieve 4-wekenplan
+// (plan/doel1-plan.json, aangeleverd aug 2026). Het plan is de waarheid:
+// wijzig eerst het plan, genereer dan deze seed opnieuw. Veldnamen volgen
+// het datamodel dat in fase 6 letterlijk naar supabase/schema.sql gaat.
 //
-// De gerechten komen uit de receptenbibliotheek van de eerdere Afval-app
-// (assets/recipes.json in de git-historie) en zijn een startpunt: pas ze aan
-// zodra het 4-wekenplan (PDF) definitief is. De 12 diners vormen de rotatie
-// (3 per week, week 5 = week 1); ontbijt, lunch en snacks kies je per dag in
-// het weekmenu. Veldnamen volgen het datamodel dat in fase 6 letterlijk naar
-// supabase/schema.sql gaat — niet hernoemen.
+// Kernregels uit het plan:
+// - kook_factor 2: elk rotatiegerecht wordt dubbel gekookt (1x koken = 2x
+//   eten); in het weekmenu staat elk gerecht daarom standaard op 2 dagen.
+// - zaterdagse tafel: zaterdagavond vervalt het rotatiegerecht
+//   (vieren-budget) — geen diner en geen boodschappen voor za.
+// - de standaarddag (ontbijt/lunch/snack) is elke dag gelijk en wordt
+//   gedekt door de vaste weeklijst; alleen het diner rouleert.
 
-export const SEED_VERSIE = 2
+export const SEED_VERSIE = 3
 
 export const SEED_GERECHTEN =
 [
   {
-    "id": "d01",
-    "naam": "Kipfilet met broccoli en zoete aardappel",
+    "id": "g1",
+    "naam": "Kip-cashew roerbak",
     "soort": "diner",
     "anker": "kip",
-    "kleur1": "groen",
-    "kleur2": "oranje",
-    "basis": "Zoete aardappel",
-    "smaak": "puur",
-    "porties_tekst": "210 g kipfilet · 300 g broccoli · 10 g olijfolie · 250 g zoete aardappel",
-    "kcal": 630,
+    "kleur1": "paksoi",
+    "kleur2": "paprika",
+    "basis": "zilvervliesrijst",
+    "smaak": "soja-gember-knoflook",
+    "porties_tekst": "160 g kipfilet · 65 g zilvervliesrijst (droog) · 200 g paksoi · 100 g paprika · 20 g cashewnoten · 10 ml olijfolie · sojasaus, gember, knoflook naar smaak",
+    "kcal": 700,
     "rotatie_week": 1,
+    "kook_factor": 2,
+    "bereiding": "Rijst koken. Kip roerbakken in de olie, paksoi en paprika erbij, afblussen met soja, gember en knoflook; cashews er op het laatst door.",
     "ingredienten": [
       {
-        "naam": "Kipfilet",
-        "hoeveelheid": 210,
-        "eenheid": "g",
-        "categorie": "Vlees"
-      },
-      {
-        "naam": "Broccoli",
-        "hoeveelheid": 300,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Olijfolie",
-        "hoeveelheid": 10,
-        "eenheid": "g",
-        "categorie": "Olie"
-      },
-      {
-        "naam": "Zoete aardappel",
-        "hoeveelheid": 250,
-        "eenheid": "g",
-        "categorie": "Groente"
-      }
-    ]
-  },
-  {
-    "id": "d02",
-    "naam": "Zalm met couscous en geroerbakte groente",
-    "soort": "diner",
-    "anker": "vis",
-    "kleur1": "groen",
-    "kleur2": "rood",
-    "basis": "Couscous (droog)",
-    "smaak": "mediterraan",
-    "porties_tekst": "170 g zalmfilet · 200 g courgette · 150 g paprika · 30 g rucola · 120 g kikkererwten · 55 g couscous (droog)",
-    "kcal": 777,
-    "rotatie_week": 1,
-    "ingredienten": [
-      {
-        "naam": "Zalmfilet",
-        "hoeveelheid": 170,
-        "eenheid": "g",
-        "categorie": "Vis"
-      },
-      {
-        "naam": "Courgette",
-        "hoeveelheid": 200,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Paprika",
-        "hoeveelheid": 150,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Rucola",
-        "hoeveelheid": 30,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Kikkererwten",
-        "hoeveelheid": 120,
-        "eenheid": "g",
-        "categorie": "Conserven"
-      },
-      {
-        "naam": "Couscous (droog)",
-        "hoeveelheid": 55,
-        "eenheid": "g",
-        "categorie": "Pasta en rijst"
-      }
-    ]
-  },
-  {
-    "id": "d09",
-    "naam": "Chili con carne",
-    "soort": "diner",
-    "anker": "rund",
-    "kleur1": "rood",
-    "kleur2": "geel",
-    "basis": "Zilvervliesrijst (droog)",
-    "smaak": "mexicaans",
-    "porties_tekst": "180 g mager rundergehakt · 250 g kidneybonen · 200 g tomatenblokjes · 150 g paprika · 80 g mais · 60 g zilvervliesrijst (droog)",
-    "kcal": 912,
-    "rotatie_week": 1,
-    "ingredienten": [
-      {
-        "naam": "Mager rundergehakt",
-        "hoeveelheid": 180,
-        "eenheid": "g",
-        "categorie": "Vlees"
-      },
-      {
-        "naam": "Kidneybonen",
-        "hoeveelheid": 250,
-        "eenheid": "g",
-        "categorie": "Conserven"
-      },
-      {
-        "naam": "Tomatenblokjes",
-        "hoeveelheid": 200,
-        "eenheid": "g",
-        "categorie": "Conserven"
-      },
-      {
-        "naam": "Paprika",
-        "hoeveelheid": 150,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Mais",
-        "hoeveelheid": 80,
-        "eenheid": "g",
-        "categorie": "Conserven"
-      },
-      {
-        "naam": "Zilvervliesrijst (droog)",
-        "hoeveelheid": 60,
-        "eenheid": "g",
-        "categorie": "Pasta en rijst"
-      }
-    ]
-  },
-  {
-    "id": "d05",
-    "naam": "Kipshoarma in volkoren wraps",
-    "soort": "diner",
-    "anker": "kip",
-    "kleur1": "groen",
-    "kleur2": "rood",
-    "basis": "Volkoren wraps",
-    "smaak": "oosters",
-    "porties_tekst": "220 g kipshoarma · 100 g ijsbergsla · 100 g tomaat · 150 g paprika · 100 g magere yoghurt · 120 g kidneybonen · 120 g volkoren wraps",
-    "kcal": 882,
-    "rotatie_week": 2,
-    "ingredienten": [
-      {
-        "naam": "Kipshoarma",
-        "hoeveelheid": 220,
-        "eenheid": "g",
-        "categorie": "Vlees"
-      },
-      {
-        "naam": "IJsbergsla",
-        "hoeveelheid": 100,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Tomaat",
-        "hoeveelheid": 100,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Paprika",
-        "hoeveelheid": 150,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Magere yoghurt",
-        "hoeveelheid": 100,
-        "eenheid": "g",
-        "categorie": "Zuivel"
-      },
-      {
-        "naam": "Kidneybonen",
-        "hoeveelheid": 120,
-        "eenheid": "g",
-        "categorie": "Conserven"
-      },
-      {
-        "naam": "Volkoren wraps",
-        "hoeveelheid": 120,
-        "eenheid": "g",
-        "categorie": "Brood"
-      }
-    ]
-  },
-  {
-    "id": "d08",
-    "naam": "Kabeljauw met aardappel en spinazie",
-    "soort": "diner",
-    "anker": "vis",
-    "kleur1": "groen",
-    "kleur2": "wit",
-    "basis": "Aardappelen",
-    "smaak": "puur",
-    "porties_tekst": "240 g kabeljauwfilet · 250 g verse spinazie · 12 g olijfolie · 40 g rode ui · 150 g haricots verts · 300 g aardappelen",
-    "kcal": 668,
-    "rotatie_week": 2,
-    "ingredienten": [
-      {
-        "naam": "Kabeljauwfilet",
-        "hoeveelheid": 240,
-        "eenheid": "g",
-        "categorie": "Vis"
-      },
-      {
-        "naam": "Verse spinazie",
-        "hoeveelheid": 250,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Olijfolie",
-        "hoeveelheid": 12,
-        "eenheid": "g",
-        "categorie": "Olie"
-      },
-      {
-        "naam": "Rode ui",
-        "hoeveelheid": 40,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Haricots verts",
-        "hoeveelheid": 150,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Aardappelen",
-        "hoeveelheid": 300,
-        "eenheid": "g",
-        "categorie": "Groente"
-      }
-    ]
-  },
-  {
-    "id": "d15",
-    "naam": "Kikkererwtencurry met bloemkool",
-    "soort": "diner",
-    "anker": "vega",
-    "kleur1": "wit",
-    "kleur2": "rood",
-    "basis": "Basmatirijst (droog)",
-    "smaak": "indiaas",
-    "porties_tekst": "250 g kikkererwten · 250 g bloemkool · 120 g kokosmelk light · 200 g tomatenblokjes · 25 g rode currypasta · 100 g griekse yoghurt 0% · 200 g gemarineerde tofu · 55 g basmatirijst (droog)",
-    "kcal": 1065,
-    "rotatie_week": 2,
-    "ingredienten": [
-      {
-        "naam": "Kikkererwten",
-        "hoeveelheid": 250,
-        "eenheid": "g",
-        "categorie": "Conserven"
-      },
-      {
-        "naam": "Bloemkool",
-        "hoeveelheid": 250,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Kokosmelk light",
-        "hoeveelheid": 120,
-        "eenheid": "g",
-        "categorie": "Wereldkeuken"
-      },
-      {
-        "naam": "Tomatenblokjes",
-        "hoeveelheid": 200,
-        "eenheid": "g",
-        "categorie": "Conserven"
-      },
-      {
-        "naam": "Rode currypasta",
-        "hoeveelheid": 25,
-        "eenheid": "g",
-        "categorie": "Wereldkeuken"
-      },
-      {
-        "naam": "Griekse yoghurt 0%",
-        "hoeveelheid": 100,
-        "eenheid": "g",
-        "categorie": "Zuivel"
-      },
-      {
-        "naam": "Gemarineerde tofu",
-        "hoeveelheid": 200,
-        "eenheid": "g",
-        "categorie": "Vegetarisch"
-      },
-      {
-        "naam": "Basmatirijst (droog)",
-        "hoeveelheid": 55,
-        "eenheid": "g",
-        "categorie": "Pasta en rijst"
-      }
-    ]
-  },
-  {
-    "id": "d10",
-    "naam": "Kipsaté met rijst en komkommer",
-    "soort": "diner",
-    "anker": "kip",
-    "kleur1": "groen",
-    "kleur2": "oranje",
-    "basis": "Zilvervliesrijst (droog)",
-    "smaak": "indonesisch",
-    "porties_tekst": "200 g kipfilet · 20 g pindakaas 100% · 200 g komkommer · 100 g wortel · 120 g edamame · 55 g zilvervliesrijst (droog)",
-    "kcal": 737,
-    "rotatie_week": 3,
-    "ingredienten": [
-      {
-        "naam": "Kipfilet",
-        "hoeveelheid": 200,
-        "eenheid": "g",
-        "categorie": "Vlees"
-      },
-      {
-        "naam": "Pindakaas 100%",
-        "hoeveelheid": 20,
-        "eenheid": "g",
-        "categorie": "Noten"
-      },
-      {
-        "naam": "Komkommer",
-        "hoeveelheid": 200,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Wortel",
-        "hoeveelheid": 100,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Edamame",
-        "hoeveelheid": 120,
-        "eenheid": "g",
-        "categorie": "Diepvries"
-      },
-      {
-        "naam": "Zilvervliesrijst (droog)",
-        "hoeveelheid": 55,
-        "eenheid": "g",
-        "categorie": "Pasta en rijst"
-      }
-    ]
-  },
-  {
-    "id": "d17",
-    "naam": "Tonijnsteak met quinoa en asperges",
-    "soort": "diner",
-    "anker": "vis",
-    "kleur1": "groen",
-    "kleur2": "wit",
-    "basis": "Quinoa (droog)",
-    "smaak": "mediterraan",
-    "porties_tekst": "200 g tonijnsteak · 250 g groene asperges · 10 g olijfolie · 40 g rucola · 100 g edamame · 55 g quinoa (droog)",
-    "kcal": 690,
-    "rotatie_week": 3,
-    "ingredienten": [
-      {
-        "naam": "Tonijnsteak",
-        "hoeveelheid": 200,
-        "eenheid": "g",
-        "categorie": "Vis"
-      },
-      {
-        "naam": "Groene asperges",
-        "hoeveelheid": 250,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Olijfolie",
-        "hoeveelheid": 10,
-        "eenheid": "g",
-        "categorie": "Olie"
-      },
-      {
-        "naam": "Rucola",
-        "hoeveelheid": 40,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Edamame",
-        "hoeveelheid": 100,
-        "eenheid": "g",
-        "categorie": "Diepvries"
-      },
-      {
-        "naam": "Quinoa (droog)",
-        "hoeveelheid": 55,
-        "eenheid": "g",
-        "categorie": "Pasta en rijst"
-      }
-    ]
-  },
-  {
-    "id": "d12",
-    "naam": "Gehaktballen in tomatensaus met pasta",
-    "soort": "diner",
-    "anker": "rund",
-    "kleur1": "rood",
-    "kleur2": "groen",
-    "basis": "Volkoren pasta (droog)",
-    "smaak": "italiaans",
-    "porties_tekst": "190 g mager rundergehakt · 250 g tomatensaus · 150 g courgette · 25 g belegen kaas 30+ · 150 g kidneybonen · 60 g volkoren pasta (droog)",
-    "kcal": 843,
-    "rotatie_week": 3,
-    "ingredienten": [
-      {
-        "naam": "Mager rundergehakt",
-        "hoeveelheid": 190,
-        "eenheid": "g",
-        "categorie": "Vlees"
-      },
-      {
-        "naam": "Tomatensaus",
-        "hoeveelheid": 250,
-        "eenheid": "g",
-        "categorie": "Conserven"
-      },
-      {
-        "naam": "Courgette",
-        "hoeveelheid": 150,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Belegen kaas 30+",
-        "hoeveelheid": 25,
-        "eenheid": "g",
-        "categorie": "Zuivel"
-      },
-      {
-        "naam": "Kidneybonen",
-        "hoeveelheid": 150,
-        "eenheid": "g",
-        "categorie": "Conserven"
-      },
-      {
-        "naam": "Volkoren pasta (droog)",
-        "hoeveelheid": 60,
-        "eenheid": "g",
-        "categorie": "Pasta en rijst"
-      }
-    ]
-  },
-  {
-    "id": "d11",
-    "naam": "Griekse kip met bulgur en tzatziki",
-    "soort": "diner",
-    "anker": "kip",
-    "kleur1": "rood",
-    "kleur2": "groen",
-    "basis": "Bulgur (droog)",
-    "smaak": "grieks",
-    "porties_tekst": "200 g kipfilet · 100 g magere tzatziki · 150 g tomaat · 100 g komkommer · 30 g feta · 130 g kikkererwten · 55 g bulgur (droog)",
-    "kcal": 718,
-    "rotatie_week": 4,
-    "ingredienten": [
-      {
-        "naam": "Kipfilet",
-        "hoeveelheid": 200,
-        "eenheid": "g",
-        "categorie": "Vlees"
-      },
-      {
-        "naam": "Magere tzatziki",
-        "hoeveelheid": 100,
-        "eenheid": "g",
-        "categorie": "Zuivel"
-      },
-      {
-        "naam": "Tomaat",
-        "hoeveelheid": 150,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Komkommer",
-        "hoeveelheid": 100,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Feta",
-        "hoeveelheid": 30,
-        "eenheid": "g",
-        "categorie": "Zuivel"
-      },
-      {
-        "naam": "Kikkererwten",
-        "hoeveelheid": 130,
-        "eenheid": "g",
-        "categorie": "Conserven"
-      },
-      {
-        "naam": "Bulgur (droog)",
-        "hoeveelheid": 55,
-        "eenheid": "g",
-        "categorie": "Pasta en rijst"
-      }
-    ]
-  },
-  {
-    "id": "d13",
-    "naam": "Pokébowl met zalm en edamame",
-    "soort": "diner",
-    "anker": "vis",
-    "kleur1": "groen",
-    "kleur2": "oranje",
-    "basis": "Zilvervliesrijst (droog)",
-    "smaak": "japans",
-    "porties_tekst": "160 g zalmfilet · 180 g edamame · 100 g komkommer · 100 g wortel · 15 g sojasaus · 100 g mais · 55 g zilvervliesrijst (droog)",
-    "kcal": 890,
-    "rotatie_week": 4,
-    "ingredienten": [
-      {
-        "naam": "Zalmfilet",
+        "naam": "kipfilet",
         "hoeveelheid": 160,
         "eenheid": "g",
-        "categorie": "Vis"
+        "categorie": "vlees-vis"
       },
       {
-        "naam": "Edamame",
+        "naam": "zilvervliesrijst (droog)",
+        "hoeveelheid": 65,
+        "eenheid": "g",
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "paksoi",
+        "hoeveelheid": 200,
+        "eenheid": "g",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "paprika",
+        "hoeveelheid": 100,
+        "eenheid": "g",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "cashewnoten",
+        "hoeveelheid": 20,
+        "eenheid": "g",
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "olijfolie",
+        "hoeveelheid": 10,
+        "eenheid": "ml",
+        "categorie": "voorraad"
+      },
+      {
+        "naam": "sojasaus, gember, knoflook",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
+        "categorie": "voorraad"
+      }
+    ]
+  },
+  {
+    "id": "g2",
+    "naam": "Chili con carne XL-groente",
+    "soort": "diner",
+    "anker": "mager rundergehakt",
+    "kleur1": "paprika",
+    "kleur2": "courgette/wortel",
+    "basis": "bonen + rijst",
+    "smaak": "chilikruiden",
+    "porties_tekst": "150 g mager rundergehakt · 130 g bonen (blik, uitgelekt) · 100 g paprika · 100 g courgette · 100 g wortel · 200 g tomatenblokjes (blik) · 50 g zilvervliesrijst (droog) · 10 ml olijfolie · chilikruiden (zonder suiker) naar smaak",
+    "kcal": 740,
+    "rotatie_week": 1,
+    "kook_factor": 2,
+    "bereiding": "Gehakt rullen in de olie, fijngesneden groente en chilikruiden erbij, bonen en tomatenblokjes erdoor, laten pruttelen; rijst ernaast.",
+    "ingredienten": [
+      {
+        "naam": "mager rundergehakt",
+        "hoeveelheid": 150,
+        "eenheid": "g",
+        "categorie": "vlees-vis"
+      },
+      {
+        "naam": "bonen (blik, uitgelekt)",
+        "hoeveelheid": 130,
+        "eenheid": "g",
+        "categorie": "voorraad"
+      },
+      {
+        "naam": "paprika",
+        "hoeveelheid": 100,
+        "eenheid": "g",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "courgette",
+        "hoeveelheid": 100,
+        "eenheid": "g",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "wortel",
+        "hoeveelheid": 100,
+        "eenheid": "g",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "tomatenblokjes (blik)",
+        "hoeveelheid": 200,
+        "eenheid": "g",
+        "categorie": "voorraad"
+      },
+      {
+        "naam": "zilvervliesrijst (droog)",
+        "hoeveelheid": 50,
+        "eenheid": "g",
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "olijfolie",
+        "hoeveelheid": 10,
+        "eenheid": "ml",
+        "categorie": "voorraad"
+      },
+      {
+        "naam": "chilikruiden (zonder suiker)",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
+        "categorie": "voorraad"
+      }
+    ]
+  },
+  {
+    "id": "g3",
+    "naam": "Zalm uit de oven",
+    "soort": "diner",
+    "anker": "zalm",
+    "kleur1": "groene groente",
+    "kleur2": "citroen",
+    "basis": "krieltjes",
+    "smaak": "citroen-dille",
+    "porties_tekst": "150 g zalmfilet · 300 g krieltjes · 300 g groene groente (haricots/broccoli) · 10 ml olijfolie · citroen en dille naar smaak",
+    "kcal": 690,
+    "rotatie_week": 1,
+    "kook_factor": 2,
+    "bereiding": "Alles op een bakplaat met de olie; 25 min op 200 graden. Citroen en dille over de zalm.",
+    "ingredienten": [
+      {
+        "naam": "zalmfilet",
+        "hoeveelheid": 150,
+        "eenheid": "g",
+        "categorie": "vlees-vis"
+      },
+      {
+        "naam": "krieltjes",
+        "hoeveelheid": 300,
+        "eenheid": "g",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "groene groente (haricots/broccoli)",
+        "hoeveelheid": 300,
+        "eenheid": "g",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "olijfolie",
+        "hoeveelheid": 10,
+        "eenheid": "ml",
+        "categorie": "voorraad"
+      },
+      {
+        "naam": "citroen en dille",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
+        "categorie": "groente-fruit"
+      }
+    ]
+  },
+  {
+    "id": "g4",
+    "naam": "Harissa-kip traybake",
+    "soort": "diner",
+    "anker": "kipdij",
+    "kleur1": "broccoli",
+    "kleur2": "rode ui",
+    "basis": "zoete aardappel",
+    "smaak": "harissa-citroen",
+    "porties_tekst": "180 g kipdijfilet · 300 g zoete aardappel · 250 g broccoli · 1 stuk rode ui · 10 ml olijfolie · harissa naar smaak",
+    "kcal": 695,
+    "rotatie_week": 2,
+    "kook_factor": 2,
+    "bereiding": "Alles op een bakplaat, harissa en olie erover; 30-35 min op 200 graden, halverwege keren.",
+    "ingredienten": [
+      {
+        "naam": "kipdijfilet",
         "hoeveelheid": 180,
         "eenheid": "g",
-        "categorie": "Diepvries"
+        "categorie": "vlees-vis"
       },
       {
-        "naam": "Komkommer",
-        "hoeveelheid": 100,
+        "naam": "zoete aardappel",
+        "hoeveelheid": 300,
         "eenheid": "g",
-        "categorie": "Groente"
+        "categorie": "groente-fruit"
       },
       {
-        "naam": "Wortel",
-        "hoeveelheid": 100,
+        "naam": "broccoli",
+        "hoeveelheid": 250,
         "eenheid": "g",
-        "categorie": "Groente"
+        "categorie": "groente-fruit"
       },
       {
-        "naam": "Sojasaus",
-        "hoeveelheid": 15,
-        "eenheid": "g",
-        "categorie": "Wereldkeuken"
+        "naam": "rode ui",
+        "hoeveelheid": 1,
+        "eenheid": "stuk",
+        "categorie": "groente-fruit"
       },
       {
-        "naam": "Mais",
-        "hoeveelheid": 100,
-        "eenheid": "g",
-        "categorie": "Conserven"
+        "naam": "harissa",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
+        "categorie": "voorraad"
       },
       {
-        "naam": "Zilvervliesrijst (droog)",
-        "hoeveelheid": 55,
-        "eenheid": "g",
-        "categorie": "Pasta en rijst"
+        "naam": "olijfolie",
+        "hoeveelheid": 10,
+        "eenheid": "ml",
+        "categorie": "voorraad"
       }
     ]
   },
   {
-    "id": "d07",
-    "naam": "Ovenschotel met kipgehakt",
+    "id": "g5",
+    "naam": "Linzen-dal met spinazie",
     "soort": "diner",
-    "anker": "kip",
-    "kleur1": "rood",
-    "kleur2": "wit",
-    "basis": "Volkoren pasta (droog)",
-    "smaak": "italiaans",
-    "porties_tekst": "210 g mager kipgehakt · 200 g courgette · 200 g tomatensaus · 30 g belegen kaas 30+ · 100 g champignons · 120 g kidneybonen · 55 g volkoren pasta (droog)",
-    "kcal": 802,
-    "rotatie_week": 4,
+    "anker": "rode linzen",
+    "kleur1": "spinazie",
+    "kleur2": "tomaat",
+    "basis": "linzen + rijst",
+    "smaak": "kerrie-kokos",
+    "porties_tekst": "90 g rode linzen (droog) · 100 ml kokosmelk light · 200 g verse spinazie · 100 g tomatenblokjes (blik) · 40 g zilvervliesrijst (droog) · 100 g griekse yoghurt · kerrie/garam masala naar smaak",
+    "kcal": 690,
+    "rotatie_week": 2,
+    "kook_factor": 2,
+    "bereiding": "Linzen met kerrie en tomaat zacht koken, kokosmelk erbij, spinazie laten slinken; rijst ernaast, klodder yoghurt erop.",
     "ingredienten": [
       {
-        "naam": "Mager kipgehakt",
-        "hoeveelheid": 210,
-        "eenheid": "g",
-        "categorie": "Vlees"
-      },
-      {
-        "naam": "Courgette",
-        "hoeveelheid": 200,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Tomatensaus",
-        "hoeveelheid": 200,
-        "eenheid": "g",
-        "categorie": "Conserven"
-      },
-      {
-        "naam": "Belegen kaas 30+",
-        "hoeveelheid": 30,
-        "eenheid": "g",
-        "categorie": "Zuivel"
-      },
-      {
-        "naam": "Champignons",
-        "hoeveelheid": 100,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Kidneybonen",
-        "hoeveelheid": 120,
-        "eenheid": "g",
-        "categorie": "Conserven"
-      },
-      {
-        "naam": "Volkoren pasta (droog)",
-        "hoeveelheid": 55,
-        "eenheid": "g",
-        "categorie": "Pasta en rijst"
-      }
-    ]
-  },
-  {
-    "id": "b1",
-    "naam": "Kwark met havermout en bessen",
-    "soort": "ontbijt",
-    "anker": null,
-    "kleur1": null,
-    "kleur2": null,
-    "basis": "Havermout",
-    "smaak": null,
-    "porties_tekst": "300 g magere kwark · 100 g blauwe bessen (diepvries) · 10 g amandelen · 50 g havermout",
-    "kcal": 464,
-    "rotatie_week": null,
-    "ingredienten": [
-      {
-        "naam": "Magere kwark",
-        "hoeveelheid": 300,
-        "eenheid": "g",
-        "categorie": "Zuivel"
-      },
-      {
-        "naam": "Blauwe bessen (diepvries)",
-        "hoeveelheid": 100,
-        "eenheid": "g",
-        "categorie": "Diepvries"
-      },
-      {
-        "naam": "Amandelen",
-        "hoeveelheid": 10,
-        "eenheid": "g",
-        "categorie": "Noten"
-      },
-      {
-        "naam": "Havermout",
-        "hoeveelheid": 50,
-        "eenheid": "g",
-        "categorie": "Ontbijt"
-      }
-    ]
-  },
-  {
-    "id": "b2",
-    "naam": "Omelet met spinazie en champignons",
-    "soort": "ontbijt",
-    "anker": null,
-    "kleur1": null,
-    "kleur2": null,
-    "basis": "Volkorenbrood",
-    "smaak": null,
-    "porties_tekst": "165 g eieren · 150 g vloeibaar eiwit · 200 g verse spinazie · 100 g champignons · 150 g tomaat · 70 g volkorenbrood",
-    "kcal": 568,
-    "rotatie_week": null,
-    "ingredienten": [
-      {
-        "naam": "Eieren",
-        "hoeveelheid": 165,
-        "eenheid": "g",
-        "categorie": "Zuivel"
-      },
-      {
-        "naam": "Vloeibaar eiwit",
-        "hoeveelheid": 150,
-        "eenheid": "g",
-        "categorie": "Zuivel"
-      },
-      {
-        "naam": "Verse spinazie",
-        "hoeveelheid": 200,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Champignons",
-        "hoeveelheid": 100,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Tomaat",
-        "hoeveelheid": 150,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Volkorenbrood",
-        "hoeveelheid": 70,
-        "eenheid": "g",
-        "categorie": "Brood"
-      }
-    ]
-  },
-  {
-    "id": "b3",
-    "naam": "Skyr-bowl met banaan en pindakaas",
-    "soort": "ontbijt",
-    "anker": null,
-    "kleur1": null,
-    "kleur2": null,
-    "basis": "Havermout",
-    "smaak": null,
-    "porties_tekst": "300 g skyr naturel · 100 g banaan · 15 g pindakaas 100% · 100 g blauwe bessen (diepvries) · 45 g havermout",
-    "kcal": 585,
-    "rotatie_week": null,
-    "ingredienten": [
-      {
-        "naam": "Skyr naturel",
-        "hoeveelheid": 300,
-        "eenheid": "g",
-        "categorie": "Zuivel"
-      },
-      {
-        "naam": "Banaan",
-        "hoeveelheid": 100,
-        "eenheid": "g",
-        "categorie": "Fruit"
-      },
-      {
-        "naam": "Pindakaas 100%",
-        "hoeveelheid": 15,
-        "eenheid": "g",
-        "categorie": "Noten"
-      },
-      {
-        "naam": "Blauwe bessen (diepvries)",
-        "hoeveelheid": 100,
-        "eenheid": "g",
-        "categorie": "Diepvries"
-      },
-      {
-        "naam": "Havermout",
-        "hoeveelheid": 45,
-        "eenheid": "g",
-        "categorie": "Ontbijt"
-      }
-    ]
-  },
-  {
-    "id": "b4",
-    "naam": "Volkoren met ei en kipfilet",
-    "soort": "ontbijt",
-    "anker": null,
-    "kleur1": null,
-    "kleur2": null,
-    "basis": "Volkorenbrood",
-    "smaak": null,
-    "porties_tekst": "110 g eieren · 80 g kipfilet (gaar) · 80 g hüttenkäse · 150 g tomaat · 200 g verse spinazie · 120 g appel · 70 g volkorenbrood",
-    "kcal": 624,
-    "rotatie_week": null,
-    "ingredienten": [
-      {
-        "naam": "Eieren",
-        "hoeveelheid": 110,
-        "eenheid": "g",
-        "categorie": "Zuivel"
-      },
-      {
-        "naam": "Kipfilet (gaar)",
-        "hoeveelheid": 80,
-        "eenheid": "g",
-        "categorie": "Vlees"
-      },
-      {
-        "naam": "Hüttenkäse",
-        "hoeveelheid": 80,
-        "eenheid": "g",
-        "categorie": "Zuivel"
-      },
-      {
-        "naam": "Tomaat",
-        "hoeveelheid": 150,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Verse spinazie",
-        "hoeveelheid": 200,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Appel",
-        "hoeveelheid": 120,
-        "eenheid": "g",
-        "categorie": "Fruit"
-      },
-      {
-        "naam": "Volkorenbrood",
-        "hoeveelheid": 70,
-        "eenheid": "g",
-        "categorie": "Brood"
-      }
-    ]
-  },
-  {
-    "id": "l1",
-    "naam": "Volkoren met kip en hüttenkäse",
-    "soort": "lunch",
-    "anker": null,
-    "kleur1": null,
-    "kleur2": null,
-    "basis": "Volkorenbrood",
-    "smaak": null,
-    "porties_tekst": "120 g kipfilet (gaar) · 125 g hüttenkäse · 100 g tomaat · 100 g komkommer · 25 g rucola · 120 g kikkererwten · 70 g volkorenbrood",
-    "kcal": 595,
-    "rotatie_week": null,
-    "ingredienten": [
-      {
-        "naam": "Kipfilet (gaar)",
-        "hoeveelheid": 120,
-        "eenheid": "g",
-        "categorie": "Vlees"
-      },
-      {
-        "naam": "Hüttenkäse",
-        "hoeveelheid": 125,
-        "eenheid": "g",
-        "categorie": "Zuivel"
-      },
-      {
-        "naam": "Tomaat",
-        "hoeveelheid": 100,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Komkommer",
-        "hoeveelheid": 100,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Rucola",
-        "hoeveelheid": 25,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Kikkererwten",
-        "hoeveelheid": 120,
-        "eenheid": "g",
-        "categorie": "Conserven"
-      },
-      {
-        "naam": "Volkorenbrood",
-        "hoeveelheid": 70,
-        "eenheid": "g",
-        "categorie": "Brood"
-      }
-    ]
-  },
-  {
-    "id": "l2",
-    "naam": "Tonijnsalade met kikkererwten",
-    "soort": "lunch",
-    "anker": null,
-    "kleur1": null,
-    "kleur2": null,
-    "basis": "Kikkererwten",
-    "smaak": null,
-    "porties_tekst": "150 g tonijn op water · 150 g paprika · 40 g rode ui · 40 g rucola · 10 g olijfolie · 80 g mais · 150 g kikkererwten",
-    "kcal": 557,
-    "rotatie_week": null,
-    "ingredienten": [
-      {
-        "naam": "Tonijn op water",
-        "hoeveelheid": 150,
-        "eenheid": "g",
-        "categorie": "Conserven"
-      },
-      {
-        "naam": "Paprika",
-        "hoeveelheid": 150,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Rode ui",
-        "hoeveelheid": 40,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Rucola",
-        "hoeveelheid": 40,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Olijfolie",
-        "hoeveelheid": 10,
-        "eenheid": "g",
-        "categorie": "Olie"
-      },
-      {
-        "naam": "Mais",
-        "hoeveelheid": 80,
-        "eenheid": "g",
-        "categorie": "Conserven"
-      },
-      {
-        "naam": "Kikkererwten",
-        "hoeveelheid": 150,
-        "eenheid": "g",
-        "categorie": "Conserven"
-      }
-    ]
-  },
-  {
-    "id": "l3",
-    "naam": "Linzensoep met volkorenbrood",
-    "soort": "lunch",
-    "anker": null,
-    "kleur1": null,
-    "kleur2": null,
-    "basis": "Volkorenbrood",
-    "smaak": null,
-    "porties_tekst": "90 g rode linzen (droog) · 100 g wortel · 200 g tomatenblokjes · 100 g griekse yoghurt 0% · 100 g kipfilet (gaar) · 70 g volkorenbrood",
-    "kcal": 723,
-    "rotatie_week": null,
-    "ingredienten": [
-      {
-        "naam": "Rode linzen (droog)",
+        "naam": "rode linzen (droog)",
         "hoeveelheid": 90,
         "eenheid": "g",
-        "categorie": "Peulvruchten"
+        "categorie": "voorraad"
       },
       {
-        "naam": "Wortel",
+        "naam": "kokosmelk light",
         "hoeveelheid": 100,
-        "eenheid": "g",
-        "categorie": "Groente"
+        "eenheid": "ml",
+        "categorie": "voorraad"
       },
       {
-        "naam": "Tomatenblokjes",
+        "naam": "verse spinazie",
         "hoeveelheid": 200,
         "eenheid": "g",
-        "categorie": "Conserven"
+        "categorie": "groente-fruit"
       },
       {
-        "naam": "Griekse yoghurt 0%",
+        "naam": "tomatenblokjes (blik)",
         "hoeveelheid": 100,
         "eenheid": "g",
-        "categorie": "Zuivel"
+        "categorie": "voorraad"
       },
       {
-        "naam": "Kipfilet (gaar)",
-        "hoeveelheid": 100,
-        "eenheid": "g",
-        "categorie": "Vlees"
-      },
-      {
-        "naam": "Volkorenbrood",
-        "hoeveelheid": 70,
-        "eenheid": "g",
-        "categorie": "Brood"
-      }
-    ]
-  },
-  {
-    "id": "l4",
-    "naam": "Wrap met zalm en roomkaas",
-    "soort": "lunch",
-    "anker": null,
-    "kleur1": null,
-    "kleur2": null,
-    "basis": "Volkoren wraps",
-    "smaak": null,
-    "porties_tekst": "120 g zalmfilet · 60 g magere roomkaas · 100 g komkommer · 40 g rucola · 30 g rode ui · 100 g edamame · 80 g volkoren wraps",
-    "kcal": 702,
-    "rotatie_week": null,
-    "ingredienten": [
-      {
-        "naam": "Zalmfilet",
-        "hoeveelheid": 120,
-        "eenheid": "g",
-        "categorie": "Vis"
-      },
-      {
-        "naam": "Magere roomkaas",
-        "hoeveelheid": 60,
-        "eenheid": "g",
-        "categorie": "Zuivel"
-      },
-      {
-        "naam": "Komkommer",
-        "hoeveelheid": 100,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Rucola",
+        "naam": "zilvervliesrijst (droog)",
         "hoeveelheid": 40,
         "eenheid": "g",
-        "categorie": "Groente"
+        "categorie": "koolhydraten-noten"
       },
       {
-        "naam": "Rode ui",
-        "hoeveelheid": 30,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Edamame",
+        "naam": "griekse yoghurt",
         "hoeveelheid": 100,
         "eenheid": "g",
-        "categorie": "Diepvries"
+        "categorie": "zuivel-eieren"
       },
       {
-        "naam": "Volkoren wraps",
-        "hoeveelheid": 80,
-        "eenheid": "g",
-        "categorie": "Brood"
+        "naam": "kerrie/garam masala",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
+        "categorie": "voorraad"
       }
     ]
   },
   {
-    "id": "l5",
-    "naam": "Couscoussalade met feta en kikkererwten",
-    "soort": "lunch",
-    "anker": null,
-    "kleur1": null,
-    "kleur2": null,
-    "basis": "Couscous (droog)",
-    "smaak": null,
-    "porties_tekst": "200 g kikkererwten · 50 g feta · 100 g paprika · 100 g komkommer · 8 g olijfolie · 150 g gemarineerde tofu · 50 g couscous (droog)",
-    "kcal": 854,
-    "rotatie_week": null,
+    "id": "g6",
+    "naam": "Gyros-bowls",
+    "soort": "diner",
+    "anker": "kip",
+    "kleur1": "tomaat",
+    "kleur2": "komkommer/ui",
+    "basis": "couscous",
+    "smaak": "gyroskruiden-tzatziki",
+    "porties_tekst": "160 g kipfilet · 70 g couscous (droog) · 100 g griekse yoghurt · 150 g tomaat · 150 g komkommer · ½ stuk rode ui · 10 ml olijfolie · gyroskruiden naar smaak",
+    "kcal": 720,
+    "rotatie_week": 2,
+    "kook_factor": 2,
+    "bereiding": "Kipreepjes met gyroskruiden bakken in de olie; couscous wellen; tzatziki van yoghurt, geraspte komkommer en knoflook; alles in een bowl.",
     "ingredienten": [
       {
-        "naam": "Kikkererwten",
-        "hoeveelheid": 200,
+        "naam": "kipfilet",
+        "hoeveelheid": 160,
         "eenheid": "g",
-        "categorie": "Conserven"
+        "categorie": "vlees-vis"
       },
       {
-        "naam": "Feta",
-        "hoeveelheid": 50,
+        "naam": "couscous (droog)",
+        "hoeveelheid": 70,
         "eenheid": "g",
-        "categorie": "Zuivel"
+        "categorie": "koolhydraten-noten"
       },
       {
-        "naam": "Paprika",
+        "naam": "griekse yoghurt",
         "hoeveelheid": 100,
         "eenheid": "g",
-        "categorie": "Groente"
+        "categorie": "zuivel-eieren"
       },
       {
-        "naam": "Komkommer",
-        "hoeveelheid": 100,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Olijfolie",
-        "hoeveelheid": 8,
-        "eenheid": "g",
-        "categorie": "Olie"
-      },
-      {
-        "naam": "Gemarineerde tofu",
+        "naam": "tomaat",
         "hoeveelheid": 150,
         "eenheid": "g",
-        "categorie": "Vegetarisch"
+        "categorie": "groente-fruit"
       },
       {
-        "naam": "Couscous (droog)",
-        "hoeveelheid": 50,
+        "naam": "komkommer",
+        "hoeveelheid": 150,
         "eenheid": "g",
-        "categorie": "Pasta en rijst"
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "rode ui",
+        "hoeveelheid": 0.5,
+        "eenheid": "stuk",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "gyroskruiden",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
+        "categorie": "voorraad"
+      },
+      {
+        "naam": "olijfolie",
+        "hoeveelheid": 10,
+        "eenheid": "ml",
+        "categorie": "voorraad"
       }
     ]
   },
   {
-    "id": "s1",
-    "naam": "Skyr met appel",
-    "soort": "snack",
-    "anker": null,
-    "kleur1": null,
-    "kleur2": null,
-    "basis": null,
-    "smaak": null,
-    "porties_tekst": "300 g skyr naturel · 150 g appel · 15 g amandelen · 100 g blauwe bessen (diepvries)",
-    "kcal": 405,
-    "rotatie_week": null,
+    "id": "g7",
+    "naam": "Kip-pesto ovenschotel",
+    "soort": "diner",
+    "anker": "kip",
+    "kleur1": "roostergroente",
+    "kleur2": "cherrytomaat",
+    "basis": "couscous",
+    "smaak": "groene pesto",
+    "porties_tekst": "170 g kipfilet · 15 g groene pesto · 300 g roostergroente-mix · 100 g cherrytomaten · 70 g couscous (droog)",
+    "kcal": 700,
+    "rotatie_week": 3,
+    "kook_factor": 2,
+    "bereiding": "Kip met pesto en groente in een ovenschaal, 25 min op 200 graden; couscous eronder om de sappen te vangen.",
     "ingredienten": [
       {
-        "naam": "Skyr naturel",
+        "naam": "kipfilet",
+        "hoeveelheid": 170,
+        "eenheid": "g",
+        "categorie": "vlees-vis"
+      },
+      {
+        "naam": "groene pesto",
+        "hoeveelheid": 15,
+        "eenheid": "g",
+        "categorie": "voorraad"
+      },
+      {
+        "naam": "roostergroente-mix",
         "hoeveelheid": 300,
         "eenheid": "g",
-        "categorie": "Zuivel"
+        "categorie": "groente-fruit"
       },
       {
-        "naam": "Appel",
-        "hoeveelheid": 150,
-        "eenheid": "g",
-        "categorie": "Fruit"
-      },
-      {
-        "naam": "Amandelen",
-        "hoeveelheid": 15,
-        "eenheid": "g",
-        "categorie": "Noten"
-      },
-      {
-        "naam": "Blauwe bessen (diepvries)",
+        "naam": "cherrytomaten",
         "hoeveelheid": 100,
         "eenheid": "g",
-        "categorie": "Diepvries"
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "couscous (droog)",
+        "hoeveelheid": 70,
+        "eenheid": "g",
+        "categorie": "koolhydraten-noten"
       }
     ]
   },
   {
-    "id": "s2",
-    "naam": "Cottage cheese met walnoten",
-    "soort": "snack",
-    "anker": null,
-    "kleur1": null,
-    "kleur2": null,
-    "basis": null,
-    "smaak": null,
-    "porties_tekst": "250 g cottage cheese · 20 g walnoten · 150 g appel · 10 g eiwitpoeder · 100 g blauwe bessen (diepvries)",
-    "kcal": 544,
-    "rotatie_week": null,
+    "id": "g8",
+    "naam": "Gehakt-volkorenpasta",
+    "soort": "diner",
+    "anker": "mager rundergehakt",
+    "kleur1": "courgette",
+    "kleur2": "tomaat",
+    "basis": "volkorenpasta",
+    "smaak": "italiaanse kruiden-parmezaan",
+    "porties_tekst": "150 g mager rundergehakt · 75 g volkorenpasta (droog) · 200 g courgette · 200 g tomatenblokjes (blik) · 20 g parmezaan · 10 ml olijfolie · italiaanse kruiden naar smaak",
+    "kcal": 755,
+    "rotatie_week": 3,
+    "kook_factor": 2,
+    "bereiding": "Gehakt rullen, courgette en tomatenblokjes erbij, saus laten pruttelen; door de pasta, parmezaan erover.",
     "ingredienten": [
       {
-        "naam": "Cottage cheese",
-        "hoeveelheid": 250,
-        "eenheid": "g",
-        "categorie": "Zuivel"
-      },
-      {
-        "naam": "Walnoten",
-        "hoeveelheid": 20,
-        "eenheid": "g",
-        "categorie": "Noten"
-      },
-      {
-        "naam": "Appel",
+        "naam": "mager rundergehakt",
         "hoeveelheid": 150,
         "eenheid": "g",
-        "categorie": "Fruit"
+        "categorie": "vlees-vis"
       },
       {
-        "naam": "Eiwitpoeder",
+        "naam": "volkorenpasta (droog)",
+        "hoeveelheid": 75,
+        "eenheid": "g",
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "courgette",
+        "hoeveelheid": 200,
+        "eenheid": "g",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "tomatenblokjes (blik)",
+        "hoeveelheid": 200,
+        "eenheid": "g",
+        "categorie": "voorraad"
+      },
+      {
+        "naam": "parmezaan",
+        "hoeveelheid": 20,
+        "eenheid": "g",
+        "categorie": "zuivel-eieren"
+      },
+      {
+        "naam": "olijfolie",
         "hoeveelheid": 10,
-        "eenheid": "g",
-        "categorie": "Zuivel"
+        "eenheid": "ml",
+        "categorie": "voorraad"
       },
       {
-        "naam": "Blauwe bessen (diepvries)",
-        "hoeveelheid": 100,
-        "eenheid": "g",
-        "categorie": "Diepvries"
+        "naam": "italiaanse kruiden",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
+        "categorie": "voorraad"
       }
     ]
   },
   {
-    "id": "s3",
-    "naam": "Kwark met eiwitpoeder en banaan",
-    "soort": "snack",
-    "anker": null,
-    "kleur1": null,
-    "kleur2": null,
-    "basis": null,
-    "smaak": null,
-    "porties_tekst": "250 g magere kwark · 15 g eiwitpoeder · 100 g banaan · 100 g blauwe bessen (diepvries)",
-    "kcal": 333,
-    "rotatie_week": null,
+    "id": "g9",
+    "naam": "Tonijn-bowl",
+    "soort": "diner",
+    "anker": "tonijn",
+    "kleur1": "edamame",
+    "kleur2": "komkommer",
+    "basis": "zilvervliesrijst",
+    "smaak": "sesam-soja",
+    "porties_tekst": "65 g zilvervliesrijst (droog) · 1 blik tonijn op water (blik) · 50 g edamame · ½ stuk avocado · 150 g komkommer · sesamzaad + sojasaus naar smaak",
+    "kcal": 690,
+    "rotatie_week": 3,
+    "kook_factor": 2,
+    "bereiding": "Rijst koken (of restje gebruiken); alles in een bowl, sesam-sojadressing erover. Nul echt kookwerk.",
     "ingredienten": [
       {
-        "naam": "Magere kwark",
-        "hoeveelheid": 250,
+        "naam": "zilvervliesrijst (droog)",
+        "hoeveelheid": 65,
         "eenheid": "g",
-        "categorie": "Zuivel"
+        "categorie": "koolhydraten-noten"
       },
       {
-        "naam": "Eiwitpoeder",
-        "hoeveelheid": 15,
-        "eenheid": "g",
-        "categorie": "Zuivel"
+        "naam": "tonijn op water (blik)",
+        "hoeveelheid": 1,
+        "eenheid": "blik",
+        "categorie": "vlees-vis"
       },
       {
-        "naam": "Banaan",
-        "hoeveelheid": 100,
+        "naam": "edamame",
+        "hoeveelheid": 50,
         "eenheid": "g",
-        "categorie": "Fruit"
+        "categorie": "groente-fruit"
       },
       {
-        "naam": "Blauwe bessen (diepvries)",
-        "hoeveelheid": 100,
-        "eenheid": "g",
-        "categorie": "Diepvries"
-      }
-    ]
-  },
-  {
-    "id": "s4",
-    "naam": "Griekse yoghurt met bessen en amandelen",
-    "soort": "snack",
-    "anker": null,
-    "kleur1": null,
-    "kleur2": null,
-    "basis": null,
-    "smaak": null,
-    "porties_tekst": "250 g griekse yoghurt 0% · 125 g blauwe bessen (diepvries) · 15 g amandelen · 20 g eiwitpoeder",
-    "kcal": 364,
-    "rotatie_week": null,
-    "ingredienten": [
-      {
-        "naam": "Griekse yoghurt 0%",
-        "hoeveelheid": 250,
-        "eenheid": "g",
-        "categorie": "Zuivel"
+        "naam": "avocado",
+        "hoeveelheid": 0.5,
+        "eenheid": "stuk",
+        "categorie": "groente-fruit"
       },
       {
-        "naam": "Blauwe bessen (diepvries)",
-        "hoeveelheid": 125,
-        "eenheid": "g",
-        "categorie": "Diepvries"
-      },
-      {
-        "naam": "Amandelen",
-        "hoeveelheid": 15,
-        "eenheid": "g",
-        "categorie": "Noten"
-      },
-      {
-        "naam": "Eiwitpoeder",
-        "hoeveelheid": 20,
-        "eenheid": "g",
-        "categorie": "Zuivel"
-      }
-    ]
-  },
-  {
-    "id": "s5",
-    "naam": "Crackers met hüttenkäse en tomaat",
-    "soort": "snack",
-    "anker": null,
-    "kleur1": null,
-    "kleur2": null,
-    "basis": "Volkoren crackers",
-    "smaak": null,
-    "porties_tekst": "250 g hüttenkäse · 100 g tomaat · 20 g rucola · 10 g eiwitpoeder · 150 g appel · 30 g volkoren crackers",
-    "kcal": 493,
-    "rotatie_week": null,
-    "ingredienten": [
-      {
-        "naam": "Hüttenkäse",
-        "hoeveelheid": 250,
-        "eenheid": "g",
-        "categorie": "Zuivel"
-      },
-      {
-        "naam": "Tomaat",
-        "hoeveelheid": 100,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Rucola",
-        "hoeveelheid": 20,
-        "eenheid": "g",
-        "categorie": "Groente"
-      },
-      {
-        "naam": "Eiwitpoeder",
-        "hoeveelheid": 10,
-        "eenheid": "g",
-        "categorie": "Zuivel"
-      },
-      {
-        "naam": "Appel",
+        "naam": "komkommer",
         "hoeveelheid": 150,
         "eenheid": "g",
-        "categorie": "Fruit"
+        "categorie": "groente-fruit"
       },
       {
-        "naam": "Volkoren crackers",
-        "hoeveelheid": 30,
+        "naam": "sesamzaad + sojasaus",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
+        "categorie": "voorraad"
+      }
+    ]
+  },
+  {
+    "id": "g10",
+    "naam": "Courgette-feta frittata",
+    "soort": "diner",
+    "anker": "eieren",
+    "kleur1": "courgette",
+    "kleur2": "salade",
+    "basis": "volkorenbrood",
+    "smaak": "feta-munt",
+    "porties_tekst": "4 stuks eieren · 150 g courgette · 40 g feta · 2 sneden volkorenbrood · 100 g gemengde salade · 5 ml olijfolie",
+    "kcal": 700,
+    "rotatie_week": 4,
+    "kook_factor": 2,
+    "bereiding": "Eieren loskloppen met geraspte courgette en feta, in de pan garen en onder de grill afmaken; brood en salade ernaast.",
+    "ingredienten": [
+      {
+        "naam": "eieren",
+        "hoeveelheid": 4,
+        "eenheid": "stuks",
+        "categorie": "zuivel-eieren"
+      },
+      {
+        "naam": "courgette",
+        "hoeveelheid": 150,
         "eenheid": "g",
-        "categorie": "Brood"
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "feta",
+        "hoeveelheid": 40,
+        "eenheid": "g",
+        "categorie": "zuivel-eieren"
+      },
+      {
+        "naam": "volkorenbrood",
+        "hoeveelheid": 2,
+        "eenheid": "sneden",
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "gemengde salade",
+        "hoeveelheid": 100,
+        "eenheid": "g",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "olijfolie",
+        "hoeveelheid": 5,
+        "eenheid": "ml",
+        "categorie": "voorraad"
+      }
+    ]
+  },
+  {
+    "id": "g11",
+    "naam": "Kip klassiek",
+    "soort": "diner",
+    "anker": "kip",
+    "kleur1": "broccoli",
+    "kleur2": "citroen",
+    "basis": "zilvervliesrijst",
+    "smaak": "droge kruiden",
+    "porties_tekst": "180 g kipfilet · 75 g zilvervliesrijst (droog) · 300 g broccoli · 15 ml olijfolie",
+    "kcal": 700,
+    "rotatie_week": 4,
+    "kook_factor": 2,
+    "bereiding": "Rijst en broccoli koken; kip royaal kruiden en bakken in de afgemeten olie (of oventechniek op 100 graden).",
+    "ingredienten": [
+      {
+        "naam": "kipfilet",
+        "hoeveelheid": 180,
+        "eenheid": "g",
+        "categorie": "vlees-vis"
+      },
+      {
+        "naam": "zilvervliesrijst (droog)",
+        "hoeveelheid": 75,
+        "eenheid": "g",
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "broccoli",
+        "hoeveelheid": 300,
+        "eenheid": "g",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "olijfolie",
+        "hoeveelheid": 15,
+        "eenheid": "ml",
+        "categorie": "voorraad"
+      }
+    ]
+  },
+  {
+    "id": "g12",
+    "naam": "Bavette met chimichurri",
+    "soort": "diner",
+    "anker": "bavette",
+    "kleur1": "grilgroente",
+    "kleur2": "verse kruiden",
+    "basis": "zoete aardappel",
+    "smaak": "chimichurri",
+    "porties_tekst": "160 g bavette · 250 g zoete aardappel · 300 g grilgroente (paprika/courgette) · 1 bos verse peterselie + knoflook · 15 ml olijfolie · rode wijnazijn naar smaak",
+    "kcal": 735,
+    "rotatie_week": 4,
+    "kook_factor": 2,
+    "bereiding": "Zoete-aardappelpartjes in de oven; bavette kort en heet bakken, laten rusten; chimichurri van peterselie, knoflook, azijn en de olie.",
+    "dag_suggestie": "zondag",
+    "ingredienten": [
+      {
+        "naam": "bavette",
+        "hoeveelheid": 160,
+        "eenheid": "g",
+        "categorie": "vlees-vis"
+      },
+      {
+        "naam": "zoete aardappel",
+        "hoeveelheid": 250,
+        "eenheid": "g",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "grilgroente (paprika/courgette)",
+        "hoeveelheid": 300,
+        "eenheid": "g",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "verse peterselie + knoflook",
+        "hoeveelheid": 1,
+        "eenheid": "bos",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "olijfolie",
+        "hoeveelheid": 15,
+        "eenheid": "ml",
+        "categorie": "voorraad"
+      },
+      {
+        "naam": "rode wijnazijn",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
+        "categorie": "voorraad"
       }
     ]
   }
 ]
 
-// Vaste boodschappenlijst (elke week hetzelfde, los van het menu).
-// Ook dit is een startpunt — aanpassen mag gewoon hier.
-export const SEED_VASTE_BOODSCHAPPEN = [
-  { naam: 'Magere kwark', hoeveelheid: 1000, eenheid: 'g', categorie: 'Zuivel' },
-  { naam: 'Magere yoghurt', hoeveelheid: 1000, eenheid: 'g', categorie: 'Zuivel' },
-  { naam: 'Halfvolle melk', hoeveelheid: 1, eenheid: 'l', categorie: 'Zuivel' },
-  { naam: 'Havermout', hoeveelheid: 500, eenheid: 'g', categorie: 'Ontbijtgranen' },
-  { naam: 'Blauwe bessen (diepvries)', hoeveelheid: 400, eenheid: 'g', categorie: 'Diepvries' },
-  { naam: 'Bananen', hoeveelheid: 7, eenheid: 'st', categorie: 'Fruit' },
-  { naam: 'Appels', hoeveelheid: 5, eenheid: 'st', categorie: 'Fruit' },
-  { naam: 'Volkoren brood', hoeveelheid: 1, eenheid: 'heel', categorie: 'Brood' },
-  { naam: 'Eieren', hoeveelheid: 10, eenheid: 'st', categorie: 'Eieren' },
-  { naam: 'Amandelen', hoeveelheid: 200, eenheid: 'g', categorie: 'Noten' },
-  { naam: 'Pindakaas 100%', hoeveelheid: 1, eenheid: 'pot', categorie: 'Noten' },
+// De standaarddag: vast ontbijt, lunch en snack — de app toont dit,
+// er valt niets te kiezen of in te voeren. Gedekt door de vaste lijst.
+export const SEED_STANDAARDDAG =
+[
+  {
+    "moment": "ontbijt",
+    "kcal_totaal": 590,
+    "items": [
+      {
+        "naam": "magere kwark",
+        "hoeveelheid": 250,
+        "eenheid": "g",
+        "kcal": 155,
+        "categorie": "zuivel-eieren"
+      },
+      {
+        "naam": "havermout",
+        "hoeveelheid": 40,
+        "eenheid": "g",
+        "kcal": 150,
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "chiazaad",
+        "hoeveelheid": 10,
+        "eenheid": "g",
+        "kcal": 55,
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "ongezouten noten",
+        "hoeveelheid": 25,
+        "eenheid": "g",
+        "kcal": 155,
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "blauwe bessen (diepvries)",
+        "hoeveelheid": 100,
+        "eenheid": "g",
+        "kcal": 55,
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "siroop",
+        "hoeveelheid": 7,
+        "eenheid": "g",
+        "kcal": 20,
+        "categorie": "voorraad"
+      },
+      {
+        "naam": "kaneel",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
+        "kcal": 0,
+        "categorie": "voorraad"
+      }
+    ],
+    "notitie": "OV-dag: avond ervoor klaarzetten als overnight oats"
+  },
+  {
+    "moment": "lunch",
+    "kcal_totaal": 460,
+    "items": [
+      {
+        "naam": "volkorenbrood",
+        "hoeveelheid": 3,
+        "eenheid": "sneden",
+        "kcal": 260,
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "gerookte kipfilet OF tonijn op water (blik)",
+        "hoeveelheid": 120,
+        "eenheid": "g",
+        "kcal": 130,
+        "categorie": "vlees-vis"
+      },
+      {
+        "naam": "huttenkase",
+        "hoeveelheid": 50,
+        "eenheid": "g",
+        "kcal": 50,
+        "categorie": "zuivel-eieren"
+      },
+      {
+        "naam": "komkommer en tomaat",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
+        "kcal": 20,
+        "categorie": "groente-fruit"
+      }
+    ]
+  },
+  {
+    "moment": "snack_1600",
+    "kcal_totaal": 160,
+    "items": [
+      {
+        "naam": "appel",
+        "hoeveelheid": 1,
+        "eenheid": "stuk",
+        "kcal": 80,
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "gekookt ei",
+        "hoeveelheid": 1,
+        "eenheid": "stuk",
+        "kcal": 80,
+        "categorie": "zuivel-eieren"
+      }
+    ],
+    "notitie": "tevens de tas-snack voor de terugreis"
+  },
+  {
+    "moment": "diner",
+    "kcal_totaal": 725,
+    "items": [],
+    "notitie": "het rotatiegerecht van vandaag (zie gerechten); alle gerechten gekalibreerd op 690-755 kcal"
+  }
+]
+
+// Vaste weeklijst (dekt de standaarddag en de plus-blokken).
+export const SEED_VASTE_BOODSCHAPPEN =
+[
+  {
+    "naam": "magere kwark",
+    "hoeveelheid": 6,
+    "eenheid": "bakken 500 g",
+    "categorie": "zuivel-eieren"
+  },
+  {
+    "naam": "huttenkase",
+    "hoeveelheid": 2,
+    "eenheid": "bakjes 200 g",
+    "categorie": "zuivel-eieren"
+  },
+  {
+    "naam": "eieren",
+    "hoeveelheid": 10,
+    "eenheid": "stuks",
+    "categorie": "zuivel-eieren"
+  },
+  {
+    "naam": "gerookte kipfilet",
+    "hoeveelheid": 400,
+    "eenheid": "g",
+    "categorie": "vlees-vis"
+  },
+  {
+    "naam": "tonijn op water",
+    "hoeveelheid": 2,
+    "eenheid": "blikken",
+    "categorie": "vlees-vis"
+  },
+  {
+    "naam": "appels",
+    "hoeveelheid": 7,
+    "eenheid": "stuks",
+    "categorie": "groente-fruit"
+  },
+  {
+    "naam": "bananen",
+    "hoeveelheid": 8,
+    "eenheid": "stuks",
+    "categorie": "groente-fruit"
+  },
+  {
+    "naam": "mandarijnen of kiwi's",
+    "hoeveelheid": 4,
+    "eenheid": "stuks",
+    "categorie": "groente-fruit"
+  },
+  {
+    "naam": "blauwe bessen (diepvries)",
+    "hoeveelheid": 700,
+    "eenheid": "g",
+    "categorie": "groente-fruit"
+  },
+  {
+    "naam": "komkommer",
+    "hoeveelheid": 1,
+    "eenheid": "stuk",
+    "categorie": "groente-fruit"
+  },
+  {
+    "naam": "tomaten",
+    "hoeveelheid": 4,
+    "eenheid": "stuks",
+    "categorie": "groente-fruit"
+  },
+  {
+    "naam": "volkorenbrood",
+    "hoeveelheid": 1,
+    "eenheid": "heel",
+    "categorie": "koolhydraten-noten"
+  },
+  {
+    "naam": "havermout",
+    "hoeveelheid": 300,
+    "eenheid": "g",
+    "categorie": "koolhydraten-noten"
+  },
+  {
+    "naam": "chiazaad",
+    "hoeveelheid": 70,
+    "eenheid": "g",
+    "categorie": "koolhydraten-noten"
+  },
+  {
+    "naam": "ongezouten noten/amandelen",
+    "hoeveelheid": 200,
+    "eenheid": "g",
+    "categorie": "koolhydraten-noten"
+  },
+  {
+    "naam": "rijstwafels",
+    "hoeveelheid": 1,
+    "eenheid": "rol",
+    "categorie": "koolhydraten-noten"
+  },
+  {
+    "naam": "pindakaas",
+    "hoeveelheid": 1,
+    "eenheid": "pot (voorraad-check)",
+    "categorie": "voorraad"
+  },
+  {
+    "naam": "krentenbollen",
+    "hoeveelheid": 2,
+    "eenheid": "stuks",
+    "categorie": "koolhydraten-noten"
+  },
+  {
+    "naam": "olijfolie, honing, siroop, kaneel",
+    "hoeveelheid": null,
+    "eenheid": "voorraad-check",
+    "categorie": "voorraad"
+  }
 ]

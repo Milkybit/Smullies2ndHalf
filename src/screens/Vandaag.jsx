@@ -1,9 +1,9 @@
 import React, { useReducer } from 'react'
-import { SPORTEN, PLUS_BLOKKEN, MAALTIJDEN } from '../domein.js'
+import { SPORTEN, PLUS_BLOKKEN, ZATERDAGSE_TAFEL } from '../domein.js'
 import { dagCode, datumKey, jaarWeekKey } from '../logic/week.js'
 import {
   getSessies, saveSessie, verwijderSessie,
-  getWeekmenu, getGerecht, getRotatieWeek,
+  getWeekmenu, getGerecht, getRotatieWeek, getStandaarddag,
   getDrogeDagen, toggleDroog,
 } from '../storage.js'
 
@@ -22,11 +22,10 @@ export default function Vandaag() {
   const droog = getDrogeDagen().includes(vandaag)
 
   const menu = getWeekmenu(weekKey)
-  const menuVandaag = MAALTIJDEN.map(({ code, label }) => {
-    const rij = menu.find((r) => r.dag === dag && r.maaltijd === code) || {}
-    return { code, label, gerecht: getGerecht(rij.gerecht_id), porties: rij.porties || 1 }
-  }).filter((m) => m.gerecht)
+  const dinerRij = menu.find((r) => r.dag === dag) || {}
+  const diner = getGerecht(dinerRij.gerecht_id)
   const rotatieNr = getRotatieWeek(weekKey)
+  const standaarddag = getStandaarddag().filter((m) => m.items.length > 0)
 
   // Kracht A tikt door: niet → vol → mini → niet; de rest is aan/uit.
   // Een sport kiezen haalt een eerder gezette rustdag weg.
@@ -108,12 +107,16 @@ export default function Vandaag() {
       <div className="kaart">
         <div className="kaart-titel">Plus-blok</div>
         {blokkenVandaag.length > 0 ? (
-          blokkenVandaag.map((sport) => (
-            <p key={sport.code} style={{ margin: '0 0 0.3rem' }}>
-              <strong>{sport.naam}</strong> → {PLUS_BLOKKEN[sport.plus].label}:
-              +{PLUS_BLOKKEN[sport.plus].kcal} kcal — {PLUS_BLOKKEN[sport.plus].omschrijving}
-            </p>
-          ))
+          blokkenVandaag.map((sport) => {
+            const blok = PLUS_BLOKKEN[sport.plus]
+            return (
+              <div key={sport.code} style={{ marginBottom: '0.5rem' }}>
+                <strong>{sport.naam}</strong> → {blok.label} · +{blok.kcal} kcal
+                <p className="klein zacht" style={{ margin: 0 }}>{blok.items.join(' · ')}</p>
+                <p className="klein zacht" style={{ margin: 0, fontStyle: 'italic' }}>{blok.timing}</p>
+              </div>
+            )
+          })
         ) : (
           <p className="zacht" style={{ margin: 0 }}>
             Hoort bij een sessie — geen sessie, geen blok.
@@ -122,24 +125,33 @@ export default function Vandaag() {
       </div>
 
       <div className="kaart">
-        <div className="kaart-titel">Eten vandaag · rotatieweek {rotatieNr}</div>
-        {menuVandaag.length > 0 ? (
-          menuVandaag.map(({ code, label, gerecht, porties }) => (
-            <div key={code} style={{ marginBottom: '0.5rem' }}>
-              <span className="klein zacht">{label}</span>
-              <div><strong>{gerecht.naam}</strong></div>
-              <p className="klein zacht" style={{ margin: 0 }}>
-                ±{gerecht.kcal} kcal per portie
-                {gerecht.basis ? ` · basis: ${gerecht.basis}` : ''}
-                {porties > 1 ? ` · ${porties} porties` : ''}
-              </p>
-            </div>
-          ))
+        <div className="kaart-titel">Diner vandaag · rotatieweek {rotatieNr}</div>
+        {diner ? (
+          <>
+            <h2>{diner.naam}</h2>
+            <p className="klein" style={{ margin: '0 0 0.3rem' }}>
+              ±{diner.kcal} kcal · basis: {diner.basis} · {diner.smaak}
+              {dinerRij.porties > 1 ? ` · ${dinerRij.porties} porties` : ''}
+            </p>
+            <p className="klein zacht" style={{ margin: 0 }}>{diner.porties_tekst}</p>
+          </>
+        ) : dag === 'za' ? (
+          <p className="zacht" style={{ margin: 0 }}>{ZATERDAGSE_TAFEL} 🎉</p>
         ) : (
-          <p className="zacht" style={{ margin: 0 }}>
-            Nog niets gepland — stel het weekmenu samen op het Eten-tabblad.
-          </p>
+          <p className="zacht" style={{ margin: 0 }}>Geen diner gepland.</p>
         )}
+      </div>
+
+      <div className="kaart">
+        <div className="kaart-titel">Standaarddag</div>
+        {standaarddag.map((m) => (
+          <p key={m.moment} className="klein" style={{ margin: '0 0 0.3rem' }}>
+            <strong>{m.moment === 'snack_1600' ? 'Snack 16:00' : m.moment[0].toUpperCase() + m.moment.slice(1)}</strong>
+            <span className="zacht"> · ±{m.kcal_totaal} kcal · {m.items.map((i) =>
+              i.hoeveelheid != null ? `${i.hoeveelheid} ${i.eenheid} ${i.naam}` : i.naam
+            ).join(' · ')}</span>
+          </p>
+        ))}
       </div>
 
       <div className="kaart">

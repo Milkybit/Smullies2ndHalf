@@ -6,8 +6,7 @@
 // veranderen. Tabel- en veldnamen zijn identiek aan het datamodel
 // (straks supabase/schema.sql) zodat de migratie triviaal is.
 
-import { SEED_GERECHTEN, SEED_VASTE_BOODSCHAPPEN, SEED_VERSIE } from './seed.js'
-import { MAALTIJDEN } from './domein.js'
+import { SEED_GERECHTEN, SEED_VASTE_BOODSCHAPPEN, SEED_STANDAARDDAG, SEED_VERSIE } from './seed.js'
 import { jaarWeekKey } from './logic/week.js'
 import { rotatieWeekNummer, standaardWeekmenu, bouwBoodschappenlijst } from './logic/rotatie.js'
 
@@ -70,6 +69,11 @@ export function getGerecht(id) {
   return getGerechten().find((g) => g.id === id) || null
 }
 
+// De standaarddag komt rechtstreeks uit het plan en is niet bewerkbaar.
+export function getStandaarddag() {
+  return SEED_STANDAARDDAG
+}
+
 // ---- sessies ---------------------------------------------------------------
 
 export function getSessies() {
@@ -119,13 +123,13 @@ export function getRotatieWeek(weekKey) {
   return rotatieWeekNummer(weekKey, start)
 }
 
-// Levert het weekmenu van een week; bestaat het nog niet, dan wordt het
-// standaardmenu uit de rotatie gegenereerd en bewaard. Oudere rijen (zonder
-// maaltijd of porties) tellen als diner met 1 portie; ontbrekende
-// maaltijdregels worden aangevuld zodat elke dag × maaltijd bestaat.
+// Levert het diner-weekmenu van een week; bestaat het nog niet, dan wordt
+// het standaardmenu uit de rotatie gegenereerd en bewaard (kook_factor 2 →
+// elk gerecht op 2 dagen; za = zaterdagse tafel, leeg). Oudere rijen zonder
+// maaltijd of porties tellen als diner met 1 portie.
 export function getWeekmenu(weekKey) {
   const alles = lees('weekmenu', [])
-  let rijen = alles.filter((r) => r.jaar_week === weekKey)
+  let rijen = alles.filter((r) => r.jaar_week === weekKey && (r.maaltijd || 'diner') === 'diner')
   if (rijen.length === 0) {
     rijen = standaardWeekmenu(weekKey, getGerechten(), getRotatieWeek(weekKey))
     schrijf('weekmenu', alles.concat(rijen))
@@ -136,14 +140,12 @@ export function getWeekmenu(weekKey) {
     if (!rij.maaltijd) { rij.maaltijd = 'diner'; gewijzigd = true }
     if (!rij.porties) { rij.porties = 1; gewijzigd = true }
   }
-  for (const { code } of MAALTIJDEN) {
-    for (const dag of ['ma', 'di', 'wo', 'do', 'vr', 'za', 'zo']) {
-      if (!rijen.some((r) => r.dag === dag && r.maaltijd === code)) {
-        const nieuw = { jaar_week: weekKey, dag, maaltijd: code, gerecht_id: null, porties: 1 }
-        rijen.push(nieuw)
-        alles.push(nieuw)
-        gewijzigd = true
-      }
+  for (const dag of ['ma', 'di', 'wo', 'do', 'vr', 'za', 'zo']) {
+    if (!rijen.some((r) => r.dag === dag)) {
+      const nieuw = { jaar_week: weekKey, dag, maaltijd: 'diner', gerecht_id: null, porties: 1 }
+      rijen.push(nieuw)
+      alles.push(nieuw)
+      gewijzigd = true
     }
   }
   if (gewijzigd) schrijf('weekmenu', alles)
