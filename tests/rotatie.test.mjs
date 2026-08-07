@@ -12,15 +12,18 @@ test('rotatie: week 5 = week 1, ook terug in de tijd', () => {
   assert.equal(rotatieWeekNummer('2026-W31', start), 4)
 })
 
-test('standaardweekmenu: 3 diners op elk 2 dagen, zaterdag vrij', () => {
+test('standaardweekmenu: diners op 2 dagen (za vrij), ontbijt en lunch standaard', () => {
   const menu = standaardWeekmenu('2026-W32', SEED_GERECHTEN, 2)
-  assert.equal(menu.length, 7)
-  assert.equal(menu.find((r) => r.dag === 'za').gerecht_id, null)
-  const ids = [...new Set(menu.filter((r) => r.gerecht_id).map((r) => r.gerecht_id))]
+  assert.equal(menu.length, 21)
+  const diners = menu.filter((r) => r.maaltijd === 'diner')
+  assert.equal(diners.find((r) => r.dag === 'za').gerecht_id, null)
+  const ids = [...new Set(diners.filter((r) => r.gerecht_id).map((r) => r.gerecht_id))]
   assert.equal(ids.length, 3)
   for (const id of ids) {
     assert.equal(SEED_GERECHTEN.find((g) => g.id === id).rotatie_week, 2)
   }
+  assert.ok(menu.filter((r) => r.maaltijd === 'ontbijt').every((r) => r.gerecht_id === 'o1'))
+  assert.ok(menu.filter((r) => r.maaltijd === 'lunch').every((r) => r.gerecht_id === 'l1'))
 })
 
 test('boodschappenlijst: vaste weeklijst + rotatie × kook_factor, samengevoegd', () => {

@@ -2,11 +2,16 @@
 // kook_factor 2 uit het plan: elk gerecht wordt dubbel gekookt en staat
 // daarom standaard op 2 dagen (ma+di / wo+do / vr+zo). Zaterdag is de
 // zaterdagse tafel: geen rotatiegerecht, geen boodschappen.
-// Ontbijt, lunch en snack zijn de standaarddag en staan niet in het menu.
+// Ontbijt en lunch staan standaard op de standaarddag-gerechten (o1/l1)
+// en zijn per dag te wisselen naar een macro-gelijke variant.
+// De snack 16:00 ligt vast en staat niet in het menu.
 
 import { wekenTussen } from './week.js'
 
 const DAG_PATROON = { ma: 0, di: 0, wo: 1, do: 1, vr: 2, za: null, zo: 2 }
+const DAGEN = Object.keys(DAG_PATROON)
+
+export const MAALTIJD_STANDAARD = { ontbijt: 'o1', lunch: 'l1' }
 
 export function rotatieWeekNummer(weekKey, startKey) {
   const n = wekenTussen(startKey, weekKey)
@@ -19,13 +24,23 @@ export function gerechtenVanRotatieWeek(gerechten, rotatieNr) {
 
 export function standaardWeekmenu(weekKey, gerechten, rotatieNr) {
   const drie = gerechtenVanRotatieWeek(gerechten, rotatieNr)
-  return Object.entries(DAG_PATROON).map(([dag, i]) => ({
-    jaar_week: weekKey,
-    dag,
-    maaltijd: 'diner',
-    gerecht_id: i !== null && drie[i] ? drie[i].id : null,
-    porties: 1,
-  }))
+  const rijen = []
+  for (const [maaltijd, standaardId] of Object.entries(MAALTIJD_STANDAARD)) {
+    for (const dag of DAGEN) {
+      rijen.push({ jaar_week: weekKey, dag, maaltijd, gerecht_id: standaardId, porties: 1 })
+    }
+  }
+  for (const dag of DAGEN) {
+    const i = DAG_PATROON[dag]
+    rijen.push({
+      jaar_week: weekKey,
+      dag,
+      maaltijd: 'diner',
+      gerecht_id: i !== null && drie[i] ? drie[i].id : null,
+      porties: 1,
+    })
+  }
+  return rijen
 }
 
 // Boodschappenlijst = vaste weeklijst + ingrediënten uit het weekmenu.
