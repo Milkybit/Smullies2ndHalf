@@ -1,4 +1,5 @@
-import React, { useReducer } from 'react'
+import React, { useReducer, useState } from 'react'
+import { MAALTIJDEN } from '../domein.js'
 import { jaarWeekKey } from '../logic/week.js'
 import {
   getGerechten, getGerecht, getRotatieWeek, getWeekmenu,
@@ -8,10 +9,14 @@ import {
 
 export default function Eten() {
   const [, ververs] = useReducer((n) => n + 1, 0)
+  const [maaltijd, setMaaltijd] = useState('diner')
   const weekKey = jaarWeekKey(new Date())
   const rotatieNr = getRotatieWeek(weekKey)
   const menu = getWeekmenu(weekKey)
   const gerechten = getGerechten()
+
+  const keuzes = gerechten.filter((g) => g.soort === maaltijd)
+  const maaltijdRijen = menu.filter((r) => r.maaltijd === maaltijd)
 
   // Elke menuwijziging rekent direct door in een al gemaakte lijst
   // (vinkjes blijven staan).
@@ -21,11 +26,12 @@ export default function Eten() {
     ververs()
   }
 
-  // De gerechten die deze week op het menu staan, met totaal porties.
-  const opHetMenu = new Map()
+  // Gepland deze week, over alle maaltijden heen, voor de gerechtkaarten.
+  const gepland = new Map()
   for (const rij of menu) {
     if (!rij.gerecht_id) continue
-    opHetMenu.set(rij.gerecht_id, (opHetMenu.get(rij.gerecht_id) || 0) + rij.porties)
+    if (!gepland.has(rij.gerecht_id)) gepland.set(rij.gerecht_id, [])
+    gepland.get(rij.gerecht_id).push(rij)
   }
 
   const lijst = getBoodschappen(weekKey)
@@ -40,22 +46,33 @@ export default function Eten() {
     <div>
       <h1>Eten</h1>
       <p className="zacht" style={{ marginTop: '-0.3rem' }}>
-        Rotatieweek {rotatieNr} — pas het menu gerust aan; de lijst rekent mee.
+        Rotatieweek {rotatieNr} — stel het menu samen; de lijst rekent mee.
       </p>
 
       <div className="kaart">
-        <div className="kaart-titel">Weekmenu — kies per dag gerecht en porties</div>
-        {menu.map((rij) => (
+        <div className="kaart-titel">Weekmenu — gerecht en porties per dag</div>
+        <div className="maaltijd-tabs">
+          {MAALTIJDEN.map(({ code, label }) => (
+            <button
+              key={code}
+              className={'knop' + (maaltijd === code ? ' primair' : '')}
+              onClick={() => setMaaltijd(code)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        {maaltijdRijen.map((rij) => (
           <div key={rij.dag} className="menurij">
             <span className="anker-dag">{rij.dag}</span>
             <select
               value={rij.gerecht_id || ''}
-              onChange={(e) => wijzigMenu(() => zetWeekmenuGerecht(weekKey, rij.dag, e.target.value || null))}
+              onChange={(e) => wijzigMenu(() => zetWeekmenuGerecht(weekKey, rij.dag, maaltijd, e.target.value || null))}
             >
               <option value="">— geen —</option>
-              {gerechten.map((g) => (
+              {keuzes.map((g) => (
                 <option key={g.id} value={g.id}>
-                  W{g.rotatie_week} · {g.naam}
+                  {g.rotatie_week ? `W${g.rotatie_week} · ` : ''}{g.naam}
                 </option>
               ))}
             </select>
@@ -63,39 +80,42 @@ export default function Eten() {
               <button
                 className="knop"
                 disabled={!rij.gerecht_id || rij.porties <= 1}
-                onClick={() => wijzigMenu(() => zetWeekmenuPorties(weekKey, rij.dag, rij.porties - 1))}
+                onClick={() => wijzigMenu(() => zetWeekmenuPorties(weekKey, rij.dag, maaltijd, rij.porties - 1))}
               >−</button>
               <span>{rij.gerecht_id ? rij.porties : '·'}</span>
               <button
                 className="knop"
                 disabled={!rij.gerecht_id || rij.porties >= 9}
-                onClick={() => wijzigMenu(() => zetWeekmenuPorties(weekKey, rij.dag, rij.porties + 1))}
+                onClick={() => wijzigMenu(() => zetWeekmenuPorties(weekKey, rij.dag, maaltijd, rij.porties + 1))}
               >+</button>
             </div>
           </div>
         ))}
-        <button
-          className="knop"
-          style={{ width: '100%', marginTop: '0.5rem' }}
-          onClick={() => wijzigMenu(() => herstelWeekmenu(weekKey))}
-        >
-          Herstel rotatievoorstel (week {rotatieNr})
-        </button>
+        {maaltijd === 'diner' && (
+          <button
+            className="knop"
+            style={{ width: '100%', marginTop: '0.5rem' }}
+            onClick={() => wijzigMenu(() => herstelWeekmenu(weekKey))}
+          >
+            Herstel rotatievoorstel (week {rotatieNr})
+          </button>
+        )}
       </div>
 
-      {[...opHetMenu.entries()].map(([id, porties]) => {
+      {[...gepland.entries()].map(([id, rijen]) => {
         const g = getGerecht(id)
         if (!g) return null
-        const dagen = menu.filter((r) => r.gerecht_id === id).map((r) => r.dag)
+        const porties = rijen.reduce((som, r) => som + r.porties, 0)
+        const label = MAALTIJDEN.find((m) => m.code === g.soort)?.label || g.soort
         return (
           <div className="kaart" key={id}>
             <div className="kaart-titel">
-              {dagen.join(' · ')} · {porties} {porties === 1 ? 'portie' : 'porties'}
+              {label} · {rijen.map((r) => r.dag).join(' · ')} · {porties} {porties === 1 ? 'portie' : 'porties'}
             </div>
             <h2>{g.naam}</h2>
             <p className="klein zacht">{g.porties_tekst}</p>
             <p className="klein" style={{ margin: 0 }}>
-              ±{g.kcal} kcal per portie · basis: {g.basis} · smaak: {g.smaak}
+              ±{g.kcal} kcal per portie{g.basis ? ` · basis: ${g.basis}` : ''}{g.smaak ? ` · smaak: ${g.smaak}` : ''}
             </p>
           </div>
         )

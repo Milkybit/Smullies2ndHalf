@@ -1,7 +1,9 @@
-// Rotatielogica: 4 weken van elk 3 gerechten, week 5 = week 1.
-// Het standaard-weekmenu verdeelt de 3 gerechten over 7 dagen:
-// ma+di gerecht 1, wo+do gerecht 2, vr+za+zo gerecht 3 (batch-koken).
+// Rotatielogica: 4 weken van elk 3 diners, week 5 = week 1.
+// Het standaard-weekmenu verdeelt de 3 diners over 7 dagen
+// (ma+di gerecht 1, wo+do gerecht 2, vr+za+zo gerecht 3, batch-koken);
+// ontbijt, lunch en snack beginnen leeg en kies je zelf per dag.
 
+import { MAALTIJDEN } from '../domein.js'
 import { wekenTussen } from './week.js'
 
 const DAG_PATROON = { ma: 0, di: 0, wo: 1, do: 1, vr: 2, za: 2, zo: 2 }
@@ -17,12 +19,19 @@ export function gerechtenVanRotatieWeek(gerechten, rotatieNr) {
 
 export function standaardWeekmenu(weekKey, gerechten, rotatieNr) {
   const drie = gerechtenVanRotatieWeek(gerechten, rotatieNr)
-  return Object.entries(DAG_PATROON).map(([dag, i]) => ({
-    jaar_week: weekKey,
-    dag,
-    gerecht_id: drie[i] ? drie[i].id : null,
-    porties: 1,
-  }))
+  const rijen = []
+  for (const { code } of MAALTIJDEN) {
+    for (const [dag, i] of Object.entries(DAG_PATROON)) {
+      rijen.push({
+        jaar_week: weekKey,
+        dag,
+        maaltijd: code,
+        gerecht_id: code === 'diner' && drie[i] ? drie[i].id : null,
+        porties: 1,
+      })
+    }
+  }
+  return rijen
 }
 
 // Boodschappenlijst = vaste lijst + weekaanvulling uit het weekmenu.

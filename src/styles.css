@@ -244,6 +244,18 @@ h2 { font-size: 1.15rem; }
 }
 
 /* Weekmenu-kiezer */
+.maaltijd-tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+}
+
+.maaltijd-tabs .knop {
+  flex: 1;
+  padding: 0.4rem 0.2rem;
+  font-size: 0.85rem;
+}
+
 .menurij {
   display: flex;
   align-items: center;

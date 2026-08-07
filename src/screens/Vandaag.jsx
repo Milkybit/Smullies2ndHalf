@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react'
-import { SPORTEN, PLUS_BLOKKEN } from '../domein.js'
+import { SPORTEN, PLUS_BLOKKEN, MAALTIJDEN } from '../domein.js'
 import { dagCode, datumKey, jaarWeekKey } from '../logic/week.js'
 import {
   getSessies, saveSessie, verwijderSessie,
@@ -22,8 +22,10 @@ export default function Vandaag() {
   const droog = getDrogeDagen().includes(vandaag)
 
   const menu = getWeekmenu(weekKey)
-  const menuVandaag = menu.find((r) => r.dag === dag) || {}
-  const diner = getGerecht(menuVandaag.gerecht_id)
+  const menuVandaag = MAALTIJDEN.map(({ code, label }) => {
+    const rij = menu.find((r) => r.dag === dag && r.maaltijd === code) || {}
+    return { code, label, gerecht: getGerecht(rij.gerecht_id), porties: rij.porties || 1 }
+  }).filter((m) => m.gerecht)
   const rotatieNr = getRotatieWeek(weekKey)
 
   // Kracht A tikt door: niet → vol → mini → niet; de rest is aan/uit.
@@ -120,18 +122,23 @@ export default function Vandaag() {
       </div>
 
       <div className="kaart">
-        <div className="kaart-titel">Diner vandaag · rotatieweek {rotatieNr}</div>
-        {diner ? (
-          <>
-            <h2>{diner.naam}</h2>
-            <p className="klein zacht">{diner.porties_tekst}</p>
-            <p className="klein" style={{ margin: 0 }}>
-              ±{diner.kcal} kcal per portie · basis: {diner.basis}
-              {menuVandaag.porties > 1 ? ` · ${menuVandaag.porties} porties` : ''}
-            </p>
-          </>
+        <div className="kaart-titel">Eten vandaag · rotatieweek {rotatieNr}</div>
+        {menuVandaag.length > 0 ? (
+          menuVandaag.map(({ code, label, gerecht, porties }) => (
+            <div key={code} style={{ marginBottom: '0.5rem' }}>
+              <span className="klein zacht">{label}</span>
+              <div><strong>{gerecht.naam}</strong></div>
+              <p className="klein zacht" style={{ margin: 0 }}>
+                ±{gerecht.kcal} kcal per portie
+                {gerecht.basis ? ` · basis: ${gerecht.basis}` : ''}
+                {porties > 1 ? ` · ${porties} porties` : ''}
+              </p>
+            </div>
+          ))
         ) : (
-          <p className="zacht" style={{ margin: 0 }}>Geen diner gepland.</p>
+          <p className="zacht" style={{ margin: 0 }}>
+            Nog niets gepland — stel het weekmenu samen op het Eten-tabblad.
+          </p>
         )}
       </div>
 

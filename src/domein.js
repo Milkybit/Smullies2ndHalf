@@ -29,6 +29,15 @@ export const PLUS_BLOKKEN = {
 export const GEMISTE_WEEK_ZIN =
   'Vorige week niet binnen — data, geen vonnis. Deze week telt gewoon opnieuw.'
 
+// Maaltijden van het weekmenu. Alleen het diner draait mee in de
+// 4-weken-rotatie; ontbijt, lunch en snack kies je per dag.
+export const MAALTIJDEN = [
+  { code: 'ontbijt', label: 'Ontbijt' },
+  { code: 'lunch', label: 'Lunch' },
+  { code: 'diner', label: 'Diner' },
+  { code: 'snack', label: 'Snack' },
+]
+
 export const DAG_NAMEN = {
   ma: 'maandag', di: 'dinsdag', wo: 'woensdag', do: 'donderdag',
   vr: 'vrijdag', za: 'zaterdag', zo: 'zondag',
