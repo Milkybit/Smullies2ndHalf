@@ -1473,72 +1473,84 @@ export const SEED_VASTE_BOODSCHAPPEN =
     "naam": "magere kwark",
     "hoeveelheid": 3,
     "eenheid": "bakken 500 g",
-    "categorie": "zuivel-eieren"
+    "categorie": "zuivel-eieren",
+    "dekt": "plus-blokken"
   },
   {
     "naam": "eieren",
     "hoeveelheid": 10,
     "eenheid": "stuks",
-    "categorie": "zuivel-eieren"
+    "categorie": "zuivel-eieren",
+    "dekt": "snack 16:00 + marge"
   },
   {
     "naam": "appels",
     "hoeveelheid": 7,
     "eenheid": "stuks",
-    "categorie": "groente-fruit"
+    "categorie": "groente-fruit",
+    "dekt": "snack 16:00"
   },
   {
     "naam": "bananen",
     "hoeveelheid": 6,
     "eenheid": "stuks",
-    "categorie": "groente-fruit"
+    "categorie": "groente-fruit",
+    "dekt": "plus-blokken M en L + marge"
   },
   {
     "naam": "mandarijnen of kiwi's",
     "hoeveelheid": 4,
     "eenheid": "stuks",
-    "categorie": "groente-fruit"
+    "categorie": "groente-fruit",
+    "dekt": "plus-blok S"
   },
   {
     "naam": "komkommer",
     "hoeveelheid": 1,
     "eenheid": "stuk",
-    "categorie": "groente-fruit"
+    "categorie": "groente-fruit",
+    "dekt": "lunch naar smaak"
   },
   {
     "naam": "tomaten",
     "hoeveelheid": 4,
     "eenheid": "stuks",
-    "categorie": "groente-fruit"
+    "categorie": "groente-fruit",
+    "dekt": "lunch naar smaak"
   },
   {
     "naam": "rijstwafels",
     "hoeveelheid": 1,
     "eenheid": "rol",
-    "categorie": "koolhydraten-noten"
+    "categorie": "koolhydraten-noten",
+    "dekt": "plus-blok M"
   },
   {
     "naam": "krentenbollen",
     "hoeveelheid": 2,
     "eenheid": "stuks",
-    "categorie": "koolhydraten-noten"
+    "categorie": "koolhydraten-noten",
+    "dekt": "plus-blok L"
   },
   {
     "naam": "volkorenbrood (L-blok)",
     "hoeveelheid": 1,
     "eenheid": "snee",
-    "categorie": "koolhydraten-noten"
+    "categorie": "koolhydraten-noten",
+    "dekt": "plus-blok L"
   },
   {
     "naam": "pindakaas",
     "hoeveelheid": 1,
     "eenheid": "pot (voorraad-check)",
-    "categorie": "voorraad"
+    "categorie": "voorraad",
+    "dekt": "plus-blok M"
   },
   {
     "naam": "olijfolie, honing, siroop, kaneel",
     "hoeveelheid": null,
     "eenheid": "voorraad-check",
-    "categorie": "voorraad"
+    "categorie": "voorraad",
+    "dekt": "algemeen"
   }
 ]

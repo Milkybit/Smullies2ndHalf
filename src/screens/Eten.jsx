@@ -170,7 +170,10 @@ export default function Eten() {
                     onClick={() => { toggleBoodschap(item.id); ververs() }}
                   >
                     <span className="vinkje">✓</span>
-                    <span className="naam">{item.naam}</span>
+                    <span className="naam">
+                      {item.naam}
+                      {item.dekt && <span className="klein zacht"> · {item.dekt}</span>}
+                    </span>
                     <span className="hoeveelheid">
                       {item.hoeveelheid != null ? `${item.hoeveelheid} ${item.eenheid}` : item.eenheid}
                     </span>

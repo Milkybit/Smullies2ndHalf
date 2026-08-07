@@ -49,7 +49,7 @@ for soort, lijst in [('ontbijt', av['ontbijt_varianten']), ('lunch', av['lunch_v
             'ingredienten': v['ingredienten'],
         })
 
-vaste = [{k: v for k, v in item.items() if k != 'dekt'} for item in av['vaste_basislijst']]
+vaste = av['vaste_basislijst']  # incl. 'dekt': waarvoor het item op de lijst staat
 versie = int(sys.argv[1])
 
 print(f"""// Seed-data voor Doel1 — gegenereerd uit het definitieve 4-wekenplan
