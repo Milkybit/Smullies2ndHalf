@@ -30,7 +30,7 @@ Bouw een mobiel-eerst PWA ("Doel1") voor één gebruiker die zijn voedingsschema
 
 Nu de vorm voor localStorage; in fase 6 letterlijk als `supabase/schema.sql`.
 
-Tabellen (alle met `user_id uuid default auth.uid()` + RLS): `gerechten` (naam, anker, kleur1, kleur2, basis, smaak, porties_tekst, kcal, rotatie_week 1-4), `weekmenu` (jaar_week, dag, gerecht_id, porties int default 1), `boodschappen` (jaar_week, naam, hoeveelheid, eenheid, categorie, vast boolean, afgevinkt boolean), `sessies` (datum, anker check in ('ma','di','wo','vr','za','extra'), mini boolean), `metingen` (datum, gewicht, vet_pct), `droge_dagen` (datum), `doelen` (domein, omschrijving, meetlat, richtdatum, status).
+Tabellen (alle met `user_id uuid default auth.uid()` + RLS): `gerechten` (naam, anker, kleur1, kleur2, basis, smaak, porties_tekst, kcal, rotatie_week 1-4), `weekmenu` (jaar_week, dag, gerecht_id, porties int default 1), `boodschappen` (jaar_week, naam, hoeveelheid, eenheid, categorie, vast boolean, afgevinkt boolean), `sessies` (datum, anker check in ('ma','di','wo','vr','za','extra','rust'), mini boolean — 'rust' = bewust geregistreerde rustdag, telt niet mee voor de week), `metingen` (datum, gewicht, vet_pct), `droge_dagen` (datum), `doelen` (domein, omschrijving, meetlat, richtdatum, status).
 
 Seed-data: de 12 rotatie-gerechten (3 per week, met porties en ±kcal) en de vaste boodschappenlijst — vraag de gebruiker om de PDF-inhoud van zijn 4-wekenplan als die niet is meegeleverd, of laat een seed-script met placeholders achter.
 

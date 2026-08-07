@@ -17,6 +17,8 @@ export default function Vandaag() {
   const sessies = getSessies()
   const sessiesVandaag = sessies.filter((s) => s.datum === vandaag)
   const extraVandaag = sessiesVandaag.find((s) => s.anker === 'extra')
+  const rustVandaag = sessiesVandaag.find((s) => s.anker === 'rust')
+  const sportVandaag = sessiesVandaag.some((s) => s.anker !== 'rust')
   const droog = getDrogeDagen().includes(vandaag)
 
   const menu = getWeekmenu(weekKey)
@@ -25,7 +27,9 @@ export default function Vandaag() {
   const rotatieNr = getRotatieWeek(weekKey)
 
   // Kracht A tikt door: niet → vol → mini → niet; de rest is aan/uit.
+  // Een sport kiezen haalt een eerder gezette rustdag weg.
   function tikSport(code) {
+    if (rustVandaag) verwijderSessie(vandaag, 'rust')
     const sessie = sessiesVandaag.find((s) => s.anker === code)
     if (code === 'ma') {
       if (!sessie) saveSessie({ datum: vandaag, anker: code, mini: false })
@@ -70,17 +74,33 @@ export default function Vandaag() {
         <p className="klein zacht" style={{ margin: '0.3rem 0 0.5rem' }}>
           Tik op Kracht A wisselt: niet → vol → mini. Vol én mini tellen allebei.
         </p>
-        <button
-          className={'knop' + (extraVandaag ? ' gedaan' : '')}
-          style={{ width: '100%' }}
-          onClick={() => {
-            if (extraVandaag) verwijderSessie(vandaag, 'extra')
-            else saveSessie({ datum: vandaag, anker: 'extra' })
-            ververs()
-          }}
-        >
-          {extraVandaag ? 'Extra sessie ✓' : 'Iets anders bewogen? Extra sessie'}
-        </button>
+        <div className="knoppenrij">
+          <button
+            className={'knop' + (extraVandaag ? ' gedaan' : '')}
+            onClick={() => {
+              if (extraVandaag) {
+                verwijderSessie(vandaag, 'extra')
+              } else {
+                if (rustVandaag) verwijderSessie(vandaag, 'rust')
+                saveSessie({ datum: vandaag, anker: 'extra' })
+              }
+              ververs()
+            }}
+          >
+            {extraVandaag ? 'Extra sessie ✓' : 'Extra sessie'}
+          </button>
+          <button
+            className={'knop' + (rustVandaag ? ' gedaan' : '')}
+            disabled={sportVandaag && !rustVandaag}
+            onClick={() => {
+              if (rustVandaag) verwijderSessie(vandaag, 'rust')
+              else saveSessie({ datum: vandaag, anker: 'rust' })
+              ververs()
+            }}
+          >
+            {rustVandaag ? 'Rustdag ✓' : 'Vandaag rustdag'}
+          </button>
+        </div>
       </div>
 
       <div className="kaart">
