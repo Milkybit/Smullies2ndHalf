@@ -12,15 +12,21 @@ beforeEach(() => {
   storage.initStorage(NU)
 })
 
-test('init zaait de 12 plangerechten, 3 per rotatieweek, met kook_factor 2', () => {
+test('init zaait de plangerechten: 12 diners + ontbijt- en lunchkeuzes', () => {
   const gerechten = storage.getGerechten()
-  assert.equal(gerechten.length, 12)
+  const diners = gerechten.filter((g) => g.soort === 'diner')
+  assert.equal(diners.length, 12)
   for (const w of [1, 2, 3, 4]) {
-    assert.equal(gerechten.filter((g) => g.rotatie_week === w).length, 3)
+    assert.equal(diners.filter((g) => g.rotatie_week === w).length, 3)
   }
-  assert.ok(gerechten.every((g) => g.kook_factor === 2 && g.bereiding))
-  // gekalibreerd op 690-755 kcal
-  assert.ok(gerechten.every((g) => g.kcal >= 690 && g.kcal <= 755))
+  assert.ok(diners.every((g) => g.kook_factor === 2 && g.bereiding))
+  // diners gekalibreerd op 690-755 kcal
+  assert.ok(diners.every((g) => g.kcal >= 690 && g.kcal <= 755))
+  // ontbijt ±590, lunch ±460 — alle keuzes macro-gelijk
+  const ontbijt = gerechten.filter((g) => g.soort === 'ontbijt')
+  const lunch = gerechten.filter((g) => g.soort === 'lunch')
+  assert.ok(ontbijt.length >= 3 && ontbijt.every((g) => Math.abs(g.kcal - 590) <= 30))
+  assert.ok(lunch.length >= 3 && lunch.every((g) => Math.abs(g.kcal - 460) <= 30))
 })
 
 test('standaarddag komt uit het plan', () => {
@@ -34,7 +40,7 @@ test('seed-versie: een oudere gerechtenlijst wordt bij init vervangen', () => {
   instellingen.seed_versie = 2
   globalThis.localStorage.setItem('doel1.instellingen', JSON.stringify(instellingen))
   storage.initStorage(NU)
-  assert.equal(storage.getGerechten().length, 12)
+  assert.equal(storage.getGerechten().length, 18)
 })
 
 test('sessies: opslaan, driestand maandag, verwijderen, persistentie', () => {
@@ -60,18 +66,37 @@ test('metingen: upsert op datum en gesorteerd teruggeven', () => {
   assert.equal(metingen[1].gewicht, 84.1)
 })
 
-test('weekmenu: rotatie op 2 dagen per gerecht, zaterdag vrij', () => {
+test('weekmenu: rotatie op 2 dagen per gerecht, zaterdag vrij, standaard ontbijt/lunch', () => {
   const menu = storage.getWeekmenu(WEEK)
-  assert.equal(menu.length, 7)
+  assert.equal(menu.length, 21)
+  const diners = menu.filter((r) => r.maaltijd === 'diner')
   // zaterdagse tafel: geen gerecht op za
-  assert.equal(menu.find((r) => r.dag === 'za').gerecht_id, null)
+  assert.equal(diners.find((r) => r.dag === 'za').gerecht_id, null)
   // 3 gerechten, elk op precies 2 dagen (kook_factor 2)
   const telling = {}
-  for (const r of menu) if (r.gerecht_id) telling[r.gerecht_id] = (telling[r.gerecht_id] || 0) + 1
+  for (const r of diners) if (r.gerecht_id) telling[r.gerecht_id] = (telling[r.gerecht_id] || 0) + 1
   assert.equal(Object.keys(telling).length, 3)
   assert.ok(Object.values(telling).every((n) => n === 2))
+  // ontbijt en lunch standaard op o1/l1
+  assert.ok(menu.filter((r) => r.maaltijd === 'ontbijt').every((r) => r.gerecht_id === 'o1'))
+  assert.ok(menu.filter((r) => r.maaltijd === 'lunch').every((r) => r.gerecht_id === 'l1'))
   // tweede aanroep: zelfde menu, niet opnieuw gegenereerd
   assert.deepEqual(storage.getWeekmenu(WEEK), menu)
+})
+
+test('ontbijtvariant kiezen: macro-gelijk en de lijst rekent mee', () => {
+  storage.getWeekmenu(WEEK)
+  // woensdag de skyr-bowl in plaats van overnight oats
+  storage.zetWeekmenuGerecht(WEEK, 'wo', 'ontbijt', 'o2')
+  const o1 = storage.getGerecht('o1')
+  const o2 = storage.getGerecht('o2')
+  assert.ok(Math.abs(o1.kcal - o2.kcal) <= 30) // macro-gelijk binnen marge
+  const lijst = storage.maakBoodschappen(WEEK)
+  // kwark: 6 dagen standaardontbijt × 250 g (variant-dag telt niet mee)
+  const kwark = lijst.find((b) => b.naam === 'magere kwark' && !b.vast)
+  assert.equal(kwark.hoeveelheid, 6 * 250)
+  const skyr = lijst.find((b) => b.naam === 'skyr naturel' && !b.vast)
+  assert.equal(skyr.hoeveelheid, 300)
 })
 
 test('weekmenu: gerecht kiezen en porties ophogen werkt door in de lijst', () => {
@@ -81,7 +106,8 @@ test('weekmenu: gerecht kiezen en porties ophogen werkt door in de lijst', () =>
   // donderdag een ander diner (g1, Kip-cashew uit week 1) en 3 porties
   storage.zetWeekmenuGerecht(WEEK, 'do', 'diner', 'g1')
   storage.zetWeekmenuPorties(WEEK, 'do', 'diner', 3)
-  const donderdag = storage.getWeekmenu(WEEK).find((r) => r.dag === 'do')
+  const donderdag = storage.getWeekmenu(WEEK)
+    .find((r) => r.dag === 'do' && r.maaltijd === 'diner')
   assert.equal(donderdag.gerecht_id, 'g1')
   assert.equal(donderdag.porties, 3)
 
@@ -92,11 +118,14 @@ test('weekmenu: gerecht kiezen en porties ophogen werkt door in de lijst', () =>
 
   // dag op '— geen —' zetten haalt het gerecht eruit
   storage.zetWeekmenuGerecht(WEEK, 'do', 'diner', null)
-  assert.equal(storage.getWeekmenu(WEEK).find((r) => r.dag === 'do').gerecht_id, null)
+  assert.equal(
+    storage.getWeekmenu(WEEK).find((r) => r.dag === 'do' && r.maaltijd === 'diner').gerecht_id,
+    null
+  )
 
-  // herstel zet de rotatie terug (7 dagen, za vrij)
+  // herstel zet de rotatie terug (21 rijen: 3 maaltijden × 7 dagen)
   const hersteld = storage.herstelWeekmenu(WEEK)
-  assert.equal(hersteld.length, 7)
+  assert.equal(hersteld.length, 21)
   assert.ok(hersteld.every((r) => r.porties === 1))
 })
 
@@ -147,7 +176,7 @@ test('export en import: alle tabellen komen ongeschonden terug', () => {
   assert.equal(storage.getSessies()[0].mini, true)
   assert.equal(storage.getMetingen()[0].gewicht, 84.6)
   assert.deepEqual(storage.getDrogeDagen(), ['2026-08-04'])
-  assert.equal(storage.getGerechten().length, 12)
+  assert.equal(storage.getGerechten().length, 18)
 })
 
 test('doelen: opslaan en teruglezen', () => {

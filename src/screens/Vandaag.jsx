@@ -22,10 +22,13 @@ export default function Vandaag() {
   const droog = getDrogeDagen().includes(vandaag)
 
   const menu = getWeekmenu(weekKey)
-  const dinerRij = menu.find((r) => r.dag === dag) || {}
+  const rijVan = (maaltijd) => menu.find((r) => r.dag === dag && r.maaltijd === maaltijd) || {}
+  const dinerRij = rijVan('diner')
   const diner = getGerecht(dinerRij.gerecht_id)
+  const ontbijt = getGerecht(rijVan('ontbijt').gerecht_id)
+  const lunch = getGerecht(rijVan('lunch').gerecht_id)
   const rotatieNr = getRotatieWeek(weekKey)
-  const standaarddag = getStandaarddag().filter((m) => m.items.length > 0)
+  const snack = getStandaarddag().find((m) => m.moment === 'snack_1600')
 
   // Kracht A tikt door: niet → vol → mini → niet; de rest is aan/uit.
   // Een sport kiezen haalt een eerder gezette rustdag weg.
@@ -143,15 +146,25 @@ export default function Vandaag() {
       </div>
 
       <div className="kaart">
-        <div className="kaart-titel">Standaarddag</div>
-        {standaarddag.map((m) => (
-          <p key={m.moment} className="klein" style={{ margin: '0 0 0.3rem' }}>
-            <strong>{m.moment === 'snack_1600' ? 'Snack 16:00' : m.moment[0].toUpperCase() + m.moment.slice(1)}</strong>
-            <span className="zacht"> · ±{m.kcal_totaal} kcal · {m.items.map((i) =>
+        <div className="kaart-titel">Ontbijt, lunch en snack vandaag</div>
+        {[['Ontbijt', ontbijt], ['Lunch', lunch]].map(([label, gerecht]) => (
+          <p key={label} className="klein" style={{ margin: '0 0 0.3rem' }}>
+            <strong>{label}</strong>
+            {gerecht ? (
+              <span className="zacht"> · {gerecht.naam} · ±{gerecht.kcal} kcal · {gerecht.porties_tekst}</span>
+            ) : (
+              <span className="zacht"> · niets gepland</span>
+            )}
+          </p>
+        ))}
+        {snack && (
+          <p className="klein" style={{ margin: 0 }}>
+            <strong>Snack 16:00</strong>
+            <span className="zacht"> · ±{snack.kcal_totaal} kcal · {snack.items.map((i) =>
               i.hoeveelheid != null ? `${i.hoeveelheid} ${i.eenheid} ${i.naam}` : i.naam
             ).join(' · ')}</span>
           </p>
-        ))}
+        )}
       </div>
 
       <div className="kaart">

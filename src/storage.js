@@ -8,7 +8,7 @@
 
 import { SEED_GERECHTEN, SEED_VASTE_BOODSCHAPPEN, SEED_STANDAARDDAG, SEED_VERSIE } from './seed.js'
 import { jaarWeekKey } from './logic/week.js'
-import { rotatieWeekNummer, standaardWeekmenu, bouwBoodschappenlijst } from './logic/rotatie.js'
+import { rotatieWeekNummer, standaardWeekmenu, bouwBoodschappenlijst, MAALTIJD_STANDAARD } from './logic/rotatie.js'
 
 const PREFIX = 'doel1.'
 
@@ -123,13 +123,18 @@ export function getRotatieWeek(weekKey) {
   return rotatieWeekNummer(weekKey, start)
 }
 
-// Levert het diner-weekmenu van een week; bestaat het nog niet, dan wordt
-// het standaardmenu uit de rotatie gegenereerd en bewaard (kook_factor 2 →
-// elk gerecht op 2 dagen; za = zaterdagse tafel, leeg). Oudere rijen zonder
-// maaltijd of porties tellen als diner met 1 portie.
+// Levert het weekmenu (ontbijt, lunch, diner per dag); bestaat het nog
+// niet, dan wordt het standaardmenu gegenereerd en bewaard: diners uit de
+// rotatie (kook_factor 2 → elk gerecht op 2 dagen; za = zaterdagse tafel,
+// leeg), ontbijt en lunch op de standaarddag-gerechten. Oudere rijen worden
+// genormaliseerd; onbekende gerecht-id's (van eerdere seeds) vallen terug
+// op de standaard.
 export function getWeekmenu(weekKey) {
   const alles = lees('weekmenu', [])
-  let rijen = alles.filter((r) => r.jaar_week === weekKey && (r.maaltijd || 'diner') === 'diner')
+  const bekend = new Set(getGerechten().map((g) => g.id))
+  let rijen = alles.filter((r) =>
+    r.jaar_week === weekKey && ['ontbijt', 'lunch', 'diner'].includes(r.maaltijd || 'diner')
+  )
   if (rijen.length === 0) {
     rijen = standaardWeekmenu(weekKey, getGerechten(), getRotatieWeek(weekKey))
     schrijf('weekmenu', alles.concat(rijen))
@@ -139,13 +144,23 @@ export function getWeekmenu(weekKey) {
   for (const rij of rijen) {
     if (!rij.maaltijd) { rij.maaltijd = 'diner'; gewijzigd = true }
     if (!rij.porties) { rij.porties = 1; gewijzigd = true }
-  }
-  for (const dag of ['ma', 'di', 'wo', 'do', 'vr', 'za', 'zo']) {
-    if (!rijen.some((r) => r.dag === dag)) {
-      const nieuw = { jaar_week: weekKey, dag, maaltijd: 'diner', gerecht_id: null, porties: 1 }
-      rijen.push(nieuw)
-      alles.push(nieuw)
+    if (rij.gerecht_id && !bekend.has(rij.gerecht_id)) {
+      rij.gerecht_id = MAALTIJD_STANDAARD[rij.maaltijd] || null
       gewijzigd = true
+    }
+  }
+  for (const maaltijd of ['ontbijt', 'lunch', 'diner']) {
+    for (const dag of ['ma', 'di', 'wo', 'do', 'vr', 'za', 'zo']) {
+      if (!rijen.some((r) => r.dag === dag && r.maaltijd === maaltijd)) {
+        const nieuw = {
+          jaar_week: weekKey, dag, maaltijd,
+          gerecht_id: MAALTIJD_STANDAARD[maaltijd] || null,
+          porties: 1,
+        }
+        rijen.push(nieuw)
+        alles.push(nieuw)
+        gewijzigd = true
+      }
     }
   }
   if (gewijzigd) schrijf('weekmenu', alles)

@@ -1,17 +1,16 @@
-// Seed-data voor Doel1 — rechtstreeks uit het definitieve 4-wekenplan
-// (plan/doel1-plan.json, aangeleverd aug 2026). Het plan is de waarheid:
-// wijzig eerst het plan, genereer dan deze seed opnieuw. Veldnamen volgen
-// het datamodel dat in fase 6 letterlijk naar supabase/schema.sql gaat.
+// Seed-data voor Doel1 — gegenereerd uit het definitieve 4-wekenplan
+// (plan/doel1-plan.json, incl. de variatie-aanvulling van aug 2026).
+// Het plan is de waarheid: wijzig eerst het plan, genereer dan deze seed
+// opnieuw. Veldnamen volgen het datamodel (fase 6: supabase/schema.sql).
 //
-// Kernregels uit het plan:
-// - kook_factor 2: elk rotatiegerecht wordt dubbel gekookt (1x koken = 2x
-//   eten); in het weekmenu staat elk gerecht daarom standaard op 2 dagen.
-// - zaterdagse tafel: zaterdagavond vervalt het rotatiegerecht
-//   (vieren-budget) — geen diner en geen boodschappen voor za.
-// - de standaarddag (ontbijt/lunch/snack) is elke dag gelijk en wordt
-//   gedekt door de vaste weeklijst; alleen het diner rouleert.
+// Kernregels:
+// - Diner: 4-weken-rotatie, kook_factor 2 (elk gerecht op 2 dagen),
+//   zaterdagse tafel (za geen diner, geen boodschappen).
+// - Ontbijt en lunch: standaard uit de standaarddag, per dag te wisselen
+//   naar een macro-gelijke variant (ontbijt ±590 kcal, lunch ±460 kcal).
+// - Snack 16:00 en plus-blokken liggen vast; de vaste basislijst dekt ze.
 
-export const SEED_VERSIE = 3
+export const SEED_VERSIE = 4
 
 export const SEED_GERECHTEN =
 [
@@ -313,7 +312,7 @@ export const SEED_GERECHTEN =
     "kleur2": "komkommer/ui",
     "basis": "couscous",
     "smaak": "gyroskruiden-tzatziki",
-    "porties_tekst": "160 g kipfilet · 70 g couscous (droog) · 100 g griekse yoghurt · 150 g tomaat · 150 g komkommer · ½ stuk rode ui · 10 ml olijfolie · gyroskruiden naar smaak",
+    "porties_tekst": "160 g kipfilet · 70 g couscous (droog) · 100 g griekse yoghurt · 150 g tomaat · 150 g komkommer · 0.5 stuk rode ui · 10 ml olijfolie · gyroskruiden naar smaak",
     "kcal": 720,
     "rotatie_week": 2,
     "kook_factor": 2,
@@ -484,7 +483,7 @@ export const SEED_GERECHTEN =
     "kleur2": "komkommer",
     "basis": "zilvervliesrijst",
     "smaak": "sesam-soja",
-    "porties_tekst": "65 g zilvervliesrijst (droog) · 1 blik tonijn op water (blik) · 50 g edamame · ½ stuk avocado · 150 g komkommer · sesamzaad + sojasaus naar smaak",
+    "porties_tekst": "65 g zilvervliesrijst (droog) · 1 blik tonijn op water (blik) · 50 g edamame · 0.5 stuk avocado · 150 g komkommer · sesamzaad + sojasaus naar smaak",
     "kcal": 690,
     "rotatie_week": 3,
     "kook_factor": 2,
@@ -675,11 +674,310 @@ export const SEED_GERECHTEN =
         "categorie": "voorraad"
       }
     ]
+  },
+  {
+    "id": "o1",
+    "naam": "Standaard — overnight oats",
+    "soort": "ontbijt",
+    "anker": null,
+    "kleur1": null,
+    "kleur2": null,
+    "basis": null,
+    "smaak": null,
+    "porties_tekst": "250 g magere kwark · 40 g havermout · 10 g chiazaad · 25 g ongezouten noten · 100 g blauwe bessen (diepvries) · 7 g siroop · kaneel naar smaak",
+    "kcal": 590,
+    "rotatie_week": null,
+    "kook_factor": 1,
+    "bereiding": "OV-dag: avond ervoor klaarzetten als overnight oats",
+    "ingredienten": [
+      {
+        "naam": "magere kwark",
+        "hoeveelheid": 250,
+        "eenheid": "g",
+        "categorie": "zuivel-eieren"
+      },
+      {
+        "naam": "havermout",
+        "hoeveelheid": 40,
+        "eenheid": "g",
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "chiazaad",
+        "hoeveelheid": 10,
+        "eenheid": "g",
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "ongezouten noten",
+        "hoeveelheid": 25,
+        "eenheid": "g",
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "blauwe bessen (diepvries)",
+        "hoeveelheid": 100,
+        "eenheid": "g",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "siroop",
+        "hoeveelheid": 7,
+        "eenheid": "g",
+        "categorie": "voorraad"
+      },
+      {
+        "naam": "kaneel",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
+        "categorie": "voorraad"
+      }
+    ]
+  },
+  {
+    "id": "l1",
+    "naam": "Standaard — volkoren met kip of tonijn",
+    "soort": "lunch",
+    "anker": null,
+    "kleur1": null,
+    "kleur2": null,
+    "basis": null,
+    "smaak": null,
+    "porties_tekst": "3 sneden volkorenbrood · 120 g gerookte kipfilet OF tonijn op water (blik) · 50 g huttenkase · komkommer en tomaat naar smaak",
+    "kcal": 460,
+    "rotatie_week": null,
+    "kook_factor": 1,
+    "bereiding": null,
+    "ingredienten": [
+      {
+        "naam": "volkorenbrood",
+        "hoeveelheid": 3,
+        "eenheid": "sneden",
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "gerookte kipfilet OF tonijn op water (blik)",
+        "hoeveelheid": 120,
+        "eenheid": "g",
+        "categorie": "vlees-vis"
+      },
+      {
+        "naam": "huttenkase",
+        "hoeveelheid": 50,
+        "eenheid": "g",
+        "categorie": "zuivel-eieren"
+      },
+      {
+        "naam": "komkommer en tomaat",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
+        "categorie": "groente-fruit"
+      }
+    ]
+  },
+  {
+    "id": "o2",
+    "naam": "Skyr-bowl met banaan en noten",
+    "soort": "ontbijt",
+    "anker": null,
+    "kleur1": null,
+    "kleur2": null,
+    "basis": null,
+    "smaak": null,
+    "porties_tekst": "300 g skyr naturel · 1 stuk banaan · 35 g havermout · 20 g ongezouten noten · 7 g honing · kaneel naar smaak",
+    "kcal": 585,
+    "rotatie_week": null,
+    "kook_factor": 1,
+    "bereiding": "≈ standaard: zuivel-eiwit + traag koolhydraat + noten",
+    "ingredienten": [
+      {
+        "naam": "skyr naturel",
+        "hoeveelheid": 300,
+        "eenheid": "g",
+        "categorie": "zuivel-eieren"
+      },
+      {
+        "naam": "banaan",
+        "hoeveelheid": 1,
+        "eenheid": "stuk",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "havermout",
+        "hoeveelheid": 35,
+        "eenheid": "g",
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "ongezouten noten",
+        "hoeveelheid": 20,
+        "eenheid": "g",
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "honing",
+        "hoeveelheid": 7,
+        "eenheid": "g",
+        "categorie": "voorraad"
+      },
+      {
+        "naam": "kaneel",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
+        "categorie": "voorraad"
+      }
+    ]
+  },
+  {
+    "id": "o3",
+    "naam": "Omelet met volkoren en appel",
+    "soort": "ontbijt",
+    "anker": null,
+    "kleur1": null,
+    "kleur2": null,
+    "basis": null,
+    "smaak": null,
+    "porties_tekst": "3 stuks eieren · 2 sneden volkorenbrood · 50 g huttenkase · 1 stuk tomaat · 1 stuk appel · 5 ml olijfolie",
+    "kcal": 580,
+    "rotatie_week": null,
+    "kook_factor": 1,
+    "bereiding": "≈ standaard: ei-eiwit i.p.v. zuivel",
+    "ingredienten": [
+      {
+        "naam": "eieren",
+        "hoeveelheid": 3,
+        "eenheid": "stuks",
+        "categorie": "zuivel-eieren"
+      },
+      {
+        "naam": "volkorenbrood",
+        "hoeveelheid": 2,
+        "eenheid": "sneden",
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "huttenkase",
+        "hoeveelheid": 50,
+        "eenheid": "g",
+        "categorie": "zuivel-eieren"
+      },
+      {
+        "naam": "tomaat",
+        "hoeveelheid": 1,
+        "eenheid": "stuk",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "appel",
+        "hoeveelheid": 1,
+        "eenheid": "stuk",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "olijfolie",
+        "hoeveelheid": 5,
+        "eenheid": "ml",
+        "categorie": "voorraad"
+      }
+    ]
+  },
+  {
+    "id": "l2",
+    "naam": "Tonijn-kikkererwtensalade",
+    "soort": "lunch",
+    "anker": null,
+    "kleur1": null,
+    "kleur2": null,
+    "basis": null,
+    "smaak": null,
+    "porties_tekst": "1 blik tonijn op water (blik) · 150 g kikkererwten (blik, uitgelekt) · 1 snee volkorenbrood · 5 ml olijfolie · komkommer en tomaat naar smaak",
+    "kcal": 455,
+    "rotatie_week": null,
+    "kook_factor": 1,
+    "bereiding": "≈ standaard: vis-eiwit + peulvrucht-koolhydraat",
+    "ingredienten": [
+      {
+        "naam": "tonijn op water (blik)",
+        "hoeveelheid": 1,
+        "eenheid": "blik",
+        "categorie": "vlees-vis"
+      },
+      {
+        "naam": "kikkererwten (blik, uitgelekt)",
+        "hoeveelheid": 150,
+        "eenheid": "g",
+        "categorie": "voorraad"
+      },
+      {
+        "naam": "volkorenbrood",
+        "hoeveelheid": 1,
+        "eenheid": "snee",
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "komkommer en tomaat",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "olijfolie",
+        "hoeveelheid": 5,
+        "eenheid": "ml",
+        "categorie": "voorraad"
+      }
+    ]
+  },
+  {
+    "id": "l3",
+    "naam": "Wrap met gerookte kip",
+    "soort": "lunch",
+    "anker": null,
+    "kleur1": null,
+    "kleur2": null,
+    "basis": null,
+    "smaak": null,
+    "porties_tekst": "1 stuk volkoren wrap · 120 g gerookte kipfilet · 50 g huttenkase · 1 stuk appel · komkommer en tomaat naar smaak",
+    "kcal": 450,
+    "rotatie_week": null,
+    "kook_factor": 1,
+    "bereiding": "≈ standaard: zelfde eiwitbron, wrap i.p.v. brood",
+    "ingredienten": [
+      {
+        "naam": "volkoren wrap",
+        "hoeveelheid": 1,
+        "eenheid": "stuk",
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "gerookte kipfilet",
+        "hoeveelheid": 120,
+        "eenheid": "g",
+        "categorie": "vlees-vis"
+      },
+      {
+        "naam": "huttenkase",
+        "hoeveelheid": 50,
+        "eenheid": "g",
+        "categorie": "zuivel-eieren"
+      },
+      {
+        "naam": "komkommer en tomaat",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "appel",
+        "hoeveelheid": 1,
+        "eenheid": "stuk",
+        "categorie": "groente-fruit"
+      }
+    ]
   }
 ]
 
-// De standaarddag: vast ontbijt, lunch en snack — de app toont dit,
-// er valt niets te kiezen of in te voeren. Gedekt door de vaste lijst.
+// De standaarddag uit het plan (referentie + de vaste snack 16:00).
 export const SEED_STANDAARDDAG =
 [
   {
@@ -801,19 +1099,14 @@ export const SEED_STANDAARDDAG =
   }
 ]
 
-// Vaste weeklijst (dekt de standaarddag en de plus-blokken).
+// Vaste basislijst: dekt plus-blokken, snack 16:00 en voorraad-checks.
+// Ontbijt-, lunch- en diner-ingrediënten rekent de app uit het weekmenu.
 export const SEED_VASTE_BOODSCHAPPEN =
 [
   {
     "naam": "magere kwark",
-    "hoeveelheid": 6,
+    "hoeveelheid": 3,
     "eenheid": "bakken 500 g",
-    "categorie": "zuivel-eieren"
-  },
-  {
-    "naam": "huttenkase",
-    "hoeveelheid": 2,
-    "eenheid": "bakjes 200 g",
     "categorie": "zuivel-eieren"
   },
   {
@@ -823,18 +1116,6 @@ export const SEED_VASTE_BOODSCHAPPEN =
     "categorie": "zuivel-eieren"
   },
   {
-    "naam": "gerookte kipfilet",
-    "hoeveelheid": 400,
-    "eenheid": "g",
-    "categorie": "vlees-vis"
-  },
-  {
-    "naam": "tonijn op water",
-    "hoeveelheid": 2,
-    "eenheid": "blikken",
-    "categorie": "vlees-vis"
-  },
-  {
     "naam": "appels",
     "hoeveelheid": 7,
     "eenheid": "stuks",
@@ -842,7 +1123,7 @@ export const SEED_VASTE_BOODSCHAPPEN =
   },
   {
     "naam": "bananen",
-    "hoeveelheid": 8,
+    "hoeveelheid": 6,
     "eenheid": "stuks",
     "categorie": "groente-fruit"
   },
@@ -850,12 +1131,6 @@ export const SEED_VASTE_BOODSCHAPPEN =
     "naam": "mandarijnen of kiwi's",
     "hoeveelheid": 4,
     "eenheid": "stuks",
-    "categorie": "groente-fruit"
-  },
-  {
-    "naam": "blauwe bessen (diepvries)",
-    "hoeveelheid": 700,
-    "eenheid": "g",
     "categorie": "groente-fruit"
   },
   {
@@ -871,33 +1146,21 @@ export const SEED_VASTE_BOODSCHAPPEN =
     "categorie": "groente-fruit"
   },
   {
-    "naam": "volkorenbrood",
-    "hoeveelheid": 1,
-    "eenheid": "heel",
-    "categorie": "koolhydraten-noten"
-  },
-  {
-    "naam": "havermout",
-    "hoeveelheid": 300,
-    "eenheid": "g",
-    "categorie": "koolhydraten-noten"
-  },
-  {
-    "naam": "chiazaad",
-    "hoeveelheid": 70,
-    "eenheid": "g",
-    "categorie": "koolhydraten-noten"
-  },
-  {
-    "naam": "ongezouten noten/amandelen",
-    "hoeveelheid": 200,
-    "eenheid": "g",
-    "categorie": "koolhydraten-noten"
-  },
-  {
     "naam": "rijstwafels",
     "hoeveelheid": 1,
     "eenheid": "rol",
+    "categorie": "koolhydraten-noten"
+  },
+  {
+    "naam": "krentenbollen",
+    "hoeveelheid": 2,
+    "eenheid": "stuks",
+    "categorie": "koolhydraten-noten"
+  },
+  {
+    "naam": "volkorenbrood (L-blok)",
+    "hoeveelheid": 1,
+    "eenheid": "snee",
     "categorie": "koolhydraten-noten"
   },
   {
@@ -905,12 +1168,6 @@ export const SEED_VASTE_BOODSCHAPPEN =
     "hoeveelheid": 1,
     "eenheid": "pot (voorraad-check)",
     "categorie": "voorraad"
-  },
-  {
-    "naam": "krentenbollen",
-    "hoeveelheid": 2,
-    "eenheid": "stuks",
-    "categorie": "koolhydraten-noten"
   },
   {
     "naam": "olijfolie, honing, siroop, kaneel",
