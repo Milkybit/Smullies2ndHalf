@@ -11,7 +11,7 @@
 //   eiwit leidend). Keuzes vastgesteld door de gebruiker.
 // - Snack 16:00 en plus-blokken liggen vast; de vaste basislijst dekt ze.
 
-export const SEED_VERSIE = 10
+export const SEED_VERSIE = 11
 
 export const SEED_GERECHTEN =
 [
@@ -1343,36 +1343,7 @@ export const SEED_GERECHTEN =
   },
   {
     "id": "s1",
-    "naam": "Standaard — appel + gekookt ei",
-    "soort": "snack",
-    "anker": null,
-    "kleur1": null,
-    "kleur2": null,
-    "basis": null,
-    "smaak": null,
-    "porties_tekst": "1 stuk appel · 1 stuk eieren",
-    "kcal": 160,
-    "rotatie_week": null,
-    "kook_factor": 1,
-    "bereiding": "de standaard uit het plan; tevens tas-snack",
-    "ingredienten": [
-      {
-        "naam": "appel",
-        "hoeveelheid": 1,
-        "eenheid": "stuk",
-        "categorie": "groente-fruit"
-      },
-      {
-        "naam": "eieren",
-        "hoeveelheid": 1,
-        "eenheid": "stuk",
-        "categorie": "zuivel-eieren"
-      }
-    ]
-  },
-  {
-    "id": "s2",
-    "naam": "Eiwitshake met appel",
+    "naam": "Eiwitshake + appel",
     "soort": "snack",
     "anker": null,
     "kleur1": null,
@@ -1383,7 +1354,7 @@ export const SEED_GERECHTEN =
     "kcal": 195,
     "rotatie_week": null,
     "kook_factor": 1,
-    "bereiding": "±24 g eiwit uit de shake — 3× de standaard; appel erbij voor vezels en volume",
+    "bereiding": "±24 g eiwit uit de shake; fruit naar keuze, macro-neutraal",
     "ingredienten": [
       {
         "naam": "whey-eiwitpoeder",
@@ -1396,6 +1367,122 @@ export const SEED_GERECHTEN =
         "hoeveelheid": 1,
         "eenheid": "stuk",
         "categorie": "groente-fruit"
+      }
+    ]
+  },
+  {
+    "id": "s2",
+    "naam": "Eiwitshake + banaan",
+    "soort": "snack",
+    "anker": null,
+    "kleur1": null,
+    "kleur2": null,
+    "basis": null,
+    "smaak": null,
+    "porties_tekst": "30 g whey-eiwitpoeder · 1 stuk banaan",
+    "kcal": 205,
+    "rotatie_week": null,
+    "kook_factor": 1,
+    "bereiding": "±24 g eiwit uit de shake; fruit naar keuze, macro-neutraal",
+    "ingredienten": [
+      {
+        "naam": "whey-eiwitpoeder",
+        "hoeveelheid": 30,
+        "eenheid": "g",
+        "categorie": "voorraad"
+      },
+      {
+        "naam": "banaan",
+        "hoeveelheid": 1,
+        "eenheid": "stuk",
+        "categorie": "groente-fruit"
+      }
+    ]
+  },
+  {
+    "id": "s3",
+    "naam": "Eiwitshake + peer",
+    "soort": "snack",
+    "anker": null,
+    "kleur1": null,
+    "kleur2": null,
+    "basis": null,
+    "smaak": null,
+    "porties_tekst": "30 g whey-eiwitpoeder · 1 stuk peer",
+    "kcal": 200,
+    "rotatie_week": null,
+    "kook_factor": 1,
+    "bereiding": "±24 g eiwit uit de shake; fruit naar keuze, macro-neutraal",
+    "ingredienten": [
+      {
+        "naam": "whey-eiwitpoeder",
+        "hoeveelheid": 30,
+        "eenheid": "g",
+        "categorie": "voorraad"
+      },
+      {
+        "naam": "peer",
+        "hoeveelheid": 1,
+        "eenheid": "stuk",
+        "categorie": "groente-fruit"
+      }
+    ]
+  },
+  {
+    "id": "s4",
+    "naam": "Eiwitshake + mandarijnen of kiwi",
+    "soort": "snack",
+    "anker": null,
+    "kleur1": null,
+    "kleur2": null,
+    "basis": null,
+    "smaak": null,
+    "porties_tekst": "30 g whey-eiwitpoeder · 2 stuks mandarijnen of kiwi's",
+    "kcal": 195,
+    "rotatie_week": null,
+    "kook_factor": 1,
+    "bereiding": "±24 g eiwit uit de shake; fruit naar keuze, macro-neutraal",
+    "ingredienten": [
+      {
+        "naam": "whey-eiwitpoeder",
+        "hoeveelheid": 30,
+        "eenheid": "g",
+        "categorie": "voorraad"
+      },
+      {
+        "naam": "mandarijnen of kiwi's",
+        "hoeveelheid": 2,
+        "eenheid": "stuks",
+        "categorie": "groente-fruit"
+      }
+    ]
+  },
+  {
+    "id": "s5",
+    "naam": "Klassiek — appel + gekookt ei",
+    "soort": "snack",
+    "anker": null,
+    "kleur1": null,
+    "kleur2": null,
+    "basis": null,
+    "smaak": null,
+    "porties_tekst": "1 stuk appel · 1 stuk eieren",
+    "kcal": 160,
+    "rotatie_week": null,
+    "kook_factor": 1,
+    "bereiding": "de oorspronkelijke standaard uit het plan; tas-proof zonder shaker",
+    "ingredienten": [
+      {
+        "naam": "appel",
+        "hoeveelheid": 1,
+        "eenheid": "stuk",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "eieren",
+        "hoeveelheid": 1,
+        "eenheid": "stuk",
+        "categorie": "zuivel-eieren"
       }
     ]
   }

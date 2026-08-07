@@ -74,7 +74,7 @@ export default function Eten() {
         {maaltijd !== 'diner' && (
           <p className="klein zacht" style={{ margin: '0 0 0.4rem' }}>
             {maaltijd === 'snack'
-              ? 'Snack 16:00 — standaard appel + ei, of de eiwitshake (±24 g eiwit).'
+              ? 'Snack 16:00 — standaard de eiwitshake (±24 g eiwit) met fruit naar keuze; appel + ei is de klassieke optie.'
               : `Alle keuzes zijn macro-gelijk (${maaltijd === 'ontbijt' ? '±590' : '±460'} kcal) — wisselen kan zonder rekenen.`}
           </p>
         )}
