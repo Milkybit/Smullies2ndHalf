@@ -1,10 +1,13 @@
 import React, { useReducer } from 'react'
+import { ZATERDAGSE_TAFEL } from '../domein.js'
 import { jaarWeekKey } from '../logic/week.js'
 import {
-  getGerechten, getGerecht, getRotatieWeek, getWeekmenu,
+  getGerechten, getGerecht, getRotatieWeek, getWeekmenu, getStandaarddag,
   zetWeekmenuGerecht, zetWeekmenuPorties, herstelWeekmenu,
   getBoodschappen, maakBoodschappen, toggleBoodschap,
 } from '../storage.js'
+
+const MOMENT_LABELS = { ontbijt: 'Ontbijt', lunch: 'Lunch', snack_1600: 'Snack 16:00', diner: 'Diner' }
 
 export default function Eten() {
   const [, ververs] = useReducer((n) => n + 1, 0)
@@ -12,6 +15,7 @@ export default function Eten() {
   const rotatieNr = getRotatieWeek(weekKey)
   const menu = getWeekmenu(weekKey)
   const gerechten = getGerechten()
+  const standaarddag = getStandaarddag()
 
   // Elke menuwijziging rekent direct door in een al gemaakte lijst
   // (vinkjes blijven staan).
@@ -21,11 +25,12 @@ export default function Eten() {
     ververs()
   }
 
-  // De gerechten die deze week op het menu staan, met totaal porties.
-  const opHetMenu = new Map()
+  // Geplande diners deze week, voor de gerechtkaarten.
+  const gepland = new Map()
   for (const rij of menu) {
     if (!rij.gerecht_id) continue
-    opHetMenu.set(rij.gerecht_id, (opHetMenu.get(rij.gerecht_id) || 0) + rij.porties)
+    if (!gepland.has(rij.gerecht_id)) gepland.set(rij.gerecht_id, [])
+    gepland.get(rij.gerecht_id).push(rij)
   }
 
   const lijst = getBoodschappen(weekKey)
@@ -40,36 +45,54 @@ export default function Eten() {
     <div>
       <h1>Eten</h1>
       <p className="zacht" style={{ marginTop: '-0.3rem' }}>
-        Rotatieweek {rotatieNr} — pas het menu gerust aan; de lijst rekent mee.
+        Rotatieweek {rotatieNr} — het schema is de waarheid.
       </p>
 
       <div className="kaart">
-        <div className="kaart-titel">Weekmenu — kies per dag gerecht en porties</div>
+        <div className="kaart-titel">Standaarddag — elke dag hetzelfde</div>
+        {standaarddag.filter((m) => m.items.length > 0).map((m) => (
+          <div key={m.moment} style={{ marginBottom: '0.5rem' }}>
+            <strong>{MOMENT_LABELS[m.moment] || m.moment}</strong>
+            <span className="klein zacht"> · ±{m.kcal_totaal} kcal</span>
+            <p className="klein zacht" style={{ margin: 0 }}>
+              {m.items.map((i) => i.hoeveelheid != null
+                ? `${i.hoeveelheid} ${i.eenheid} ${i.naam}`
+                : `${i.naam} ${i.eenheid}`).join(' · ')}
+            </p>
+            {m.notitie && <p className="klein zacht" style={{ margin: 0, fontStyle: 'italic' }}>{m.notitie}</p>}
+          </div>
+        ))}
+        <p className="klein zacht" style={{ margin: 0 }}>
+          Diner: het rotatiegerecht van de dag (±690–755 kcal). De vaste
+          weeklijst dekt de standaarddag en de plus-blokken.
+        </p>
+      </div>
+
+      <div className="kaart">
+        <div className="kaart-titel">Diners deze week — kook_factor 2: 1× koken = 2× eten</div>
         {menu.map((rij) => (
           <div key={rij.dag} className="menurij">
             <span className="anker-dag">{rij.dag}</span>
             <select
               value={rij.gerecht_id || ''}
-              onChange={(e) => wijzigMenu(() => zetWeekmenuGerecht(weekKey, rij.dag, e.target.value || null))}
+              onChange={(e) => wijzigMenu(() => zetWeekmenuGerecht(weekKey, rij.dag, 'diner', e.target.value || null))}
             >
-              <option value="">— geen —</option>
+              <option value="">{rij.dag === 'za' ? `— ${ZATERDAGSE_TAFEL.toLowerCase()} —` : '— geen —'}</option>
               {gerechten.map((g) => (
-                <option key={g.id} value={g.id}>
-                  W{g.rotatie_week} · {g.naam}
-                </option>
+                <option key={g.id} value={g.id}>W{g.rotatie_week} · {g.naam}</option>
               ))}
             </select>
             <div className="stepper">
               <button
                 className="knop"
                 disabled={!rij.gerecht_id || rij.porties <= 1}
-                onClick={() => wijzigMenu(() => zetWeekmenuPorties(weekKey, rij.dag, rij.porties - 1))}
+                onClick={() => wijzigMenu(() => zetWeekmenuPorties(weekKey, rij.dag, 'diner', rij.porties - 1))}
               >−</button>
               <span>{rij.gerecht_id ? rij.porties : '·'}</span>
               <button
                 className="knop"
                 disabled={!rij.gerecht_id || rij.porties >= 9}
-                onClick={() => wijzigMenu(() => zetWeekmenuPorties(weekKey, rij.dag, rij.porties + 1))}
+                onClick={() => wijzigMenu(() => zetWeekmenuPorties(weekKey, rij.dag, 'diner', rij.porties + 1))}
               >+</button>
             </div>
           </div>
@@ -83,20 +106,21 @@ export default function Eten() {
         </button>
       </div>
 
-      {[...opHetMenu.entries()].map(([id, porties]) => {
+      {[...gepland.entries()].map(([id, rijen]) => {
         const g = getGerecht(id)
         if (!g) return null
-        const dagen = menu.filter((r) => r.gerecht_id === id).map((r) => r.dag)
+        const porties = rijen.reduce((som, r) => som + r.porties, 0)
         return (
           <div className="kaart" key={id}>
             <div className="kaart-titel">
-              {dagen.join(' · ')} · {porties} {porties === 1 ? 'portie' : 'porties'}
+              {rijen.map((r) => r.dag).join(' · ')} · {porties} {porties === 1 ? 'portie' : 'porties'}
             </div>
             <h2>{g.naam}</h2>
-            <p className="klein zacht">{g.porties_tekst}</p>
-            <p className="klein" style={{ margin: 0 }}>
-              ±{g.kcal} kcal per portie · basis: {g.basis} · smaak: {g.smaak}
+            <p className="klein" style={{ margin: '0 0 0.3rem' }}>
+              ±{g.kcal} kcal · {g.anker} · {g.kleur1} + {g.kleur2} · basis: {g.basis} · {g.smaak}
             </p>
+            <p className="klein zacht">{g.porties_tekst}</p>
+            {g.bereiding && <p className="klein zacht" style={{ margin: 0 }}>{g.bereiding}</p>}
           </div>
         )
       })}
@@ -113,8 +137,8 @@ export default function Eten() {
         {lijst.length > 0 && (
           <>
             <p className="klein zacht" style={{ margin: '0.6rem 0 0' }}>
-              Vaste lijst + ingrediënten × porties, rekent mee met het menu ·
-              {' '}{klaar}/{lijst.length} afgevinkt
+              Vaste weeklijst + diner-ingrediënten × porties, rekent mee met
+              het menu · {klaar}/{lijst.length} afgevinkt
             </p>
             {[...perCategorie.entries()].map(([categorie, items]) => (
               <div key={categorie}>
@@ -127,7 +151,9 @@ export default function Eten() {
                   >
                     <span className="vinkje">✓</span>
                     <span className="naam">{item.naam}</span>
-                    <span className="hoeveelheid">{item.hoeveelheid} {item.eenheid}</span>
+                    <span className="hoeveelheid">
+                      {item.hoeveelheid != null ? `${item.hoeveelheid} ${item.eenheid}` : item.eenheid}
+                    </span>
                   </div>
                 ))}
               </div>

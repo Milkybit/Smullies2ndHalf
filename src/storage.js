@@ -6,7 +6,7 @@
 // veranderen. Tabel- en veldnamen zijn identiek aan het datamodel
 // (straks supabase/schema.sql) zodat de migratie triviaal is.
 
-import { SEED_GERECHTEN, SEED_VASTE_BOODSCHAPPEN } from './seed.js'
+import { SEED_GERECHTEN, SEED_VASTE_BOODSCHAPPEN, SEED_STANDAARDDAG, SEED_VERSIE } from './seed.js'
 import { jaarWeekKey } from './logic/week.js'
 import { rotatieWeekNummer, standaardWeekmenu, bouwBoodschappenlijst } from './logic/rotatie.js'
 
@@ -34,17 +34,19 @@ function nieuwId() {
 
 // ---- init ------------------------------------------------------------------
 
-// Zaait gerechten en instellingen bij de eerste start. `nu` is injecteerbaar
-// voor tests; standaard vandaag.
+// Zaait gerechten en instellingen bij de eerste start. Een nieuwe seed-versie
+// (bijv. extra maaltijdsoorten) vervangt de gerechtenlijst — die is in de app
+// zelf niet te bewerken, dus dat is veilig. `nu` is injecteerbaar voor tests.
 export function initStorage(nu = new Date()) {
-  if (globalThis.localStorage.getItem(PREFIX + 'gerechten') === null) {
-    schrijf('gerechten', SEED_GERECHTEN)
-  }
   const instellingen = lees('instellingen', {})
+  if (instellingen.seed_versie !== SEED_VERSIE) {
+    schrijf('gerechten', SEED_GERECHTEN)
+    instellingen.seed_versie = SEED_VERSIE
+  }
   if (!instellingen.rotatie_start_jaar_week) {
     instellingen.rotatie_start_jaar_week = jaarWeekKey(nu)
-    schrijf('instellingen', instellingen)
   }
+  schrijf('instellingen', instellingen)
 }
 
 export function getInstellingen() {
@@ -65,6 +67,11 @@ export function getGerechten() {
 
 export function getGerecht(id) {
   return getGerechten().find((g) => g.id === id) || null
+}
+
+// De standaarddag komt rechtstreeks uit het plan en is niet bewerkbaar.
+export function getStandaarddag() {
+  return SEED_STANDAARDDAG
 }
 
 // ---- sessies ---------------------------------------------------------------
@@ -116,40 +123,64 @@ export function getRotatieWeek(weekKey) {
   return rotatieWeekNummer(weekKey, start)
 }
 
-// Levert het weekmenu van een week; bestaat het nog niet, dan wordt het
-// standaardmenu uit de rotatie gegenereerd en bewaard. Oudere rijen zonder
-// porties tellen als 1 portie.
+// Levert het diner-weekmenu van een week; bestaat het nog niet, dan wordt
+// het standaardmenu uit de rotatie gegenereerd en bewaard (kook_factor 2 →
+// elk gerecht op 2 dagen; za = zaterdagse tafel, leeg). Oudere rijen zonder
+// maaltijd of porties tellen als diner met 1 portie.
 export function getWeekmenu(weekKey) {
   const alles = lees('weekmenu', [])
-  let rijen = alles.filter((r) => r.jaar_week === weekKey)
+  let rijen = alles.filter((r) => r.jaar_week === weekKey && (r.maaltijd || 'diner') === 'diner')
   if (rijen.length === 0) {
     rijen = standaardWeekmenu(weekKey, getGerechten(), getRotatieWeek(weekKey))
     schrijf('weekmenu', alles.concat(rijen))
+    return rijen
   }
-  return rijen.map((r) => ({ porties: 1, ...r }))
+  let gewijzigd = false
+  for (const rij of rijen) {
+    if (!rij.maaltijd) { rij.maaltijd = 'diner'; gewijzigd = true }
+    if (!rij.porties) { rij.porties = 1; gewijzigd = true }
+  }
+  for (const dag of ['ma', 'di', 'wo', 'do', 'vr', 'za', 'zo']) {
+    if (!rijen.some((r) => r.dag === dag)) {
+      const nieuw = { jaar_week: weekKey, dag, maaltijd: 'diner', gerecht_id: null, porties: 1 }
+      rijen.push(nieuw)
+      alles.push(nieuw)
+      gewijzigd = true
+    }
+  }
+  if (gewijzigd) schrijf('weekmenu', alles)
+  return rijen
 }
 
-function wijzigWeekmenu(weekKey, dag, wijziging) {
+function wijzigWeekmenu(weekKey, dag, maaltijd, wijziging) {
   getWeekmenu(weekKey) // garandeert dat de rijen bestaan
   const alles = lees('weekmenu', [])
-  const rij = alles.find((r) => r.jaar_week === weekKey && r.dag === dag)
+  const rij = alles.find((r) =>
+    r.jaar_week === weekKey && r.dag === dag && (r.maaltijd || 'diner') === maaltijd
+  )
   Object.assign(rij, wijziging)
   schrijf('weekmenu', alles)
 }
 
-// Zelf een gerecht kiezen voor een dag (null = geen diner gepland).
-export function zetWeekmenuGerecht(weekKey, dag, gerechtId) {
-  wijzigWeekmenu(weekKey, dag, { gerecht_id: gerechtId })
+// Zelf een gerecht kiezen voor een dag en maaltijd (null = niets gepland).
+export function zetWeekmenuGerecht(weekKey, dag, maaltijd, gerechtId) {
+  wijzigWeekmenu(weekKey, dag, maaltijd, { gerecht_id: gerechtId })
 }
 
-// Porties voor een dag ophogen of verlagen (1–9), voor een exacte lijst.
-export function zetWeekmenuPorties(weekKey, dag, porties) {
-  wijzigWeekmenu(weekKey, dag, { porties: Math.max(1, Math.min(9, porties)) })
+// Porties ophogen of verlagen (1–9), voor een exacte lijst.
+export function zetWeekmenuPorties(weekKey, dag, maaltijd, porties) {
+  wijzigWeekmenu(weekKey, dag, maaltijd, { porties: Math.max(1, Math.min(9, porties)) })
 }
 
-// Terug naar het rotatievoorstel voor deze week.
+// Terug naar het rotatievoorstel voor deze week. Alleen de diners worden
+// gereset; gekozen ontbijt, lunch en snacks blijven staan.
 export function herstelWeekmenu(weekKey) {
-  schrijf('weekmenu', lees('weekmenu', []).filter((r) => r.jaar_week !== weekKey))
+  const rest = lees('weekmenu', []).filter((r) =>
+    !(r.jaar_week === weekKey && (r.maaltijd || 'diner') === 'diner')
+  )
+  const dinerRijen = standaardWeekmenu(weekKey, getGerechten(), getRotatieWeek(weekKey))
+    .filter((r) => r.maaltijd === 'diner')
+  schrijf('weekmenu', rest.concat(dinerRijen))
   return getWeekmenu(weekKey)
 }
 

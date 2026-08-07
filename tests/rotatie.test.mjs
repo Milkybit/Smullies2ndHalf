@@ -12,28 +12,33 @@ test('rotatie: week 5 = week 1, ook terug in de tijd', () => {
   assert.equal(rotatieWeekNummer('2026-W31', start), 4)
 })
 
-test('standaardweekmenu: 7 dagen, 3 gerechten uit de juiste rotatieweek', () => {
+test('standaardweekmenu: 3 diners op elk 2 dagen, zaterdag vrij', () => {
   const menu = standaardWeekmenu('2026-W32', SEED_GERECHTEN, 2)
   assert.equal(menu.length, 7)
-  const ids = [...new Set(menu.map((r) => r.gerecht_id))]
+  assert.equal(menu.find((r) => r.dag === 'za').gerecht_id, null)
+  const ids = [...new Set(menu.filter((r) => r.gerecht_id).map((r) => r.gerecht_id))]
   assert.equal(ids.length, 3)
   for (const id of ids) {
     assert.equal(SEED_GERECHTEN.find((g) => g.id === id).rotatie_week, 2)
   }
 })
 
-test('boodschappenlijst: vaste lijst + samengevoegde weekaanvulling', () => {
+test('boodschappenlijst: vaste weeklijst + rotatie × kook_factor, samengevoegd', () => {
   const menu = standaardWeekmenu('2026-W32', SEED_GERECHTEN, 1)
   const lijst = bouwBoodschappenlijst('2026-W32', menu, SEED_GERECHTEN, SEED_VASTE_BOODSCHAPPEN)
 
   const vast = lijst.filter((b) => b.vast)
   assert.equal(vast.length, SEED_VASTE_BOODSCHAPPEN.length)
 
-  // Kipfilet (d01, ma+di in het patroon): 210 g × 2 dagen = 420 g
-  const kip = lijst.find((b) => b.naam === 'Kipfilet' && !b.vast)
-  assert.equal(kip.hoeveelheid, 420)
+  // kipfilet (g1, 160 g): op 2 dagen = 320 g
+  const kip = lijst.find((b) => b.naam === 'kipfilet' && !b.vast)
+  assert.equal(kip.hoeveelheid, 320)
 
-  // geen dubbele niet-vaste items met dezelfde naam
-  const namen = lijst.filter((b) => !b.vast).map((b) => b.naam)
-  assert.equal(namen.length, new Set(namen).size)
+  // olijfolie uit g1+g2+g3 (10+10+10 ml × 2 dagen) = 60 ml
+  const olie = lijst.find((b) => b.naam === 'olijfolie' && !b.vast)
+  assert.equal(olie.hoeveelheid, 60)
+
+  // geen dubbele niet-vaste items met dezelfde naam+eenheid
+  const sleutels = lijst.filter((b) => !b.vast).map((b) => `${b.naam}|${b.eenheid}`)
+  assert.equal(sleutels.length, new Set(sleutels).size)
 })

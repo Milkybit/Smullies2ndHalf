@@ -1,10 +1,12 @@
-// Rotatielogica: 4 weken van elk 3 gerechten, week 5 = week 1.
-// Het standaard-weekmenu verdeelt de 3 gerechten over 7 dagen:
-// ma+di gerecht 1, wo+do gerecht 2, vr+za+zo gerecht 3 (batch-koken).
+// Rotatielogica: 4 weken van elk 3 diners, week 5 = week 1.
+// kook_factor 2 uit het plan: elk gerecht wordt dubbel gekookt en staat
+// daarom standaard op 2 dagen (ma+di / wo+do / vr+zo). Zaterdag is de
+// zaterdagse tafel: geen rotatiegerecht, geen boodschappen.
+// Ontbijt, lunch en snack zijn de standaarddag en staan niet in het menu.
 
 import { wekenTussen } from './week.js'
 
-const DAG_PATROON = { ma: 0, di: 0, wo: 1, do: 1, vr: 2, za: 2, zo: 2 }
+const DAG_PATROON = { ma: 0, di: 0, wo: 1, do: 1, vr: 2, za: null, zo: 2 }
 
 export function rotatieWeekNummer(weekKey, startKey) {
   const n = wekenTussen(startKey, weekKey)
@@ -20,14 +22,17 @@ export function standaardWeekmenu(weekKey, gerechten, rotatieNr) {
   return Object.entries(DAG_PATROON).map(([dag, i]) => ({
     jaar_week: weekKey,
     dag,
-    gerecht_id: drie[i] ? drie[i].id : null,
+    maaltijd: 'diner',
+    gerecht_id: i !== null && drie[i] ? drie[i].id : null,
     porties: 1,
   }))
 }
 
-// Boodschappenlijst = vaste lijst + weekaanvulling uit het weekmenu.
-// Ingrediënten van hetzelfde gerecht tellen per geplande dag × porties mee;
-// gelijke ingrediënten (zelfde naam + eenheid) worden samengevoegd.
+// Boodschappenlijst = vaste weeklijst + ingrediënten uit het weekmenu.
+// Ingrediënten tellen per geplande dag × porties mee (kook_factor 2 volgt
+// vanzelf uit een gerecht op 2 dagen); gelijke ingrediënten (zelfde naam +
+// eenheid) worden samengevoegd. Ingrediënten zonder hoeveelheid ("naar
+// smaak", voorraad-check) komen één keer op de lijst, ongeteld.
 export function bouwBoodschappenlijst(weekKey, weekmenu, gerechten, vasteLijst) {
   const items = []
   for (const v of vasteLijst) {
@@ -47,16 +52,20 @@ export function bouwBoodschappenlijst(weekKey, weekmenu, gerechten, vasteLijst) 
     for (const ing of gerecht.ingredienten || []) {
       const sleutel = `${ing.naam}|${ing.eenheid}`
       const bestaand = samengevoegd.get(sleutel)
-      if (bestaand) bestaand.hoeveelheid += ing.hoeveelheid * porties
-      else samengevoegd.set(sleutel, {
-        jaar_week: weekKey,
-        naam: ing.naam,
-        hoeveelheid: ing.hoeveelheid * porties,
-        eenheid: ing.eenheid,
-        categorie: ing.categorie,
-        vast: false,
-        afgevinkt: false,
-      })
+      const los = ing.hoeveelheid == null
+      if (bestaand) {
+        if (!los) bestaand.hoeveelheid += ing.hoeveelheid * porties
+      } else {
+        samengevoegd.set(sleutel, {
+          jaar_week: weekKey,
+          naam: ing.naam,
+          hoeveelheid: los ? null : ing.hoeveelheid * porties,
+          eenheid: ing.eenheid,
+          categorie: ing.categorie,
+          vast: false,
+          afgevinkt: false,
+        })
+      }
     }
   }
   return items.concat([...samengevoegd.values()])
