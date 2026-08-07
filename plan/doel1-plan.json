@@ -1587,33 +1587,13 @@
         "dekt": "algemeen"
       }
     ],
-    "regel_boodschappen": "met varianten actief: lijst = vaste_basislijst + (ontbijt-, lunch- en snackkeuzes per dag) + (diner-rotatie x kook_factor); snack 16:00 is per dag te kiezen (standaard appel+ei of eiwitshake+appel), aanvulling aug 2026",
+    "regel_boodschappen": "met varianten actief: lijst = vaste_basislijst + (ontbijt-, lunch- en snackkeuzes per dag) + (diner-rotatie x kook_factor); snack 16:00 is standaard de eiwitshake met fruit naar keuze (appel/banaan/peer/mandarijn-kiwi); appel+ei blijft als klassieke optie (aanvulling aug 2026)",
     "snack_varianten": [
       {
         "id": "s1",
-        "naam": "Standaard — appel + gekookt ei",
-        "kcal": 160,
-        "macro_notitie": "de standaard uit het plan; tevens tas-snack",
-        "ingredienten": [
-          {
-            "naam": "appel",
-            "hoeveelheid": 1,
-            "eenheid": "stuk",
-            "categorie": "groente-fruit"
-          },
-          {
-            "naam": "eieren",
-            "hoeveelheid": 1,
-            "eenheid": "stuk",
-            "categorie": "zuivel-eieren"
-          }
-        ]
-      },
-      {
-        "id": "s2",
-        "naam": "Eiwitshake met appel",
+        "naam": "Eiwitshake + appel",
         "kcal": 195,
-        "macro_notitie": "±24 g eiwit uit de shake — 3× de standaard; appel erbij voor vezels en volume",
+        "macro_notitie": "±24 g eiwit uit de shake; fruit naar keuze, macro-neutraal",
         "ingredienten": [
           {
             "naam": "whey-eiwitpoeder",
@@ -1626,6 +1606,86 @@
             "hoeveelheid": 1,
             "eenheid": "stuk",
             "categorie": "groente-fruit"
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "naam": "Eiwitshake + banaan",
+        "kcal": 205,
+        "macro_notitie": "±24 g eiwit uit de shake; fruit naar keuze, macro-neutraal",
+        "ingredienten": [
+          {
+            "naam": "whey-eiwitpoeder",
+            "hoeveelheid": 30,
+            "eenheid": "g",
+            "categorie": "voorraad"
+          },
+          {
+            "naam": "banaan",
+            "hoeveelheid": 1,
+            "eenheid": "stuk",
+            "categorie": "groente-fruit"
+          }
+        ]
+      },
+      {
+        "id": "s3",
+        "naam": "Eiwitshake + peer",
+        "kcal": 200,
+        "macro_notitie": "±24 g eiwit uit de shake; fruit naar keuze, macro-neutraal",
+        "ingredienten": [
+          {
+            "naam": "whey-eiwitpoeder",
+            "hoeveelheid": 30,
+            "eenheid": "g",
+            "categorie": "voorraad"
+          },
+          {
+            "naam": "peer",
+            "hoeveelheid": 1,
+            "eenheid": "stuk",
+            "categorie": "groente-fruit"
+          }
+        ]
+      },
+      {
+        "id": "s4",
+        "naam": "Eiwitshake + mandarijnen of kiwi",
+        "kcal": 195,
+        "macro_notitie": "±24 g eiwit uit de shake; fruit naar keuze, macro-neutraal",
+        "ingredienten": [
+          {
+            "naam": "whey-eiwitpoeder",
+            "hoeveelheid": 30,
+            "eenheid": "g",
+            "categorie": "voorraad"
+          },
+          {
+            "naam": "mandarijnen of kiwi's",
+            "hoeveelheid": 2,
+            "eenheid": "stuks",
+            "categorie": "groente-fruit"
+          }
+        ]
+      },
+      {
+        "id": "s5",
+        "naam": "Klassiek — appel + gekookt ei",
+        "kcal": 160,
+        "macro_notitie": "de oorspronkelijke standaard uit het plan; tas-proof zonder shaker",
+        "ingredienten": [
+          {
+            "naam": "appel",
+            "hoeveelheid": 1,
+            "eenheid": "stuk",
+            "categorie": "groente-fruit"
+          },
+          {
+            "naam": "eieren",
+            "hoeveelheid": 1,
+            "eenheid": "stuk",
+            "categorie": "zuivel-eieren"
           }
         ]
       }
