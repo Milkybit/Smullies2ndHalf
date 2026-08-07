@@ -58,6 +58,28 @@ Safari op iPhone en kies Deelknop → Zet op beginscherm.
 
 Bij hosting onder een ander pad: `BASE_PATH=/ander-pad/ npm run build`.
 
+## Synchronisatie via Supabase (fase 6)
+
+De app werkt local-first: alles blijft in localStorage (snel, offline) en
+synchroniseert op de achtergrond met Supabase zodra dat is ingericht.
+Eenmalige setup:
+
+1. Gratis project op [supabase.com](https://supabase.com), regio EU.
+2. SQL Editor → inhoud van `supabase/schema.sql` plakken → Run.
+3. Authentication → Providers → Email: "Confirm email" mag uit (één gebruiker).
+4. Settings → API: kopieer Project URL en anon key.
+5. GitHub-repo → Settings → Secrets and variables → Actions → twee secrets:
+   `VITE_SUPABASE_URL` en `VITE_SUPABASE_ANON_KEY` → daarna één keer
+   opnieuw deployen (workflow draaien of een PR mergen).
+6. In de app (Voortgang → Synchronisatie): registreren met e-mail en
+   wachtwoord, inloggen, en één keer **"Importeer lokale data → cloud"**.
+7. Op je andere apparaat: inloggen — de data komt vanzelf binnen.
+
+De anon key is publiek bedoeld; Row Level Security zorgt dat alleen de
+ingelogde gebruiker zijn eigen rijen kan lezen en schrijven. Let op de
+gratis tier: het project pauzeert na 7 dagen zonder verkeer — dagelijks de
+app openen is genoeg, of richt een nachtelijke ping in.
+
 ## Nieuwe ideeën
 
 Buiten de v1-scope: noteren in `IDEAS.md`, niet bouwen.

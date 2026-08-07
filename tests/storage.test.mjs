@@ -192,6 +192,20 @@ test('droge dagen: één tik per dag, tweede tik haalt weg', () => {
   assert.deepEqual(storage.getDrogeDagen(), ['2026-08-04'])
 })
 
+test('sync-haak: schrijfacties melden zich, vervangTabel blijft stil', () => {
+  const gemeld = []
+  storage.registreerSyncListener((tabel) => gemeld.push(tabel))
+  storage.saveSessie({ datum: '2026-08-03', anker: 'ma' })
+  storage.saveMeting({ datum: '2026-08-01', gewicht: 84.6, vet_pct: null })
+  assert.deepEqual(gemeld, ['sessies', 'metingen'])
+
+  // cloud → lokaal schrijven mag geen nieuwe push uitlokken
+  storage.vervangTabel('sessies', [{ id: 'x', datum: '2026-08-04', anker: 'di', mini: false }])
+  assert.deepEqual(gemeld, ['sessies', 'metingen'])
+  assert.equal(storage.getSessies()[0].anker, 'di')
+  storage.registreerSyncListener(null)
+})
+
 test('export en import: alle tabellen komen ongeschonden terug', () => {
   storage.saveSessie({ datum: '2026-08-03', anker: 'ma', mini: true })
   storage.saveMeting({ datum: '2026-08-01', gewicht: 84.6, vet_pct: 24.4 })

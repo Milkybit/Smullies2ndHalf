@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Vandaag from './screens/Vandaag.jsx'
 import Week from './screens/Week.jsx'
 import Eten from './screens/Eten.jsx'
@@ -20,15 +20,22 @@ function tabUitHash() {
 
 export default function App() {
   const [actief, setActiefState] = useState(tabUitHash)
+  const [syncTik, setSyncTik] = useState(0)
   const setActief = (id) => {
     window.location.hash = id
     setActiefState(id)
   }
+  // Binnengekomen cloud-data → schermen opnieuw uit storage laten lezen.
+  useEffect(() => {
+    const tik = () => setSyncTik((n) => n + 1)
+    window.addEventListener('doel1:sync', tik)
+    return () => window.removeEventListener('doel1:sync', tik)
+  }, [])
   const { Scherm } = TABS.find((t) => t.id === actief)
   return (
     <>
       <main className="scherm">
-        <Scherm />
+        <Scherm key={actief + '-' + syncTik} />
       </main>
       <nav className="tabbalk">
         <div className="tabbalk-binnen">
