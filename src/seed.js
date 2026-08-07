@@ -11,7 +11,7 @@
 //   eiwit leidend). Keuzes vastgesteld door de gebruiker.
 // - Snack 16:00 en plus-blokken liggen vast; de vaste basislijst dekt ze.
 
-export const SEED_VERSIE = 9
+export const SEED_VERSIE = 10
 
 export const SEED_GERECHTEN =
 [
@@ -1340,6 +1340,64 @@ export const SEED_GERECHTEN =
         "categorie": "voorraad"
       }
     ]
+  },
+  {
+    "id": "s1",
+    "naam": "Standaard — appel + gekookt ei",
+    "soort": "snack",
+    "anker": null,
+    "kleur1": null,
+    "kleur2": null,
+    "basis": null,
+    "smaak": null,
+    "porties_tekst": "1 stuk appel · 1 stuk eieren",
+    "kcal": 160,
+    "rotatie_week": null,
+    "kook_factor": 1,
+    "bereiding": "de standaard uit het plan; tevens tas-snack",
+    "ingredienten": [
+      {
+        "naam": "appel",
+        "hoeveelheid": 1,
+        "eenheid": "stuk",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "eieren",
+        "hoeveelheid": 1,
+        "eenheid": "stuk",
+        "categorie": "zuivel-eieren"
+      }
+    ]
+  },
+  {
+    "id": "s2",
+    "naam": "Eiwitshake met appel",
+    "soort": "snack",
+    "anker": null,
+    "kleur1": null,
+    "kleur2": null,
+    "basis": null,
+    "smaak": null,
+    "porties_tekst": "30 g whey-eiwitpoeder · 1 stuk appel",
+    "kcal": 195,
+    "rotatie_week": null,
+    "kook_factor": 1,
+    "bereiding": "±24 g eiwit uit de shake — 3× de standaard; appel erbij voor vezels en volume",
+    "ingredienten": [
+      {
+        "naam": "whey-eiwitpoeder",
+        "hoeveelheid": 30,
+        "eenheid": "g",
+        "categorie": "voorraad"
+      },
+      {
+        "naam": "appel",
+        "hoeveelheid": 1,
+        "eenheid": "stuk",
+        "categorie": "groente-fruit"
+      }
+    ]
   }
 ]
 
@@ -1475,20 +1533,6 @@ export const SEED_VASTE_BOODSCHAPPEN =
     "eenheid": "bakken 500 g",
     "categorie": "zuivel-eieren",
     "dekt": "plus-blokken"
-  },
-  {
-    "naam": "eieren",
-    "hoeveelheid": 10,
-    "eenheid": "stuks",
-    "categorie": "zuivel-eieren",
-    "dekt": "snack 16:00 + marge"
-  },
-  {
-    "naam": "appels",
-    "hoeveelheid": 7,
-    "eenheid": "stuks",
-    "categorie": "groente-fruit",
-    "dekt": "snack 16:00"
   },
   {
     "naam": "bananen",

@@ -11,7 +11,7 @@ import { wekenTussen } from './week.js'
 const DAG_PATROON = { ma: 0, di: 0, wo: 1, do: 1, vr: 2, za: null, zo: 2 }
 const DAGEN = Object.keys(DAG_PATROON)
 
-export const MAALTIJD_STANDAARD = { ontbijt: 'o1', lunch: 'l1' }
+export const MAALTIJD_STANDAARD = { ontbijt: 'o1', lunch: 'l1', snack: 's1' }
 
 export function rotatieWeekNummer(weekKey, startKey) {
   const n = wekenTussen(startKey, weekKey)

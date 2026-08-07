@@ -38,7 +38,8 @@ for mid, moment, naam in [('o1', 'ontbijt', 'Standaard — kwark met havermout (
     })
 
 av = plan['aanvulling_variatie']
-for soort, lijst in [('ontbijt', av['ontbijt_varianten']), ('lunch', av['lunch_varianten'])]:
+for soort, lijst in [('ontbijt', av['ontbijt_varianten']), ('lunch', av['lunch_varianten']),
+                     ('snack', av.get('snack_varianten', []))]:
     for v in lijst:
         gerechten.append({
             'id': v['id'], 'naam': v['naam'], 'soort': soort,

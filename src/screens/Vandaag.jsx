@@ -3,7 +3,7 @@ import { SPORTEN, PLUS_BLOKKEN, ZATERDAGSE_TAFEL } from '../domein.js'
 import { dagCode, datumKey, jaarWeekKey } from '../logic/week.js'
 import {
   getSessies, saveSessie, verwijderSessie,
-  getWeekmenu, getGerecht, getRotatieWeek, getStandaarddag,
+  getWeekmenu, getGerecht, getRotatieWeek,
   getDrogeDagen, toggleDroog,
 } from '../storage.js'
 
@@ -27,8 +27,8 @@ export default function Vandaag() {
   const diner = getGerecht(dinerRij.gerecht_id)
   const ontbijt = getGerecht(rijVan('ontbijt').gerecht_id)
   const lunch = getGerecht(rijVan('lunch').gerecht_id)
+  const snackGerecht = getGerecht(rijVan('snack').gerecht_id)
   const rotatieNr = getRotatieWeek(weekKey)
-  const snack = getStandaarddag().find((m) => m.moment === 'snack_1600')
 
   // Kracht A tikt door: niet → vol → mini → niet; de rest is aan/uit.
   // Een sport kiezen haalt een eerder gezette rustdag weg.
@@ -147,7 +147,7 @@ export default function Vandaag() {
 
       <div className="kaart">
         <div className="kaart-titel">Ontbijt, lunch en snack vandaag</div>
-        {[['Ontbijt', ontbijt], ['Lunch', lunch]].map(([label, gerecht]) => (
+        {[['Ontbijt', ontbijt], ['Lunch', lunch], ['Snack 16:00', snackGerecht]].map(([label, gerecht]) => (
           <p key={label} className="klein" style={{ margin: '0 0 0.3rem' }}>
             <strong>{label}</strong>
             {gerecht ? (
@@ -157,14 +157,6 @@ export default function Vandaag() {
             )}
           </p>
         ))}
-        {snack && (
-          <p className="klein" style={{ margin: 0 }}>
-            <strong>Snack 16:00</strong>
-            <span className="zacht"> · ±{snack.kcal_totaal} kcal · {snack.items.map((i) =>
-              i.hoeveelheid != null ? `${i.hoeveelheid} ${i.eenheid} ${i.naam}` : i.naam
-            ).join(' · ')}</span>
-          </p>
-        )}
       </div>
 
       <div className="kaart">

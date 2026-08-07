@@ -14,7 +14,7 @@ test('rotatie: week 5 = week 1, ook terug in de tijd', () => {
 
 test('standaardweekmenu: diners op 2 dagen (za vrij), ontbijt en lunch standaard', () => {
   const menu = standaardWeekmenu('2026-W32', SEED_GERECHTEN, 2)
-  assert.equal(menu.length, 21)
+  assert.equal(menu.length, 28)
   const diners = menu.filter((r) => r.maaltijd === 'diner')
   assert.equal(diners.find((r) => r.dag === 'za').gerecht_id, null)
   const ids = [...new Set(diners.filter((r) => r.gerecht_id).map((r) => r.gerecht_id))]
