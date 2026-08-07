@@ -1,4 +1,5 @@
 import React, { useReducer, useState } from 'react'
+import SyncKaart from './SyncKaart.jsx'
 import { dagCode, datumKey } from '../logic/week.js'
 import { vierWekenEvaluatie, drogeReeks, EVALUATIE_DREMPEL } from '../logic/evaluatie.js'
 import {
@@ -190,6 +191,8 @@ export default function Voortgang() {
           <span className="zacht">{reeks === 1 ? 'dag droog' : 'dagen droog'} aaneengesloten</span>
         </div>
       </div>
+
+      <SyncKaart />
 
       <div className="kaart">
         <div className="kaart-titel">Reservekopie</div>

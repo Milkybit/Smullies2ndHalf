@@ -22,8 +22,31 @@ function lees(tabel, fallback) {
   }
 }
 
+// De sync-laag (fase 6) kan meeluisteren met elke schrijfactie; bij het
+// binnenhalen van cloud-data schrijft hij zelf "stil" terug via vervangTabel.
+let syncListener = null
+let stil = false
+
 function schrijf(tabel, data) {
   globalThis.localStorage.setItem(PREFIX + tabel, JSON.stringify(data))
+  if (syncListener && !stil) syncListener(tabel)
+}
+
+export function registreerSyncListener(fn) {
+  syncListener = fn
+}
+
+export function vervangTabel(tabel, data) {
+  stil = true
+  try {
+    schrijf(tabel, data)
+  } finally {
+    stil = false
+  }
+}
+
+export function leesTabel(tabel) {
+  return lees(tabel, tabel === 'instellingen' ? {} : [])
 }
 
 function nieuwId() {
