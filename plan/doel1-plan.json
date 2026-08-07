@@ -1094,7 +1094,8 @@
             "eenheid": "naar smaak",
             "categorie": "voorraad"
           }
-        ]
+        ],
+        "bereiding": "Havermout, eieren en kwark tot beslag mixen; 3-4 pannenkoekjes bakken. Banaan in plakjes en (even verwarmde) bessen erover, honing erop."
       },
       {
         "id": "o3",
@@ -1144,7 +1145,8 @@
             "eenheid": "naar smaak",
             "categorie": "voorraad"
           }
-        ]
+        ],
+        "bereiding": "Paprika en champignons even bakken, geklopte eieren erover en laten stollen; hüttenkäse erover of ernaast, brood erbij."
       }
     ],
     "lunch_varianten": [
@@ -1184,7 +1186,8 @@
             "eenheid": "ml",
             "categorie": "voorraad"
           }
-        ]
+        ],
+        "bereiding": "Tonijn, kikkererwten en fijngesneden komkommer/tomaat mengen met de olijfolie; snee brood ernaast."
       },
       {
         "id": "l3",
@@ -1222,7 +1225,8 @@
             "eenheid": "stuk",
             "categorie": "groente-fruit"
           }
-        ]
+        ],
+        "bereiding": "Wrap besmeren met hüttenkäse, kip en groente erop, oprollen. Appel toe."
       },
       {
         "id": "l4",
@@ -1260,7 +1264,8 @@
             "eenheid": "naar smaak",
             "categorie": "voorraad"
           }
-        ]
+        ],
+        "bereiding": "Kwark met havermout en kaneel roeren; banaan in plakjes en de noten erover."
       },
       {
         "id": "l5",
@@ -1298,7 +1303,8 @@
             "eenheid": "naar smaak",
             "categorie": "voorraad"
           }
-        ]
+        ],
+        "bereiding": "Gekookte eieren prakken met yoghurt, mosterd en bieslook; op het brood, tomaat erbij."
       },
       {
         "id": "l6",
@@ -1336,7 +1342,8 @@
             "eenheid": "naar smaak",
             "categorie": "voorraad"
           }
-        ]
+        ],
+        "bereiding": "Wrap besmeren met hüttenkäse; zalm, komkommer en rucola erop, citroen en peper, oprollen."
       },
       {
         "id": "l7",
@@ -1380,7 +1387,8 @@
             "eenheid": "naar smaak",
             "categorie": "voorraad"
           }
-        ]
+        ],
+        "bereiding": "Linzen met tomatenblokjes, wortel en kruiden ±20 min in bouillon koken; grof pureren. Brood met hüttenkäse ernaast. Kook 3-4 porties tegelijk."
       },
       {
         "id": "l8",
@@ -1424,7 +1432,8 @@
             "eenheid": "naar smaak",
             "categorie": "voorraad"
           }
-        ]
+        ],
+        "bereiding": "Tartaartje bakken, ui in dezelfde pan meebakken; op het brood met mosterd, tomaat erbij."
       },
       {
         "id": "l9",
@@ -1474,7 +1483,8 @@
             "eenheid": "naar smaak",
             "categorie": "voorraad"
           }
-        ]
+        ],
+        "bereiding": "Kip, gekookt ei en salade in een kom; dressing van yoghurt, citroen en knoflook; brood roosteren en in blokjes als croutons, parmezaan erover."
       },
       {
         "id": "l10",
@@ -1512,7 +1522,8 @@
             "eenheid": "naar smaak",
             "categorie": "voorraad"
           }
-        ]
+        ],
+        "bereiding": "Brood besmeren met hüttenkäse, makreel erop plukken; komkommer erbij, citroen en peper erover."
       }
     ],
     "vaste_basislijst": [
@@ -1607,7 +1618,8 @@
             "eenheid": "stuk",
             "categorie": "groente-fruit"
           }
-        ]
+        ],
+        "bereiding": "Whey met ±300 ml koud water schudden; appel erbij."
       },
       {
         "id": "s2",
@@ -1627,7 +1639,8 @@
             "eenheid": "stuk",
             "categorie": "groente-fruit"
           }
-        ]
+        ],
+        "bereiding": "Whey met ±300 ml koud water schudden; banaan erbij."
       },
       {
         "id": "s3",
@@ -1647,7 +1660,8 @@
             "eenheid": "stuk",
             "categorie": "groente-fruit"
           }
-        ]
+        ],
+        "bereiding": "Whey met ±300 ml koud water schudden; peer erbij."
       },
       {
         "id": "s4",
@@ -1667,7 +1681,8 @@
             "eenheid": "stuks",
             "categorie": "groente-fruit"
           }
-        ]
+        ],
+        "bereiding": "Whey met ±300 ml koud water schudden; mandarijnen of kiwi erbij."
       },
       {
         "id": "s5",
@@ -1687,8 +1702,13 @@
             "eenheid": "stuk",
             "categorie": "zuivel-eieren"
           }
-        ]
+        ],
+        "bereiding": "Ei vooraf koken (meal-prep: kook er meteen een paar); appel erbij."
       }
-    ]
+    ],
+    "standaard_bereiding": {
+      "o1": "Avond ervoor: kwark, havermout, chiazaad en kaneel roeren, bessen erdoor; nacht in de koelkast (overnight oats). Noten en siroop er 's ochtends over.",
+      "l1": "Brood beleggen met kip óf tonijn en de hüttenkäse; komkommer en tomaat erbij of erop."
+    }
   }
 }
