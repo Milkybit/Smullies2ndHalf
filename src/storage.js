@@ -139,7 +139,7 @@ export function getWeekmenu(weekKey) {
   const alles = lees('weekmenu', [])
   const bekend = new Set(getGerechten().map((g) => g.id))
   let rijen = alles.filter((r) =>
-    r.jaar_week === weekKey && ['ontbijt', 'lunch', 'diner'].includes(r.maaltijd || 'diner')
+    r.jaar_week === weekKey && ['ontbijt', 'lunch', 'diner', 'snack'].includes(r.maaltijd || 'diner')
   )
   if (rijen.length === 0) {
     rijen = standaardWeekmenu(weekKey, getGerechten(), getRotatieWeek(weekKey))
@@ -155,7 +155,7 @@ export function getWeekmenu(weekKey) {
       gewijzigd = true
     }
   }
-  for (const maaltijd of ['ontbijt', 'lunch', 'diner']) {
+  for (const maaltijd of ['ontbijt', 'lunch', 'diner', 'snack']) {
     for (const dag of ['ma', 'di', 'wo', 'do', 'vr', 'za', 'zo']) {
       if (!rijen.some((r) => r.dag === dag && r.maaltijd === maaltijd)) {
         const nieuw = {

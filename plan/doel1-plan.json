@@ -1524,20 +1524,6 @@
         "dekt": "plus-blokken"
       },
       {
-        "naam": "eieren",
-        "hoeveelheid": 10,
-        "eenheid": "stuks",
-        "categorie": "zuivel-eieren",
-        "dekt": "snack 16:00 + marge"
-      },
-      {
-        "naam": "appels",
-        "hoeveelheid": 7,
-        "eenheid": "stuks",
-        "categorie": "groente-fruit",
-        "dekt": "snack 16:00"
-      },
-      {
         "naam": "bananen",
         "hoeveelheid": 6,
         "eenheid": "stuks",
@@ -1601,6 +1587,48 @@
         "dekt": "algemeen"
       }
     ],
-    "regel_boodschappen": "met varianten actief: lijst = vaste_basislijst + (ontbijt- en lunchkeuzes per dag) + (diner-rotatie x kook_factor); de oorspronkelijke vaste_weeklijst blijft hieronder staan als referentie voor de volledig-standaard-week"
+    "regel_boodschappen": "met varianten actief: lijst = vaste_basislijst + (ontbijt-, lunch- en snackkeuzes per dag) + (diner-rotatie x kook_factor); snack 16:00 is per dag te kiezen (standaard appel+ei of eiwitshake+appel), aanvulling aug 2026",
+    "snack_varianten": [
+      {
+        "id": "s1",
+        "naam": "Standaard — appel + gekookt ei",
+        "kcal": 160,
+        "macro_notitie": "de standaard uit het plan; tevens tas-snack",
+        "ingredienten": [
+          {
+            "naam": "appel",
+            "hoeveelheid": 1,
+            "eenheid": "stuk",
+            "categorie": "groente-fruit"
+          },
+          {
+            "naam": "eieren",
+            "hoeveelheid": 1,
+            "eenheid": "stuk",
+            "categorie": "zuivel-eieren"
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "naam": "Eiwitshake met appel",
+        "kcal": 195,
+        "macro_notitie": "±24 g eiwit uit de shake — 3× de standaard; appel erbij voor vezels en volume",
+        "ingredienten": [
+          {
+            "naam": "whey-eiwitpoeder",
+            "hoeveelheid": 30,
+            "eenheid": "g",
+            "categorie": "voorraad"
+          },
+          {
+            "naam": "appel",
+            "hoeveelheid": 1,
+            "eenheid": "stuk",
+            "categorie": "groente-fruit"
+          }
+        ]
+      }
+    ]
   }
 }

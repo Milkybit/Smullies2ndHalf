@@ -38,7 +38,8 @@ for mid, moment, naam in [('o1', 'ontbijt', 'Standaard — kwark met havermout (
     })
 
 av = plan['aanvulling_variatie']
-for soort, lijst in [('ontbijt', av['ontbijt_varianten']), ('lunch', av['lunch_varianten'])]:
+for soort, lijst in [('ontbijt', av['ontbijt_varianten']), ('lunch', av['lunch_varianten']),
+                     ('snack', av.get('snack_varianten', []))]:
     for v in lijst:
         gerechten.append({
             'id': v['id'], 'naam': v['naam'], 'soort': soort,
@@ -49,7 +50,7 @@ for soort, lijst in [('ontbijt', av['ontbijt_varianten']), ('lunch', av['lunch_v
             'ingredienten': v['ingredienten'],
         })
 
-vaste = [{k: v for k, v in item.items() if k != 'dekt'} for item in av['vaste_basislijst']]
+vaste = av['vaste_basislijst']  # incl. 'dekt': waarvoor het item op de lijst staat
 versie = int(sys.argv[1])
 
 print(f"""// Seed-data voor Doel1 — gegenereerd uit het definitieve 4-wekenplan

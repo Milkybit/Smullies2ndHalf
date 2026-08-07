@@ -91,7 +91,7 @@ test('metingen: upsert op datum en gesorteerd teruggeven', () => {
 
 test('weekmenu: rotatie op 2 dagen per gerecht, zaterdag vrij, standaard ontbijt/lunch', () => {
   const menu = storage.getWeekmenu(WEEK)
-  assert.equal(menu.length, 21)
+  assert.equal(menu.length, 28)
   const diners = menu.filter((r) => r.maaltijd === 'diner')
   // zaterdagse tafel: geen gerecht op za
   assert.equal(diners.find((r) => r.dag === 'za').gerecht_id, null)
@@ -100,9 +100,10 @@ test('weekmenu: rotatie op 2 dagen per gerecht, zaterdag vrij, standaard ontbijt
   for (const r of diners) if (r.gerecht_id) telling[r.gerecht_id] = (telling[r.gerecht_id] || 0) + 1
   assert.equal(Object.keys(telling).length, 3)
   assert.ok(Object.values(telling).every((n) => n === 2))
-  // ontbijt en lunch standaard op o1/l1
+  // ontbijt, lunch en snack standaard op o1/l1/s1
   assert.ok(menu.filter((r) => r.maaltijd === 'ontbijt').every((r) => r.gerecht_id === 'o1'))
   assert.ok(menu.filter((r) => r.maaltijd === 'lunch').every((r) => r.gerecht_id === 'l1'))
+  assert.ok(menu.filter((r) => r.maaltijd === 'snack').every((r) => r.gerecht_id === 's1'))
   // tweede aanroep: zelfde menu, niet opnieuw gegenereerd
   assert.deepEqual(storage.getWeekmenu(WEEK), menu)
 })
@@ -147,9 +148,9 @@ test('weekmenu: gerecht kiezen en porties ophogen werkt door in de lijst', () =>
     null
   )
 
-  // herstel zet de rotatie terug (21 rijen: 3 maaltijden × 7 dagen)
+  // herstel zet de rotatie terug (28 rijen: 4 maaltijden × 7 dagen)
   const hersteld = storage.herstelWeekmenu(WEEK)
-  assert.equal(hersteld.length, 21)
+  assert.equal(hersteld.length, 28)
   assert.ok(hersteld.every((r) => r.porties === 1))
 })
 

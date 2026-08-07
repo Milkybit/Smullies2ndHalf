@@ -11,7 +11,7 @@
 //   eiwit leidend). Keuzes vastgesteld door de gebruiker.
 // - Snack 16:00 en plus-blokken liggen vast; de vaste basislijst dekt ze.
 
-export const SEED_VERSIE = 9
+export const SEED_VERSIE = 10
 
 export const SEED_GERECHTEN =
 [
@@ -1340,6 +1340,64 @@ export const SEED_GERECHTEN =
         "categorie": "voorraad"
       }
     ]
+  },
+  {
+    "id": "s1",
+    "naam": "Standaard — appel + gekookt ei",
+    "soort": "snack",
+    "anker": null,
+    "kleur1": null,
+    "kleur2": null,
+    "basis": null,
+    "smaak": null,
+    "porties_tekst": "1 stuk appel · 1 stuk eieren",
+    "kcal": 160,
+    "rotatie_week": null,
+    "kook_factor": 1,
+    "bereiding": "de standaard uit het plan; tevens tas-snack",
+    "ingredienten": [
+      {
+        "naam": "appel",
+        "hoeveelheid": 1,
+        "eenheid": "stuk",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "eieren",
+        "hoeveelheid": 1,
+        "eenheid": "stuk",
+        "categorie": "zuivel-eieren"
+      }
+    ]
+  },
+  {
+    "id": "s2",
+    "naam": "Eiwitshake met appel",
+    "soort": "snack",
+    "anker": null,
+    "kleur1": null,
+    "kleur2": null,
+    "basis": null,
+    "smaak": null,
+    "porties_tekst": "30 g whey-eiwitpoeder · 1 stuk appel",
+    "kcal": 195,
+    "rotatie_week": null,
+    "kook_factor": 1,
+    "bereiding": "±24 g eiwit uit de shake — 3× de standaard; appel erbij voor vezels en volume",
+    "ingredienten": [
+      {
+        "naam": "whey-eiwitpoeder",
+        "hoeveelheid": 30,
+        "eenheid": "g",
+        "categorie": "voorraad"
+      },
+      {
+        "naam": "appel",
+        "hoeveelheid": 1,
+        "eenheid": "stuk",
+        "categorie": "groente-fruit"
+      }
+    ]
   }
 ]
 
@@ -1473,72 +1531,70 @@ export const SEED_VASTE_BOODSCHAPPEN =
     "naam": "magere kwark",
     "hoeveelheid": 3,
     "eenheid": "bakken 500 g",
-    "categorie": "zuivel-eieren"
-  },
-  {
-    "naam": "eieren",
-    "hoeveelheid": 10,
-    "eenheid": "stuks",
-    "categorie": "zuivel-eieren"
-  },
-  {
-    "naam": "appels",
-    "hoeveelheid": 7,
-    "eenheid": "stuks",
-    "categorie": "groente-fruit"
+    "categorie": "zuivel-eieren",
+    "dekt": "plus-blokken"
   },
   {
     "naam": "bananen",
     "hoeveelheid": 6,
     "eenheid": "stuks",
-    "categorie": "groente-fruit"
+    "categorie": "groente-fruit",
+    "dekt": "plus-blokken M en L + marge"
   },
   {
     "naam": "mandarijnen of kiwi's",
     "hoeveelheid": 4,
     "eenheid": "stuks",
-    "categorie": "groente-fruit"
+    "categorie": "groente-fruit",
+    "dekt": "plus-blok S"
   },
   {
     "naam": "komkommer",
     "hoeveelheid": 1,
     "eenheid": "stuk",
-    "categorie": "groente-fruit"
+    "categorie": "groente-fruit",
+    "dekt": "lunch naar smaak"
   },
   {
     "naam": "tomaten",
     "hoeveelheid": 4,
     "eenheid": "stuks",
-    "categorie": "groente-fruit"
+    "categorie": "groente-fruit",
+    "dekt": "lunch naar smaak"
   },
   {
     "naam": "rijstwafels",
     "hoeveelheid": 1,
     "eenheid": "rol",
-    "categorie": "koolhydraten-noten"
+    "categorie": "koolhydraten-noten",
+    "dekt": "plus-blok M"
   },
   {
     "naam": "krentenbollen",
     "hoeveelheid": 2,
     "eenheid": "stuks",
-    "categorie": "koolhydraten-noten"
+    "categorie": "koolhydraten-noten",
+    "dekt": "plus-blok L"
   },
   {
     "naam": "volkorenbrood (L-blok)",
     "hoeveelheid": 1,
     "eenheid": "snee",
-    "categorie": "koolhydraten-noten"
+    "categorie": "koolhydraten-noten",
+    "dekt": "plus-blok L"
   },
   {
     "naam": "pindakaas",
     "hoeveelheid": 1,
     "eenheid": "pot (voorraad-check)",
-    "categorie": "voorraad"
+    "categorie": "voorraad",
+    "dekt": "plus-blok M"
   },
   {
     "naam": "olijfolie, honing, siroop, kaneel",
     "hoeveelheid": null,
     "eenheid": "voorraad-check",
-    "categorie": "voorraad"
+    "categorie": "voorraad",
+    "dekt": "algemeen"
   }
 ]

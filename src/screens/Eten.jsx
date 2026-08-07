@@ -2,7 +2,7 @@ import React, { useReducer, useState } from 'react'
 import { ZATERDAGSE_TAFEL } from '../domein.js'
 import { jaarWeekKey } from '../logic/week.js'
 import {
-  getGerechten, getGerecht, getRotatieWeek, getWeekmenu, getStandaarddag,
+  getGerechten, getGerecht, getRotatieWeek, getWeekmenu,
   zetWeekmenuGerecht, zetWeekmenuPorties, herstelWeekmenu,
   getBoodschappen, maakBoodschappen, toggleBoodschap,
 } from '../storage.js'
@@ -11,6 +11,7 @@ const TABS = [
   { code: 'ontbijt', label: 'Ontbijt' },
   { code: 'lunch', label: 'Lunch' },
   { code: 'diner', label: 'Diner' },
+  { code: 'snack', label: 'Snack' },
 ]
 
 export default function Eten() {
@@ -20,7 +21,6 @@ export default function Eten() {
   const rotatieNr = getRotatieWeek(weekKey)
   const menu = getWeekmenu(weekKey)
   const gerechten = getGerechten()
-  const snack = getStandaarddag().find((m) => m.moment === 'snack_1600')
 
   const keuzes = gerechten.filter((g) => g.soort === maaltijd)
   const maaltijdRijen = ['ma', 'di', 'wo', 'do', 'vr', 'za', 'zo'].map((dag) =>
@@ -73,8 +73,9 @@ export default function Eten() {
         </div>
         {maaltijd !== 'diner' && (
           <p className="klein zacht" style={{ margin: '0 0 0.4rem' }}>
-            Alle keuzes zijn macro-gelijk ({maaltijd === 'ontbijt' ? '±590' : '±460'} kcal) —
-            wisselen kan zonder rekenen.
+            {maaltijd === 'snack'
+              ? 'Snack 16:00 — standaard appel + ei, of de eiwitshake (±24 g eiwit).'
+              : `Alle keuzes zijn macro-gelijk (${maaltijd === 'ontbijt' ? '±590' : '±460'} kcal) — wisselen kan zonder rekenen.`}
           </p>
         )}
         {maaltijdRijen.map((rij) => (
@@ -117,13 +118,9 @@ export default function Eten() {
             Herstel rotatievoorstel (week {rotatieNr})
           </button>
         )}
-        {snack && (
-          <p className="klein zacht" style={{ margin: '0.6rem 0 0' }}>
-            Snack 16:00 ligt vast: {snack.items.map((i) =>
-              i.hoeveelheid != null ? `${i.hoeveelheid} ${i.naam}` : i.naam).join(' + ')}
-            {' '}(±{snack.kcal_totaal} kcal). Plus-blokken volgen je sessies.
-          </p>
-        )}
+        <p className="klein zacht" style={{ margin: '0.6rem 0 0' }}>
+          Plus-blokken volgen je sessies en staan via de vaste basislijst op de lijst.
+        </p>
       </div>
 
       {[...geplandeDiners.entries()].map(([id, rijen]) => {
@@ -170,7 +167,10 @@ export default function Eten() {
                     onClick={() => { toggleBoodschap(item.id); ververs() }}
                   >
                     <span className="vinkje">✓</span>
-                    <span className="naam">{item.naam}</span>
+                    <span className="naam">
+                      {item.naam}
+                      {item.dekt && <span className="klein zacht"> · {item.dekt}</span>}
+                    </span>
                     <span className="hoeveelheid">
                       {item.hoeveelheid != null ? `${item.hoeveelheid} ${item.eenheid}` : item.eenheid}
                     </span>
