@@ -41,6 +41,12 @@ export function initStorage(nu = new Date()) {
   const instellingen = lees('instellingen', {})
   if (instellingen.seed_versie !== SEED_VERSIE) {
     schrijf('gerechten', SEED_GERECHTEN)
+    // Weekmenu en boodschappen kunnen naar vervallen gerecht-id's wijzen of
+    // op 'geen' staan uit een oudere seed; ze vervallen mee, zodat
+    // getWeekmenu het verse rotatievoorstel (en o1/l1) opnieuw genereert.
+    // Sessies, metingen, droge dagen en doelen blijven onaangeroerd.
+    globalThis.localStorage.removeItem(PREFIX + 'weekmenu')
+    globalThis.localStorage.removeItem(PREFIX + 'boodschappen')
     instellingen.seed_versie = SEED_VERSIE
   }
   if (!instellingen.rotatie_start_jaar_week) {

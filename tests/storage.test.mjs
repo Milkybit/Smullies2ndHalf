@@ -44,6 +44,28 @@ test('seed-versie: een oudere gerechtenlijst wordt bij init vervangen', () => {
   assert.equal(storage.getGerechten().length, SEED_GERECHTEN.length)
 })
 
+test('seed-wissel: verouderd weekmenu vervalt en de lijst rekent weer', () => {
+  // rijen van een oude seed: diners met vervallen id, ontbijt op null
+  const oud = []
+  for (const dag of ['ma', 'di', 'wo', 'do', 'vr', 'za', 'zo']) {
+    oud.push({ jaar_week: WEEK, dag, maaltijd: 'ontbijt', gerecht_id: null, porties: 1 })
+    oud.push({ jaar_week: WEEK, dag, maaltijd: 'diner', gerecht_id: 'd01', porties: 1 })
+  }
+  globalThis.localStorage.setItem('doel1.weekmenu', JSON.stringify(oud))
+  const instellingen = JSON.parse(globalThis.localStorage.getItem('doel1.instellingen'))
+  instellingen.seed_versie = 8
+  globalThis.localStorage.setItem('doel1.instellingen', JSON.stringify(instellingen))
+  storage.initStorage(NU)
+
+  const menu = storage.getWeekmenu(WEEK)
+  // rotatievoorstel opnieuw gegenereerd: 3 diners op 2 dagen, za vrij
+  assert.equal(menu.filter((r) => r.maaltijd === 'diner' && r.gerecht_id).length, 6)
+  assert.ok(menu.filter((r) => r.maaltijd === 'ontbijt').every((r) => r.gerecht_id === 'o1'))
+  // en de lijst bevat weer gerecht-ingrediënten
+  const lijst = storage.maakBoodschappen(WEEK)
+  assert.ok(lijst.filter((b) => !b.vast).length > 10)
+})
+
 test('sessies: opslaan, driestand maandag, verwijderen, persistentie', () => {
   storage.saveSessie({ datum: '2026-08-03', anker: 'ma', mini: true })
   assert.deepEqual(storage.getSessies()[0].mini, true)

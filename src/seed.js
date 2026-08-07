@@ -11,7 +11,7 @@
 //   eiwit leidend). Keuzes vastgesteld door de gebruiker.
 // - Snack 16:00 en plus-blokken liggen vast; de vaste basislijst dekt ze.
 
-export const SEED_VERSIE = 8
+export const SEED_VERSIE = 9
 
 export const SEED_GERECHTEN =
 [
