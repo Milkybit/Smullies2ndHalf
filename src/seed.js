@@ -8,9 +8,11 @@
 //   zaterdagse tafel (za geen diner, geen boodschappen).
 // - Ontbijt en lunch: standaard uit de standaarddag, per dag te wisselen
 //   naar een macro-gelijke variant (ontbijt ±590 kcal, lunch ±460 kcal).
+//   Ontbijtkeuzes vastgesteld door de gebruiker: standaard kwark-ontbijt,
+//   weekend-eiwitpannenkoeken, omelet.
 // - Snack 16:00 en plus-blokken liggen vast; de vaste basislijst dekt ze.
 
-export const SEED_VERSIE = 4
+export const SEED_VERSIE = 5
 
 export const SEED_GERECHTEN =
 [
@@ -677,7 +679,7 @@ export const SEED_GERECHTEN =
   },
   {
     "id": "o1",
-    "naam": "Standaard — overnight oats",
+    "naam": "Standaard — kwark met havermout (overnight oats)",
     "soort": "ontbijt",
     "anker": null,
     "kleur1": null,
@@ -777,22 +779,34 @@ export const SEED_GERECHTEN =
   },
   {
     "id": "o2",
-    "naam": "Skyr-bowl met banaan en noten",
+    "naam": "Weekend — eiwitpannenkoeken",
     "soort": "ontbijt",
     "anker": null,
     "kleur1": null,
     "kleur2": null,
     "basis": null,
     "smaak": null,
-    "porties_tekst": "300 g skyr naturel · 1 stuk banaan · 35 g havermout · 20 g ongezouten noten · 7 g honing · kaneel naar smaak",
-    "kcal": 585,
+    "porties_tekst": "50 g havermout · 2 stuks eieren · 125 g magere kwark · 1 stuk banaan · 100 g blauwe bessen (diepvries) · 7 g honing · kaneel naar smaak",
+    "kcal": 590,
     "rotatie_week": null,
     "kook_factor": 1,
-    "bereiding": "≈ standaard: zuivel-eiwit + traag koolhydraat + noten",
+    "bereiding": "≈ standaard, eiwit iets hoger (ei + kwark); even bakken, dus voor het weekend",
     "ingredienten": [
       {
-        "naam": "skyr naturel",
-        "hoeveelheid": 300,
+        "naam": "havermout",
+        "hoeveelheid": 50,
+        "eenheid": "g",
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "eieren",
+        "hoeveelheid": 2,
+        "eenheid": "stuks",
+        "categorie": "zuivel-eieren"
+      },
+      {
+        "naam": "magere kwark",
+        "hoeveelheid": 125,
         "eenheid": "g",
         "categorie": "zuivel-eieren"
       },
@@ -803,16 +817,10 @@ export const SEED_GERECHTEN =
         "categorie": "groente-fruit"
       },
       {
-        "naam": "havermout",
-        "hoeveelheid": 35,
+        "naam": "blauwe bessen (diepvries)",
+        "hoeveelheid": 100,
         "eenheid": "g",
-        "categorie": "koolhydraten-noten"
-      },
-      {
-        "naam": "ongezouten noten",
-        "hoeveelheid": 20,
-        "eenheid": "g",
-        "categorie": "koolhydraten-noten"
+        "categorie": "groente-fruit"
       },
       {
         "naam": "honing",

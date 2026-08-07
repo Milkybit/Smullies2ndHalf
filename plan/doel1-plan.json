@@ -1044,17 +1044,29 @@
   },
   "aanvulling_variatie": {
     "toegevoegd": "2026-08, op verzoek van de gebruiker",
-    "principe": "per dag te kiezen ontbijt/lunch-variant met dezelfde macronutrienten als de standaard (ontbijt ±590 kcal, lunch ±460 kcal, eiwit leidend); de snack en het diner-schema veranderen niet",
+    "principe": "per dag te kiezen ontbijt/lunch-variant met dezelfde macronutrienten als de standaard (ontbijt ±590 kcal, lunch ±460 kcal, eiwit leidend); de snack en het diner-schema veranderen niet. Ontbijtkeuzes vastgesteld door de gebruiker: standaard kwark-ontbijt, omelet, en eiwitpannenkoeken voor het weekend (skyr-variant vervallen).",
     "ontbijt_varianten": [
       {
         "id": "o2",
-        "naam": "Skyr-bowl met banaan en noten",
-        "kcal": 585,
-        "macro_notitie": "≈ standaard: zuivel-eiwit + traag koolhydraat + noten",
+        "naam": "Weekend — eiwitpannenkoeken",
+        "kcal": 590,
+        "macro_notitie": "≈ standaard, eiwit iets hoger (ei + kwark); even bakken, dus voor het weekend",
         "ingredienten": [
           {
-            "naam": "skyr naturel",
-            "hoeveelheid": 300,
+            "naam": "havermout",
+            "hoeveelheid": 50,
+            "eenheid": "g",
+            "categorie": "koolhydraten-noten"
+          },
+          {
+            "naam": "eieren",
+            "hoeveelheid": 2,
+            "eenheid": "stuks",
+            "categorie": "zuivel-eieren"
+          },
+          {
+            "naam": "magere kwark",
+            "hoeveelheid": 125,
             "eenheid": "g",
             "categorie": "zuivel-eieren"
           },
@@ -1065,16 +1077,10 @@
             "categorie": "groente-fruit"
           },
           {
-            "naam": "havermout",
-            "hoeveelheid": 35,
+            "naam": "blauwe bessen (diepvries)",
+            "hoeveelheid": 100,
             "eenheid": "g",
-            "categorie": "koolhydraten-noten"
-          },
-          {
-            "naam": "ongezouten noten",
-            "hoeveelheid": 20,
-            "eenheid": "g",
-            "categorie": "koolhydraten-noten"
+            "categorie": "groente-fruit"
           },
           {
             "naam": "honing",
