@@ -21,6 +21,8 @@ test('init zaait de plangerechten: 12 diners + ontbijt- en lunchkeuzes', () => {
     assert.equal(diners.filter((g) => g.rotatie_week === w).length, 3)
   }
   assert.ok(diners.every((g) => g.kook_factor === 2 && g.bereiding))
+  // elk gerecht (ook ontbijt/lunch/snack) heeft een korte bereiding
+  assert.ok(gerechten.every((g) => g.bereiding && g.bereiding.length > 10))
   // diners gekalibreerd op 690-755 kcal
   assert.ok(diners.every((g) => g.kcal >= 690 && g.kcal <= 755))
   // ontbijt ±590, lunch ±460 — alle keuzes macro-gelijk

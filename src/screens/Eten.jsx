@@ -35,12 +35,13 @@ export default function Eten() {
     ververs()
   }
 
-  // Geplande diners deze week, voor de gerechtkaarten met bereiding.
-  const geplandeDiners = new Map()
+  // Gerechtkaarten met bereiding voor de actieve tab: wat er deze week
+  // gepland staat, uniek per gerecht.
+  const geplandInTab = new Map()
   for (const rij of menu) {
-    if (!rij.gerecht_id || rij.maaltijd !== 'diner') continue
-    if (!geplandeDiners.has(rij.gerecht_id)) geplandeDiners.set(rij.gerecht_id, [])
-    geplandeDiners.get(rij.gerecht_id).push(rij)
+    if (!rij.gerecht_id || rij.maaltijd !== maaltijd) continue
+    if (!geplandInTab.has(rij.gerecht_id)) geplandInTab.set(rij.gerecht_id, [])
+    geplandInTab.get(rij.gerecht_id).push(rij)
   }
 
   const lijst = getBoodschappen(weekKey)
@@ -123,7 +124,7 @@ export default function Eten() {
         </p>
       </div>
 
-      {[...geplandeDiners.entries()].map(([id, rijen]) => {
+      {[...geplandInTab.entries()].map(([id, rijen]) => {
         const g = getGerecht(id)
         if (!g) return null
         const porties = rijen.reduce((som, r) => som + r.porties, 0)
@@ -134,7 +135,10 @@ export default function Eten() {
             </div>
             <h2>{g.naam}</h2>
             <p className="klein" style={{ margin: '0 0 0.3rem' }}>
-              ±{g.kcal} kcal · {g.anker} · {g.kleur1} + {g.kleur2} · basis: {g.basis} · {g.smaak}
+              ±{g.kcal} kcal
+              {g.soort === 'diner'
+                ? ` · ${g.anker} · ${g.kleur1} + ${g.kleur2} · basis: ${g.basis} · ${g.smaak}`
+                : g.notitie ? ` · ${g.notitie}` : ''}
             </p>
             <p className="klein zacht">{g.porties_tekst}</p>
             {g.bereiding && <p className="klein zacht" style={{ margin: 0 }}>{g.bereiding}</p>}

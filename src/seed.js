@@ -11,7 +11,7 @@
 //   eiwit leidend). Keuzes vastgesteld door de gebruiker.
 // - Snack 16:00 en plus-blokken liggen vast; de vaste basislijst dekt ze.
 
-export const SEED_VERSIE = 11
+export const SEED_VERSIE = 12
 
 export const SEED_GERECHTEN =
 [
@@ -689,7 +689,8 @@ export const SEED_GERECHTEN =
     "kcal": 590,
     "rotatie_week": null,
     "kook_factor": 1,
-    "bereiding": "OV-dag: avond ervoor klaarzetten als overnight oats",
+    "bereiding": "Avond ervoor: kwark, havermout, chiazaad en kaneel roeren, bessen erdoor; nacht in de koelkast (overnight oats). Noten en siroop er 's ochtends over.",
+    "notitie": "OV-dag: avond ervoor klaarzetten als overnight oats",
     "ingredienten": [
       {
         "naam": "magere kwark",
@@ -748,7 +749,8 @@ export const SEED_GERECHTEN =
     "kcal": 460,
     "rotatie_week": null,
     "kook_factor": 1,
-    "bereiding": null,
+    "bereiding": "Brood beleggen met kip óf tonijn en de hüttenkäse; komkommer en tomaat erbij of erop.",
+    "notitie": null,
     "ingredienten": [
       {
         "naam": "volkorenbrood",
@@ -789,7 +791,8 @@ export const SEED_GERECHTEN =
     "kcal": 590,
     "rotatie_week": null,
     "kook_factor": 1,
-    "bereiding": "≈ standaard, eiwit iets hoger (ei + kwark); even bakken, dus voor het weekend",
+    "bereiding": "Havermout, eieren en kwark tot beslag mixen; 3-4 pannenkoekjes bakken. Banaan in plakjes en (even verwarmde) bessen erover, honing erop.",
+    "notitie": "≈ standaard, eiwit iets hoger (ei + kwark); even bakken, dus voor het weekend",
     "ingredienten": [
       {
         "naam": "havermout",
@@ -848,7 +851,8 @@ export const SEED_GERECHTEN =
     "kcal": 590,
     "rotatie_week": null,
     "kook_factor": 1,
-    "bereiding": "≈ standaard: ei-eiwit i.p.v. zuivel; de appel hoort bij de snack van 16:00, niet bij het ontbijt",
+    "bereiding": "Paprika en champignons even bakken, geklopte eieren erover en laten stollen; hüttenkäse erover of ernaast, brood erbij.",
+    "notitie": "≈ standaard: ei-eiwit i.p.v. zuivel; de appel hoort bij de snack van 16:00, niet bij het ontbijt",
     "ingredienten": [
       {
         "naam": "eieren",
@@ -907,7 +911,8 @@ export const SEED_GERECHTEN =
     "kcal": 455,
     "rotatie_week": null,
     "kook_factor": 1,
-    "bereiding": "≈ standaard: vis-eiwit + peulvrucht-koolhydraat",
+    "bereiding": "Tonijn, kikkererwten en fijngesneden komkommer/tomaat mengen met de olijfolie; snee brood ernaast.",
+    "notitie": "≈ standaard: vis-eiwit + peulvrucht-koolhydraat",
     "ingredienten": [
       {
         "naam": "tonijn op water (blik)",
@@ -954,7 +959,8 @@ export const SEED_GERECHTEN =
     "kcal": 450,
     "rotatie_week": null,
     "kook_factor": 1,
-    "bereiding": "≈ standaard: zelfde eiwitbron, wrap i.p.v. brood",
+    "bereiding": "Wrap besmeren met hüttenkäse, kip en groente erop, oprollen. Appel toe.",
+    "notitie": "≈ standaard: zelfde eiwitbron, wrap i.p.v. brood",
     "ingredienten": [
       {
         "naam": "volkoren wrap",
@@ -1001,7 +1007,8 @@ export const SEED_GERECHTEN =
     "kcal": 450,
     "rotatie_week": null,
     "kook_factor": 1,
-    "bereiding": "±35 g eiwit — de hoogste van de lunches; nul bereiding, lepel erin",
+    "bereiding": "Kwark met havermout en kaneel roeren; banaan in plakjes en de noten erover.",
+    "notitie": "±35 g eiwit — de hoogste van de lunches; nul bereiding, lepel erin",
     "ingredienten": [
       {
         "naam": "magere kwark",
@@ -1048,7 +1055,8 @@ export const SEED_GERECHTEN =
     "kcal": 465,
     "rotatie_week": null,
     "kook_factor": 1,
-    "bereiding": "±28 g eiwit — eiersalade op basis van griekse yoghurt i.p.v. mayonaise",
+    "bereiding": "Gekookte eieren prakken met yoghurt, mosterd en bieslook; op het brood, tomaat erbij.",
+    "notitie": "±28 g eiwit — eiersalade op basis van griekse yoghurt i.p.v. mayonaise",
     "ingredienten": [
       {
         "naam": "eieren",
@@ -1095,7 +1103,8 @@ export const SEED_GERECHTEN =
     "kcal": 440,
     "rotatie_week": null,
     "kook_factor": 1,
-    "bereiding": "±32 g eiwit — omega-3-optie; hüttenkäse als smeersel",
+    "bereiding": "Wrap besmeren met hüttenkäse; zalm, komkommer en rucola erop, citroen en peper, oprollen.",
+    "notitie": "±32 g eiwit — omega-3-optie; hüttenkäse als smeersel",
     "ingredienten": [
       {
         "naam": "volkoren wrap",
@@ -1142,7 +1151,8 @@ export const SEED_GERECHTEN =
     "kcal": 435,
     "rotatie_week": null,
     "kook_factor": 1,
-    "bereiding": "±27 g eiwit — grote pan vooruit te koken, 3-4 porties; plantaardige optie",
+    "bereiding": "Linzen met tomatenblokjes, wortel en kruiden ±20 min in bouillon koken; grof pureren. Brood met hüttenkäse ernaast. Kook 3-4 porties tegelijk.",
+    "notitie": "±27 g eiwit — grote pan vooruit te koken, 3-4 porties; plantaardige optie",
     "ingredienten": [
       {
         "naam": "rode linzen (droog)",
@@ -1195,7 +1205,8 @@ export const SEED_GERECHTEN =
     "kcal": 460,
     "rotatie_week": null,
     "kook_factor": 1,
-    "bereiding": "±30 g eiwit — tartaartje kort bakken, gebakken ui erover",
+    "bereiding": "Tartaartje bakken, ui in dezelfde pan meebakken; op het brood met mosterd, tomaat erbij.",
+    "notitie": "±30 g eiwit — tartaartje kort bakken, gebakken ui erover",
     "ingredienten": [
       {
         "naam": "rundertartaartje",
@@ -1248,7 +1259,8 @@ export const SEED_GERECHTEN =
     "kcal": 475,
     "rotatie_week": null,
     "kook_factor": 1,
-    "bereiding": "±38 g eiwit — gerookte kip + ei; yoghurtdressing i.p.v. caesardressing",
+    "bereiding": "Kip, gekookt ei en salade in een kom; dressing van yoghurt, citroen en knoflook; brood roosteren en in blokjes als croutons, parmezaan erover.",
+    "notitie": "±38 g eiwit — gerookte kip + ei; yoghurtdressing i.p.v. caesardressing",
     "ingredienten": [
       {
         "naam": "gerookte kipfilet",
@@ -1307,7 +1319,8 @@ export const SEED_GERECHTEN =
     "kcal": 470,
     "rotatie_week": null,
     "kook_factor": 1,
-    "bereiding": "±25 g eiwit — vetter dan de rest maar vol omega-3; hüttenkäse eronder",
+    "bereiding": "Brood besmeren met hüttenkäse, makreel erop plukken; komkommer erbij, citroen en peper erover.",
+    "notitie": "±25 g eiwit — vetter dan de rest maar vol omega-3; hüttenkäse eronder",
     "ingredienten": [
       {
         "naam": "gerookte makreel",
@@ -1354,7 +1367,8 @@ export const SEED_GERECHTEN =
     "kcal": 195,
     "rotatie_week": null,
     "kook_factor": 1,
-    "bereiding": "±24 g eiwit uit de shake; fruit naar keuze, macro-neutraal",
+    "bereiding": "Whey met ±300 ml koud water schudden; appel erbij.",
+    "notitie": "±24 g eiwit uit de shake; fruit naar keuze, macro-neutraal",
     "ingredienten": [
       {
         "naam": "whey-eiwitpoeder",
@@ -1383,7 +1397,8 @@ export const SEED_GERECHTEN =
     "kcal": 205,
     "rotatie_week": null,
     "kook_factor": 1,
-    "bereiding": "±24 g eiwit uit de shake; fruit naar keuze, macro-neutraal",
+    "bereiding": "Whey met ±300 ml koud water schudden; banaan erbij.",
+    "notitie": "±24 g eiwit uit de shake; fruit naar keuze, macro-neutraal",
     "ingredienten": [
       {
         "naam": "whey-eiwitpoeder",
@@ -1412,7 +1427,8 @@ export const SEED_GERECHTEN =
     "kcal": 200,
     "rotatie_week": null,
     "kook_factor": 1,
-    "bereiding": "±24 g eiwit uit de shake; fruit naar keuze, macro-neutraal",
+    "bereiding": "Whey met ±300 ml koud water schudden; peer erbij.",
+    "notitie": "±24 g eiwit uit de shake; fruit naar keuze, macro-neutraal",
     "ingredienten": [
       {
         "naam": "whey-eiwitpoeder",
@@ -1441,7 +1457,8 @@ export const SEED_GERECHTEN =
     "kcal": 195,
     "rotatie_week": null,
     "kook_factor": 1,
-    "bereiding": "±24 g eiwit uit de shake; fruit naar keuze, macro-neutraal",
+    "bereiding": "Whey met ±300 ml koud water schudden; mandarijnen of kiwi erbij.",
+    "notitie": "±24 g eiwit uit de shake; fruit naar keuze, macro-neutraal",
     "ingredienten": [
       {
         "naam": "whey-eiwitpoeder",
@@ -1470,7 +1487,8 @@ export const SEED_GERECHTEN =
     "kcal": 160,
     "rotatie_week": null,
     "kook_factor": 1,
-    "bereiding": "de oorspronkelijke standaard uit het plan; tas-proof zonder shaker",
+    "bereiding": "Ei vooraf koken (meal-prep: kook er meteen een paar); appel erbij.",
+    "notitie": "de oorspronkelijke standaard uit het plan; tas-proof zonder shaker",
     "ingredienten": [
       {
         "naam": "appel",

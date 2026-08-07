@@ -33,7 +33,8 @@ for mid, moment, naam in [('o1', 'ontbijt', 'Standaard — kwark met havermout (
         'anker': None, 'kleur1': None, 'kleur2': None, 'basis': None, 'smaak': None,
         'porties_tekst': tekst(ings), 'kcal': m['kcal_totaal'],
         'rotatie_week': None, 'kook_factor': 1,
-        'bereiding': m.get('notitie'),
+        'bereiding': plan['aanvulling_variatie'].get('standaard_bereiding', {}).get(mid) or m.get('notitie'),
+        'notitie': m.get('notitie'),
         'ingredienten': ings,
     })
 
@@ -46,7 +47,8 @@ for soort, lijst in [('ontbijt', av['ontbijt_varianten']), ('lunch', av['lunch_v
             'anker': None, 'kleur1': None, 'kleur2': None, 'basis': None, 'smaak': None,
             'porties_tekst': tekst(v['ingredienten']), 'kcal': v['kcal'],
             'rotatie_week': None, 'kook_factor': 1,
-            'bereiding': v.get('macro_notitie'),
+            'bereiding': v.get('bereiding') or v.get('macro_notitie'),
+            'notitie': v.get('macro_notitie'),
             'ingredienten': v['ingredienten'],
         })
 
