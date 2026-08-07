@@ -43,6 +43,11 @@ export const PLUS_BLOKKEN = {
 // geen diner gepland en geen boodschappen voor het za-diner.
 export const ZATERDAGSE_TAFEL = 'Zaterdagse tafel — vrij (vieren-budget)'
 
+// Vaste meetdag voor gewicht + vet% (besluit gebruiker aug 2026: donderdag;
+// eerst zaterdag). De 4-weken-evaluatie rekent met de laatste 5 metingen.
+export const MEETDAG = 'do'
+export const MEETDAG_NAAM = 'donderdag'
+
 // De ene toegestane zin bij een gemiste week. Geen rood, geen vonnis.
 export const GEMISTE_WEEK_ZIN =
   'Vorige week niet binnen — data, geen vonnis. Deze week telt gewoon opnieuw.'
