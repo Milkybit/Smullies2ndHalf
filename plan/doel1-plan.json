@@ -1098,15 +1098,27 @@
       },
       {
         "id": "o3",
-        "naam": "Omelet met volkoren en appel",
-        "kcal": 580,
-        "macro_notitie": "≈ standaard: ei-eiwit i.p.v. zuivel",
+        "naam": "Groente-omelet met volkoren",
+        "kcal": 590,
+        "macro_notitie": "≈ standaard: ei-eiwit i.p.v. zuivel; de appel hoort bij de snack van 16:00, niet bij het ontbijt",
         "ingredienten": [
           {
             "naam": "eieren",
             "hoeveelheid": 3,
             "eenheid": "stuks",
             "categorie": "zuivel-eieren"
+          },
+          {
+            "naam": "paprika",
+            "hoeveelheid": 100,
+            "eenheid": "g",
+            "categorie": "groente-fruit"
+          },
+          {
+            "naam": "champignons",
+            "hoeveelheid": 100,
+            "eenheid": "g",
+            "categorie": "groente-fruit"
           },
           {
             "naam": "volkorenbrood",
@@ -1121,21 +1133,15 @@
             "categorie": "zuivel-eieren"
           },
           {
-            "naam": "tomaat",
-            "hoeveelheid": 1,
-            "eenheid": "stuk",
-            "categorie": "groente-fruit"
-          },
-          {
-            "naam": "appel",
-            "hoeveelheid": 1,
-            "eenheid": "stuk",
-            "categorie": "groente-fruit"
-          },
-          {
             "naam": "olijfolie",
-            "hoeveelheid": 5,
+            "hoeveelheid": 10,
             "eenheid": "ml",
+            "categorie": "voorraad"
+          },
+          {
+            "naam": "peper, zout, bieslook",
+            "hoeveelheid": null,
+            "eenheid": "naar smaak",
             "categorie": "voorraad"
           }
         ]

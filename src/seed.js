@@ -9,10 +9,10 @@
 // - Ontbijt en lunch: standaard uit de standaarddag, per dag te wisselen
 //   naar een macro-gelijke variant (ontbijt ±590 kcal, lunch ±460 kcal).
 //   Ontbijtkeuzes vastgesteld door de gebruiker: standaard kwark-ontbijt,
-//   weekend-eiwitpannenkoeken, omelet.
+//   weekend-eiwitpannenkoeken, groente-omelet.
 // - Snack 16:00 en plus-blokken liggen vast; de vaste basislijst dekt ze.
 
-export const SEED_VERSIE = 5
+export const SEED_VERSIE = 6
 
 export const SEED_GERECHTEN =
 [
@@ -838,24 +838,36 @@ export const SEED_GERECHTEN =
   },
   {
     "id": "o3",
-    "naam": "Omelet met volkoren en appel",
+    "naam": "Groente-omelet met volkoren",
     "soort": "ontbijt",
     "anker": null,
     "kleur1": null,
     "kleur2": null,
     "basis": null,
     "smaak": null,
-    "porties_tekst": "3 stuks eieren · 2 sneden volkorenbrood · 50 g huttenkase · 1 stuk tomaat · 1 stuk appel · 5 ml olijfolie",
-    "kcal": 580,
+    "porties_tekst": "3 stuks eieren · 100 g paprika · 100 g champignons · 2 sneden volkorenbrood · 50 g huttenkase · 10 ml olijfolie · peper, zout, bieslook naar smaak",
+    "kcal": 590,
     "rotatie_week": null,
     "kook_factor": 1,
-    "bereiding": "≈ standaard: ei-eiwit i.p.v. zuivel",
+    "bereiding": "≈ standaard: ei-eiwit i.p.v. zuivel; de appel hoort bij de snack van 16:00, niet bij het ontbijt",
     "ingredienten": [
       {
         "naam": "eieren",
         "hoeveelheid": 3,
         "eenheid": "stuks",
         "categorie": "zuivel-eieren"
+      },
+      {
+        "naam": "paprika",
+        "hoeveelheid": 100,
+        "eenheid": "g",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "champignons",
+        "hoeveelheid": 100,
+        "eenheid": "g",
+        "categorie": "groente-fruit"
       },
       {
         "naam": "volkorenbrood",
@@ -870,21 +882,15 @@ export const SEED_GERECHTEN =
         "categorie": "zuivel-eieren"
       },
       {
-        "naam": "tomaat",
-        "hoeveelheid": 1,
-        "eenheid": "stuk",
-        "categorie": "groente-fruit"
-      },
-      {
-        "naam": "appel",
-        "hoeveelheid": 1,
-        "eenheid": "stuk",
-        "categorie": "groente-fruit"
-      },
-      {
         "naam": "olijfolie",
-        "hoeveelheid": 5,
+        "hoeveelheid": 10,
         "eenheid": "ml",
+        "categorie": "voorraad"
+      },
+      {
+        "naam": "peper, zout, bieslook",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
         "categorie": "voorraad"
       }
     ]
