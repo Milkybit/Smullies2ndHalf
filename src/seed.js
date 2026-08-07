@@ -1,18 +1,17 @@
 // Seed-data voor Doel1 — gegenereerd uit het definitieve 4-wekenplan
 // (plan/doel1-plan.json, incl. de variatie-aanvulling van aug 2026).
 // Het plan is de waarheid: wijzig eerst het plan, genereer dan deze seed
-// opnieuw. Veldnamen volgen het datamodel (fase 6: supabase/schema.sql).
+// opnieuw met: python3 tools/gen-seed.py <versie> > src/seed.js
 //
 // Kernregels:
 // - Diner: 4-weken-rotatie, kook_factor 2 (elk gerecht op 2 dagen),
 //   zaterdagse tafel (za geen diner, geen boodschappen).
 // - Ontbijt en lunch: standaard uit de standaarddag, per dag te wisselen
-//   naar een macro-gelijke variant (ontbijt ±590 kcal, lunch ±460 kcal).
-//   Ontbijtkeuzes vastgesteld door de gebruiker: standaard kwark-ontbijt,
-//   weekend-eiwitpannenkoeken, groente-omelet.
+//   naar een macro-gelijke variant (ontbijt ±590 kcal, lunch ±460 kcal,
+//   eiwit leidend). Keuzes vastgesteld door de gebruiker.
 // - Snack 16:00 en plus-blokken liggen vast; de vaste basislijst dekt ze.
 
-export const SEED_VERSIE = 6
+export const SEED_VERSIE = 7
 
 export const SEED_GERECHTEN =
 [
@@ -986,6 +985,200 @@ export const SEED_GERECHTEN =
         "hoeveelheid": 1,
         "eenheid": "stuk",
         "categorie": "groente-fruit"
+      }
+    ]
+  },
+  {
+    "id": "l4",
+    "naam": "Zoete kwark-lunchbowl",
+    "soort": "lunch",
+    "anker": null,
+    "kleur1": null,
+    "kleur2": null,
+    "basis": null,
+    "smaak": null,
+    "porties_tekst": "300 g magere kwark · 30 g havermout · 1 stuk banaan · 10 g ongezouten noten · kaneel naar smaak",
+    "kcal": 450,
+    "rotatie_week": null,
+    "kook_factor": 1,
+    "bereiding": "±35 g eiwit — de hoogste van de lunches; nul bereiding, lepel erin",
+    "ingredienten": [
+      {
+        "naam": "magere kwark",
+        "hoeveelheid": 300,
+        "eenheid": "g",
+        "categorie": "zuivel-eieren"
+      },
+      {
+        "naam": "havermout",
+        "hoeveelheid": 30,
+        "eenheid": "g",
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "banaan",
+        "hoeveelheid": 1,
+        "eenheid": "stuk",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "ongezouten noten",
+        "hoeveelheid": 10,
+        "eenheid": "g",
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "kaneel",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
+        "categorie": "voorraad"
+      }
+    ]
+  },
+  {
+    "id": "l5",
+    "naam": "Eiersalade met yoghurt op volkoren",
+    "soort": "lunch",
+    "anker": null,
+    "kleur1": null,
+    "kleur2": null,
+    "basis": null,
+    "smaak": null,
+    "porties_tekst": "2 stuks eieren · 50 g griekse yoghurt · 3 sneden volkorenbrood · 1 stuk tomaat · bieslook, peper, mosterd naar smaak",
+    "kcal": 465,
+    "rotatie_week": null,
+    "kook_factor": 1,
+    "bereiding": "±28 g eiwit — eiersalade op basis van griekse yoghurt i.p.v. mayonaise",
+    "ingredienten": [
+      {
+        "naam": "eieren",
+        "hoeveelheid": 2,
+        "eenheid": "stuks",
+        "categorie": "zuivel-eieren"
+      },
+      {
+        "naam": "griekse yoghurt",
+        "hoeveelheid": 50,
+        "eenheid": "g",
+        "categorie": "zuivel-eieren"
+      },
+      {
+        "naam": "volkorenbrood",
+        "hoeveelheid": 3,
+        "eenheid": "sneden",
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "tomaat",
+        "hoeveelheid": 1,
+        "eenheid": "stuk",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "bieslook, peper, mosterd",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
+        "categorie": "voorraad"
+      }
+    ]
+  },
+  {
+    "id": "l6",
+    "naam": "Wrap met gerookte zalm",
+    "soort": "lunch",
+    "anker": null,
+    "kleur1": null,
+    "kleur2": null,
+    "basis": null,
+    "smaak": null,
+    "porties_tekst": "1 stuk volkoren wrap · 100 g gerookte zalm · 50 g huttenkase · komkommer en rucola naar smaak · citroen en peper naar smaak",
+    "kcal": 440,
+    "rotatie_week": null,
+    "kook_factor": 1,
+    "bereiding": "±32 g eiwit — omega-3-optie; hüttenkäse als smeersel",
+    "ingredienten": [
+      {
+        "naam": "volkoren wrap",
+        "hoeveelheid": 1,
+        "eenheid": "stuk",
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "gerookte zalm",
+        "hoeveelheid": 100,
+        "eenheid": "g",
+        "categorie": "vlees-vis"
+      },
+      {
+        "naam": "huttenkase",
+        "hoeveelheid": 50,
+        "eenheid": "g",
+        "categorie": "zuivel-eieren"
+      },
+      {
+        "naam": "komkommer en rucola",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "citroen en peper",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
+        "categorie": "voorraad"
+      }
+    ]
+  },
+  {
+    "id": "l7",
+    "naam": "Linzensoep met volkoren (meal-prep)",
+    "soort": "lunch",
+    "anker": null,
+    "kleur1": null,
+    "kleur2": null,
+    "basis": null,
+    "smaak": null,
+    "porties_tekst": "70 g rode linzen (droog) · 100 g tomatenblokjes (blik) · 100 g wortel · 1 snee volkorenbrood · 50 g huttenkase · bouillon, komijn, paprikapoeder naar smaak",
+    "kcal": 435,
+    "rotatie_week": null,
+    "kook_factor": 1,
+    "bereiding": "±27 g eiwit — grote pan vooruit te koken, 3-4 porties; plantaardige optie",
+    "ingredienten": [
+      {
+        "naam": "rode linzen (droog)",
+        "hoeveelheid": 70,
+        "eenheid": "g",
+        "categorie": "voorraad"
+      },
+      {
+        "naam": "tomatenblokjes (blik)",
+        "hoeveelheid": 100,
+        "eenheid": "g",
+        "categorie": "voorraad"
+      },
+      {
+        "naam": "wortel",
+        "hoeveelheid": 100,
+        "eenheid": "g",
+        "categorie": "groente-fruit"
+      },
+      {
+        "naam": "volkorenbrood",
+        "hoeveelheid": 1,
+        "eenheid": "snee",
+        "categorie": "koolhydraten-noten"
+      },
+      {
+        "naam": "huttenkase",
+        "hoeveelheid": 50,
+        "eenheid": "g",
+        "categorie": "zuivel-eieren"
+      },
+      {
+        "naam": "bouillon, komijn, paprikapoeder",
+        "hoeveelheid": null,
+        "eenheid": "naar smaak",
+        "categorie": "voorraad"
       }
     ]
   }

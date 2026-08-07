@@ -2,6 +2,7 @@ import { test, beforeEach } from 'node:test'
 import assert from 'node:assert/strict'
 import { versStorage } from './shim.mjs'
 import * as storage from '../src/storage.js'
+import { SEED_GERECHTEN } from '../src/seed.js'
 
 // 5 aug 2026 is een dinsdag; de week is 2026-W32.
 const NU = new Date(2026, 7, 5)
@@ -40,7 +41,7 @@ test('seed-versie: een oudere gerechtenlijst wordt bij init vervangen', () => {
   instellingen.seed_versie = 2
   globalThis.localStorage.setItem('doel1.instellingen', JSON.stringify(instellingen))
   storage.initStorage(NU)
-  assert.equal(storage.getGerechten().length, 18)
+  assert.equal(storage.getGerechten().length, SEED_GERECHTEN.length)
 })
 
 test('sessies: opslaan, driestand maandag, verwijderen, persistentie', () => {
@@ -177,7 +178,7 @@ test('export en import: alle tabellen komen ongeschonden terug', () => {
   assert.equal(storage.getSessies()[0].mini, true)
   assert.equal(storage.getMetingen()[0].gewicht, 84.6)
   assert.deepEqual(storage.getDrogeDagen(), ['2026-08-04'])
-  assert.equal(storage.getGerechten().length, 18)
+  assert.equal(storage.getGerechten().length, SEED_GERECHTEN.length)
 })
 
 test('doelen: opslaan en teruglezen', () => {
