@@ -86,17 +86,18 @@ test('weekmenu: rotatie op 2 dagen per gerecht, zaterdag vrij, standaard ontbijt
 
 test('ontbijtvariant kiezen: macro-gelijk en de lijst rekent mee', () => {
   storage.getWeekmenu(WEEK)
-  // woensdag de skyr-bowl in plaats van overnight oats
-  storage.zetWeekmenuGerecht(WEEK, 'wo', 'ontbijt', 'o2')
+  // zaterdag de weekend-eiwitpannenkoeken in plaats van overnight oats
+  storage.zetWeekmenuGerecht(WEEK, 'za', 'ontbijt', 'o2')
   const o1 = storage.getGerecht('o1')
   const o2 = storage.getGerecht('o2')
   assert.ok(Math.abs(o1.kcal - o2.kcal) <= 30) // macro-gelijk binnen marge
   const lijst = storage.maakBoodschappen(WEEK)
-  // kwark: 6 dagen standaardontbijt × 250 g (variant-dag telt niet mee)
+  // kwark: 6 dagen standaard × 250 g + pannenkoeken 125 g
   const kwark = lijst.find((b) => b.naam === 'magere kwark' && !b.vast)
-  assert.equal(kwark.hoeveelheid, 6 * 250)
-  const skyr = lijst.find((b) => b.naam === 'skyr naturel' && !b.vast)
-  assert.equal(skyr.hoeveelheid, 300)
+  assert.equal(kwark.hoeveelheid, 6 * 250 + 125)
+  // eieren van de pannenkoeken staan los van de vaste basislijst
+  const eieren = lijst.find((b) => b.naam === 'eieren' && !b.vast)
+  assert.equal(eieren.hoeveelheid, 2)
 })
 
 test('weekmenu: gerecht kiezen en porties ophogen werkt door in de lijst', () => {
