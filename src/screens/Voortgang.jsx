@@ -134,14 +134,20 @@ export default function Voortgang() {
         </button>
       </div>
 
+      {metingen.length > 0 && <Metingenlijst metingen={metingen} />}
+
       {metingen.length >= 2 && (
         <div className="kaart">
           <div className="kaart-titel">Trend — gewicht (kg)</div>
-          <Trendlijn punten={metingen.map((m) => m.gewicht)} kleur="#C98A2D" />
-          {metingen.some((m) => m.vet_pct != null) && (
+          <Trendlijn punten={metingen.map((m) => m.gewicht)} kleur="#C98A2D" eenheid=" kg" />
+          {metingen.filter((m) => m.vet_pct != null).length >= 2 && (
             <>
               <div className="kaart-titel" style={{ marginTop: '0.8rem' }}>Trend — vet %</div>
-              <Trendlijn punten={metingen.filter((m) => m.vet_pct != null).map((m) => m.vet_pct)} kleur="#24382F" />
+              <Trendlijn
+                punten={metingen.filter((m) => m.vet_pct != null).map((m) => m.vet_pct)}
+                kleur="#24382F"
+                eenheid="%"
+              />
             </>
           )}
         </div>
@@ -268,31 +274,82 @@ function Donut({ titel, kleur, huidig, start, doel, eenheid }) {
   )
 }
 
-// Kleine SVG-trendlijn zonder dependencies: punten op tijdsvolgorde,
-// met min/max-labels en een stip per meting.
-function Trendlijn({ punten, kleur }) {
+// Kleine SVG-trendlijn zonder dependencies: punten op tijdsvolgorde, met de
+// hoogste en laagste waarde als as-labels (mét eenheid) en een stip per meting.
+function Trendlijn({ punten, kleur, eenheid = '' }) {
   const B = 300
-  const H = 90
-  const PAD = 8
+  const H = 100
+  const PAD = 10
+  const LINKS = 44 // ruimte voor de as-labels
   const min = Math.min(...punten)
   const max = Math.max(...punten)
   const bereik = max - min || 1
-  const x = (i) => PAD + (i * (B - 2 * PAD)) / Math.max(1, punten.length - 1)
+  const x = (i) => LINKS + (i * (B - LINKS - PAD)) / Math.max(1, punten.length - 1)
   const y = (w) => H - PAD - ((w - min) * (H - 2 * PAD)) / bereik
   const pad = punten.map((p, i) => `${x(i).toFixed(1)},${y(p).toFixed(1)}`).join(' ')
+  const laatste = punten[punten.length - 1]
+  const labelStijl = { fontFamily: 'Karla, sans-serif', fontSize: '11px', fill: '#5C6B62' }
   return (
     <div>
       <svg className="grafiek" viewBox={`0 0 ${B} ${H}`} role="img"
-        aria-label={`Trend van ${punten.length} metingen, van ${punten[0]} naar ${punten[punten.length - 1]}`}>
+        aria-label={`Trend van ${punten.length} metingen, van ${punten[0]}${eenheid} naar ${laatste}${eenheid}`}>
+        <line x1={LINKS} y1={y(max)} x2={B - PAD} y2={y(max)} stroke="#D9DCD1" strokeWidth="1" />
+        <line x1={LINKS} y1={y(min)} x2={B - PAD} y2={y(min)} stroke="#D9DCD1" strokeWidth="1" />
+        <text x={LINKS - 6} y={y(max) + 4} textAnchor="end" style={labelStijl}>{max}{eenheid}</text>
+        {max !== min && (
+          <text x={LINKS - 6} y={y(min) + 4} textAnchor="end" style={labelStijl}>{min}{eenheid}</text>
+        )}
         <polyline points={pad} fill="none" stroke={kleur} strokeWidth="2" />
         {punten.map((p, i) => (
           <circle key={i} cx={x(i)} cy={y(p)} r="2.5" fill={kleur} />
         ))}
       </svg>
       <div className="klein zacht" style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <span>eerste: {punten[0]}</span>
-        <span>laatste: {punten[punten.length - 1]}</span>
+        <span>eerste: {punten[0]}{eenheid}</span>
+        <span>laatste: {laatste}{eenheid}</span>
       </div>
     </div>
   )
+}
+
+// Metingenlijst: elke meting met gewicht in kg, vet% en het verschil met de
+// vorige meting. Nieuwste bovenaan.
+function Metingenlijst({ metingen }) {
+  const eerste = metingen[0]
+  const laatste = metingen[metingen.length - 1]
+  const totaal = laatste.gewicht - eerste.gewicht
+  return (
+    <div className="kaart">
+      <div className="kaart-titel">Metingen — gewicht (kg)</div>
+      {metingen.length > 1 && (
+        <p className="klein" style={{ margin: '0 0 0.5rem' }}>
+          {laatste.gewicht} kg nu · {tekenGetal(totaal)} kg sinds {datumKort(eerste.datum)}
+        </p>
+      )}
+      {metingen.slice().reverse().map((m, i, omgekeerd) => {
+        const vorige = omgekeerd[i + 1]
+        const verschil = vorige ? m.gewicht - vorige.gewicht : null
+        return (
+          <div key={m.datum} className="metingregel">
+            <span className="zacht klein">{datumKort(m.datum)}</span>
+            <strong>{m.gewicht} kg</strong>
+            <span className="klein zacht">
+              {m.vet_pct != null ? `${m.vet_pct}% vet` : ''}
+            </span>
+            <span className="klein zacht" style={{ marginLeft: 'auto' }}>
+              {verschil != null ? `${tekenGetal(verschil)} kg` : 'start'}
+            </span>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+function tekenGetal(n) {
+  return (n > 0 ? '+' : n < 0 ? '−' : '±') + Math.abs(n).toFixed(1)
+}
+
+function datumKort(datum) {
+  return new Date(datum + 'T12:00:00').toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' })
 }
