@@ -1,6 +1,9 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { vierWekenEvaluatie, drogeReeks } from '../src/logic/evaluatie.js'
+import {
+  vierWekenEvaluatie, drogeReeks,
+  vetmassa, vetvrijeMassa, metVetPercentage,
+} from '../src/logic/evaluatie.js'
 
 // Vijf zaterdagen: 4 juli t/m 1 aug 2026, weken 2026-W27 … W31.
 const ZATERDAGEN = ['2026-07-04', '2026-07-11', '2026-07-18', '2026-07-25', '2026-08-01']
@@ -48,6 +51,25 @@ test('suggestie: langzamer terwijl de weken binnen waren', () => {
 test('geen suggestie: langzamer maar weken niet binnen', () => {
   const uitkomst = vierWekenEvaluatie(metingen([85, 84.9, 84.8, 84.6, 84.4]), [])
   assert.equal(uitkomst.status, 'geen-suggestie')
+})
+
+test('vetmassa: kg vet en vetvrije massa uit gewicht en vet%', () => {
+  const meting = { datum: '2026-08-06', gewicht: 84.0, vet_pct: 25 }
+  assert.equal(vetmassa(meting), 21)
+  assert.equal(vetvrijeMassa(meting), 63)
+
+  // zonder vet%-meting geen vetmassa
+  assert.equal(vetmassa({ datum: '2026-08-13', gewicht: 83.5, vet_pct: null }), null)
+  assert.equal(vetvrijeMassa({ datum: '2026-08-13', gewicht: 83.5, vet_pct: null }), null)
+
+  // afname: 1,5 kg gewicht eraf, waarvan 1,4 kg vet
+  const later = { datum: '2026-08-13', gewicht: 82.5, vet_pct: 23.8 }
+  assert.ok(Math.abs((vetmassa(later) - vetmassa(meting)) - -1.365) < 0.001)
+  assert.ok(Math.abs((vetvrijeMassa(later) - vetvrijeMassa(meting)) - -0.135) < 0.001)
+
+  // alleen metingen met vet% tellen mee
+  const reeks = [meting, { datum: '2026-08-10', gewicht: 83.5, vet_pct: null }, later]
+  assert.deepEqual(metVetPercentage(reeks).map((m) => m.datum), ['2026-08-06', '2026-08-13'])
 })
 
 test('droge reeks: telt aaneengesloten, vandaag-nog-niet breekt niet', () => {

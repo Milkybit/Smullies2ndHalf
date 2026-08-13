@@ -29,6 +29,23 @@ export function vierWekenEvaluatie(metingen, sessies) {
   return { status: alleBinnen ? 'suggestie' : 'geen-suggestie', gemiddelde }
 }
 
+// Vetmassa in kg = gewicht × vet% / 100. Zonder vet%-meting geen waarde.
+export function vetmassa(meting) {
+  if (!meting || meting.vet_pct == null || meting.gewicht == null) return null
+  return meting.gewicht * meting.vet_pct / 100
+}
+
+// Vetvrije massa (spier, botten, water) — het deel dat je juist wilt houden.
+export function vetvrijeMassa(meting) {
+  const vet = vetmassa(meting)
+  return vet == null ? null : meting.gewicht - vet
+}
+
+// Metingen mét vet%, op tijdsvolgorde; alleen die tellen mee voor vetmassa.
+export function metVetPercentage(metingen) {
+  return metingen.filter((m) => m.vet_pct != null)
+}
+
 // Aaneengesloten droge reeks, eindigend vandaag of gisteren
 // (vandaag nog niet getikt breekt de reeks niet).
 export function drogeReeks(dagen, vandaag) {
