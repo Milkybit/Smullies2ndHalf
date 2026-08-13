@@ -311,6 +311,18 @@ h2 { font-size: 1.15rem; }
 .doel-velden { display: flex; gap: 0.6rem; margin-top: 0.8rem; }
 .doel-velden > div { flex: 1; }
 
+/* Metingenlijst */
+.metingregel {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--lijn);
+}
+
+.metingregel:last-child { border-bottom: none; }
+.metingregel > span:first-child { min-width: 3.6rem; }
+
 /* Formulieren */
 input[type='number'], input[type='date'] {
   font-family: 'Karla', sans-serif;

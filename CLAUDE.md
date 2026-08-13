@@ -39,7 +39,7 @@ Seed-data: het definitieve 4-wekenplan is aangeleverd (aug 2026) en staat in `pl
 1. Vandaag — keuzelijst van de 5 sporten om de sessie(s) van vandaag te registreren (Kracht A: vol/mini), de plus-blokken van vandaag, het diner van vandaag (uit de rotatie), knop "vandaag droog".
 2. Week — vijf sport-tegels met weekstatus-regel ("X van 5 · nog Y te gaan"), achteraf bij te werken, streakteller met vlam, verdien-sloten, navigatie naar vorige weken.
 3. Eten — weekmenu met tabs Ontbijt/Lunch/Diner/Snack: per dag te kiezen met porties-teller. Ontbijt en lunch: standaard (o1/l1 uit de standaarddag) plus macro-gelijke varianten; diner: de 12 rotatiegerechten (voorstel: elk gerecht op 2 dagen, za vrij; herstelknop reset alleen diners). Gerechtkaarten met formule + bereiding, knop "boodschappenlijst maken" (vaste basislijst voor plus-blokken/snack/voorraad + ontbijt-, lunch- en diner-ingrediënten × porties, samengevoegd; "naar smaak"-items één keer ongeteld), afvinkbaar in de winkel, rekent live mee met menuwijzigingen.
-4. Voortgang — dashboard met donut-meters (vet% voorop, gewicht ernaast; doelen instelbaar, voortgang van eerste meting naar doel), weekmeting (donderdag) invoeren, trendlijn (gewicht en vet%), droge-dagen-reeks, 4-weken-evaluatiekaart met de suggestieregel, export/import-reservekopie.
+4. Voortgang — dashboard met donut-meters (vet% voorop, gewicht ernaast; doelen instelbaar, voortgang van eerste meting naar doel), weekmeting (donderdag) invoeren, metingenlijst met gewicht in kg per meting (+ verschil t.o.v. vorige), trendlijn (gewicht en vet%) met as-labels, droge-dagen-reeks, 4-weken-evaluatiekaart met de suggestieregel, export/import-reservekopie.
 
 ## Fasen & acceptatie
 
