@@ -2,7 +2,10 @@ import React, { useReducer, useState } from 'react'
 import SyncKaart from './SyncKaart.jsx'
 import { MEETDAG, MEETDAG_NAAM } from '../domein.js'
 import { dagCode, datumKey } from '../logic/week.js'
-import { vierWekenEvaluatie, drogeReeks, EVALUATIE_DREMPEL } from '../logic/evaluatie.js'
+import {
+  vierWekenEvaluatie, drogeReeks, EVALUATIE_DREMPEL,
+  vetmassa, vetvrijeMassa, metVetPercentage,
+} from '../logic/evaluatie.js'
 import {
   getMetingen, saveMeting, getSessies,
   getDrogeDagen, getInstellingen, zetInstelling, saveDoel,
@@ -140,11 +143,17 @@ export default function Voortgang() {
         <div className="kaart">
           <div className="kaart-titel">Trend — gewicht (kg)</div>
           <Trendlijn punten={metingen.map((m) => m.gewicht)} kleur="#C98A2D" eenheid=" kg" />
-          {metingen.filter((m) => m.vet_pct != null).length >= 2 && (
+          {metVetPercentage(metingen).length >= 2 && (
             <>
+              <div className="kaart-titel" style={{ marginTop: '0.8rem' }}>Trend — vetmassa (kg)</div>
+              <Trendlijn
+                punten={metVetPercentage(metingen).map((m) => Number(vetmassa(m).toFixed(1)))}
+                kleur="#24382F"
+                eenheid=" kg"
+              />
               <div className="kaart-titel" style={{ marginTop: '0.8rem' }}>Trend — vet %</div>
               <Trendlijn
-                punten={metingen.filter((m) => m.vet_pct != null).map((m) => m.vet_pct)}
+                punten={metVetPercentage(metingen).map((m) => m.vet_pct)}
                 kleur="#24382F"
                 eenheid="%"
               />
@@ -312,36 +321,72 @@ function Trendlijn({ punten, kleur, eenheid = '' }) {
   )
 }
 
-// Metingenlijst: elke meting met gewicht in kg, vet% en het verschil met de
-// vorige meting. Nieuwste bovenaan.
+// Metingenlijst: per meting het gewicht in kg, het vetpercentage, de
+// vetmassa in kg en de verschillen met de vorige meting. Nieuwste bovenaan.
+// Vetverschillen tellen tegen de vorige meting mét vet%, zodat een meting
+// zonder vetprikje de reeks niet verstoort.
 function Metingenlijst({ metingen }) {
   const eerste = metingen[0]
   const laatste = metingen[metingen.length - 1]
   const totaal = laatste.gewicht - eerste.gewicht
+
+  const metVet = metVetPercentage(metingen)
+  const vetNu = vetmassa(metVet[metVet.length - 1])
+  const vetTotaal = metVet.length > 1 ? vetNu - vetmassa(metVet[0]) : null
+  const spierTotaal = metVet.length > 1
+    ? vetvrijeMassa(metVet[metVet.length - 1]) - vetvrijeMassa(metVet[0])
+    : null
+
   return (
     <div className="kaart">
-      <div className="kaart-titel">Metingen — gewicht (kg)</div>
+      <div className="kaart-titel">Metingen — gewicht en vetmassa</div>
       {metingen.length > 1 && (
+        <p className="klein" style={{ margin: '0 0 0.2rem' }}>
+          <strong>{laatste.gewicht} kg</strong> nu · {tekenGetal(totaal)} kg sinds {datumKort(eerste.datum)}
+        </p>
+      )}
+      {vetNu != null && (
         <p className="klein" style={{ margin: '0 0 0.5rem' }}>
-          {laatste.gewicht} kg nu · {tekenGetal(totaal)} kg sinds {datumKort(eerste.datum)}
+          <strong>{vetNu.toFixed(1)} kg vet</strong>
+          {vetTotaal != null && ` · ${tekenGetal(vetTotaal)} kg vet sinds ${datumKort(metVet[0].datum)}`}
+          {spierTotaal != null && (
+            <span className="zacht"> · vetvrij {tekenGetal(spierTotaal)} kg</span>
+          )}
         </p>
       )}
       {metingen.slice().reverse().map((m, i, omgekeerd) => {
         const vorige = omgekeerd[i + 1]
         const verschil = vorige ? m.gewicht - vorige.gewicht : null
+        const vet = vetmassa(m)
+        const vorigeMetVet = omgekeerd.slice(i + 1).find((x) => x.vet_pct != null)
+        const vetVerschil = vet != null && vorigeMetVet ? vet - vetmassa(vorigeMetVet) : null
         return (
           <div key={m.datum} className="metingregel">
-            <span className="zacht klein">{datumKort(m.datum)}</span>
-            <strong>{m.gewicht} kg</strong>
-            <span className="klein zacht">
-              {m.vet_pct != null ? `${m.vet_pct}% vet` : ''}
-            </span>
-            <span className="klein zacht" style={{ marginLeft: 'auto' }}>
-              {verschil != null ? `${tekenGetal(verschil)} kg` : 'start'}
-            </span>
+            <div className="metingregel-hoofd">
+              <span className="zacht klein datumkolom">{datumKort(m.datum)}</span>
+              <strong>{m.gewicht} kg</strong>
+              <span className="klein zacht" style={{ marginLeft: 'auto' }}>
+                {verschil != null ? `${tekenGetal(verschil)} kg` : 'start'}
+              </span>
+            </div>
+            {vet != null && (
+              <div className="metingregel-sub klein zacht">
+                <span className="datumkolom" />
+                <span>{m.vet_pct}% · {vet.toFixed(1)} kg vet</span>
+                <span style={{ marginLeft: 'auto' }}>
+                  {vetVerschil != null ? `${tekenGetal(vetVerschil)} kg vet` : ''}
+                </span>
+              </div>
+            )}
           </div>
         )
       })}
+      {metingen.length === 1 && metingen[0].vet_pct == null && (
+        <p className="klein zacht" style={{ margin: '0.4rem 0 0' }}>
+          Vul bij de volgende meting ook het vetpercentage in, dan rekent de
+          app je vetmassa in kg uit.
+        </p>
+      )}
     </div>
   )
 }
