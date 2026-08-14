@@ -7,6 +7,10 @@ import {
   vetmassa, vetvrijeMassa, metVetPercentage,
 } from '../logic/evaluatie.js'
 import {
+  bmi, gezondGewicht, gezondVetPercentage, gezondeVetmassa,
+  gewichtBijVetPercentage,
+} from '../logic/referentie.js'
+import {
   getMetingen, saveMeting, getSessies,
   getDrogeDagen, getInstellingen, zetInstelling, saveDoel,
   exportData, importData,
@@ -138,6 +142,16 @@ export default function Voortgang() {
       </div>
 
       {metingen.length > 0 && <Metingenlijst metingen={metingen} />}
+
+      {metingen.length > 0 && (
+        <Referentiekaart
+          laatste={metingen[metingen.length - 1]}
+          lengte={Number(instellingen.lengte_cm) || 180}
+          leeftijd={Number(instellingen.leeftijd) || 40}
+          geslacht={instellingen.geslacht || 'man'}
+          zetInstelling={(naam, waarde) => { zetInstelling(naam, waarde); ververs() }}
+        />
+      )}
 
       {metingen.length >= 2 && (
         <div className="kaart">
@@ -387,6 +401,76 @@ function Metingenlijst({ metingen }) {
           app je vetmassa in kg uit.
         </p>
       )}
+    </div>
+  )
+}
+
+// Referentiekaart: wat is een gezonde band voor iemand van deze lengte en
+// leeftijd, en waar sta jij? Richtwaarden uit bevolkingstabellen — de app
+// oordeelt niet, hij rekent alleen om.
+function Referentiekaart({ laatste, lengte, leeftijd, geslacht, zetInstelling }) {
+  const gewichtBand = gezondGewicht(lengte)
+  const vetBand = gezondVetPercentage(leeftijd, geslacht)
+  const vetKgBand = gezondeVetmassa(laatste.gewicht, leeftijd, geslacht)
+  const huidigeBmi = bmi(laatste.gewicht, lengte)
+  const vet = vetmassa(laatste)
+  const vetvrij = vetvrijeMassa(laatste)
+  const bovenBand = vet != null && vet > vetKgBand.max
+  const tePakken = bovenBand ? vet - vetKgBand.max : null
+  const gewichtBijMax = vetvrij != null
+    ? gewichtBijVetPercentage(vetvrij, vetBand.max)
+    : null
+
+  return (
+    <div className="kaart">
+      <div className="kaart-titel">Richtwaarden — {geslacht} {leeftijd} jaar, {lengte} cm</div>
+
+      <p className="klein" style={{ margin: '0 0 0.4rem' }}>
+        <strong>Gezond gewicht: {gewichtBand.min.toFixed(0)}–{gewichtBand.max.toFixed(0)} kg</strong>
+        <span className="zacht"> (BMI 18,5–24,9) · jij: BMI {huidigeBmi.toFixed(1)}</span>
+      </p>
+
+      <p className="klein" style={{ margin: '0 0 0.4rem' }}>
+        <strong>Gezond vet: {vetBand.min}–{vetBand.max}%</strong>
+        <span className="zacht">
+          {' '}= {vetKgBand.min.toFixed(1)}–{vetKgBand.max.toFixed(1)} kg vet bij {laatste.gewicht} kg
+        </span>
+      </p>
+
+      {vet != null && (
+        <p className="klein" style={{ margin: '0 0 0.4rem' }}>
+          Jij nu: <strong>{vet.toFixed(1)} kg vet ({laatste.vet_pct}%)</strong>
+          {bovenBand
+            ? <span className="zacht"> · {tePakken.toFixed(1)} kg boven de bovengrens</span>
+            : <span className="zacht"> · binnen de band</span>}
+        </p>
+      )}
+
+      {gewichtBijMax != null && bovenBand && (
+        <p className="klein zacht" style={{ margin: '0 0 0.4rem' }}>
+          Houd je je {vetvrij.toFixed(1)} kg vetvrije massa vast, dan zit je op
+          {' '}{vetBand.max}% vet bij ongeveer {gewichtBijMax.toFixed(1)} kg.
+        </p>
+      )}
+
+      <div className="doel-velden">
+        <div>
+          <label>Lengte (cm)</label>
+          <input type="number" step="1" inputMode="numeric" value={lengte}
+            onChange={(e) => zetInstelling('lengte_cm', e.target.value === '' ? null : Number(e.target.value))} />
+        </div>
+        <div>
+          <label>Leeftijd</label>
+          <input type="number" step="1" inputMode="numeric" value={leeftijd}
+            onChange={(e) => zetInstelling('leeftijd', e.target.value === '' ? null : Number(e.target.value))} />
+        </div>
+      </div>
+
+      <p className="klein zacht" style={{ margin: '0.5rem 0 0' }}>
+        Bevolkingsrichtlijnen (WHO-BMI; vetbanden per leeftijd, Gallagher e.a.
+        2000) — geen diagnose. Een weegschaal met bio-impedantie kan er enkele
+        procentpunten naast zitten: de trend zegt meer dan het losse getal.
+      </p>
     </div>
   )
 }
