@@ -1,22 +1,30 @@
 {
-  "name": "doel1",
-  "private": true,
+  "name": "mealprep-planner",
   "version": "1.0.0",
-  "type": "module",
+  "private": true,
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "test": "node --test",
-    "icons": "node tools/make-icons.mjs"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "vitest run --configLoader runner",
+    "test:watch": "vitest --configLoader runner",
+    "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.45.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "next": "16.3.5",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^5.0.0",
-    "vite": "^7.0.0"
+    "@tailwindcss/postcss": "^4.1.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "tailwindcss": "^4.1.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.0"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }
