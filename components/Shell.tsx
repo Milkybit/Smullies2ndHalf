@@ -20,6 +20,7 @@ const groups = [
     links: [
       ["/shopping", "Boodschappen", "shopping"],
       ["/cooking", "Kookdag", "cooking"],
+      ["/kitchen", "Keukenspullen", "kitchen"],
     ],
   },
   {

@@ -73,6 +73,29 @@ describe("local persistence and backups", () => {
       ),
     ).toThrow();
   });
+  it("keeps kitchen checks and accepts backups made before the kitchen list", () => {
+    const state = initialState();
+    state.kitchenChecks = { thermometer: true, scale: false };
+    expect(parseBackup(JSON.stringify(state))).toEqual(state);
+    const { kitchenChecks: _omitted, ...older } = initialState();
+    expect(parseBackup(JSON.stringify(older)).kitchenChecks).toEqual({});
+    expect(
+      parseBackup(
+        JSON.stringify({
+          ...initialState(),
+          kitchenChecks: { thermometer: true, "retired-item": true },
+        }),
+      ).kitchenChecks,
+    ).toEqual({ thermometer: true });
+    expect(() =>
+      parseBackup(
+        JSON.stringify({ ...initialState(), kitchenChecks: { scale: "ja" } }),
+      ),
+    ).toThrow();
+    expect(() =>
+      parseBackup(JSON.stringify({ ...initialState(), kitchenChecks: [] })),
+    ).toThrow();
+  });
   it("does not swallow storage write failures", () => {
     const repo = browserRepository({
       getItem: () => null,

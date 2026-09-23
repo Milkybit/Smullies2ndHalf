@@ -1700,3 +1700,55 @@ small {
     break-inside: avoid;
   }
 }
+.shopping-row.kitchen-row,
+.shopping-column-labels.kitchen-columns {
+  grid-template-columns: minmax(0, 1fr) 130px;
+}
+.kitchen-badge {
+  margin-left: 8px;
+  vertical-align: 1px;
+  font-size: 10px;
+  padding: 2px 6px;
+}
+.kitchen-tip {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #5f6b57;
+  margin: 6px 0 4px;
+}
+.kitchen-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.kitchen-filter input {
+  accent-color: var(--green);
+}
+.kitchen-measure-link {
+  display: none;
+}
+.kitchen-not-needed {
+  margin: 10px 0 12px;
+  padding-left: 18px;
+  list-style: disc;
+  font-size: 13px;
+  line-height: 1.8;
+}
+@media (max-width: 1200px) {
+  .shopping-progress .kitchen-measure-link {
+    display: inline-flex;
+  }
+}
+@media (max-width: 700px) {
+  .shopping-row.kitchen-row,
+  .shopping-column-labels.kitchen-columns {
+    grid-template-columns: minmax(0, 1fr) 92px;
+  }
+}
+@media print {
+  .kitchen-badge {
+    border: 1px solid #999;
+  }
+}
