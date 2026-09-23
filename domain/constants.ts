@@ -1,4 +1,9 @@
-import type { Activity, Category, ProteinSource } from "./types";
+import type {
+  Activity,
+  Category,
+  KitchenCategory,
+  ProteinSource,
+} from "./types";
 export const ACTIVITY_FACTORS: Record<Activity, number> = {
   sedentary: 1.2,
   light: 1.375,
@@ -22,6 +27,14 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   spices: "Kruiden & specerijen",
   dairy: "Zuivel",
   other: "Overig",
+};
+export const KITCHEN_CATEGORY_LABELS: Record<KitchenCategory, string> = {
+  gastronorm: "Gastronormbakken (RVS)",
+  cutting: "Snijden",
+  measuring: "Meten & wegen",
+  portioning: "Portioneren & verpakken",
+  pans: "Pannen & bakplaten",
+  cooling: "Afkoelen & opruimen",
 };
 export const PROTEIN_LABELS: Record<ProteinSource, string> = {
   chicken: "Kip",

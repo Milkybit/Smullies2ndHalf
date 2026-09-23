@@ -121,6 +121,22 @@ export interface BatchItem {
   targetCalories: number;
   minimumProtein: number;
 }
+export type KitchenCategory =
+  | "gastronorm"
+  | "cutting"
+  | "measuring"
+  | "portioning"
+  | "pans"
+  | "cooling";
+/** One piece of kitchen equipment for a batch cooking day. */
+export interface KitchenItem {
+  id: string;
+  nameNl: string;
+  quantity: string;
+  purpose: string;
+  category: KitchenCategory;
+  essential: boolean;
+}
 export interface Equipment {
   burners: number;
   ovens: number;
@@ -138,6 +154,7 @@ export interface AppState {
   equipment: Equipment;
   cookedYields: Record<string, { dryGrams: number; cookedGrams: number }>;
   completedTasks: Record<string, boolean>;
+  kitchenChecks: Record<string, boolean>;
 }
 export interface ScaledRecipe {
   ingredients: RecipeIngredient[];

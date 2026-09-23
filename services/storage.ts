@@ -7,6 +7,7 @@ import {
 } from "@/domain/validation";
 import { ingredients } from "@/data/ingredients";
 import { recipes } from "@/data/recipes";
+import { kitchenItems } from "@/data/kitchen";
 
 /** Keeps the pre-PrepPartner name so existing browser data still loads. */
 export const STORAGE_KEY = "mealprep-planner:v1";
@@ -29,6 +30,7 @@ export function initialState(): AppState {
     equipment: { burners: 4, ovens: 1, maxServingsPerPot: 6 },
     cookedYields: {},
     completedTasks: {},
+    kitchenChecks: {},
   };
 }
 const record = (value: unknown): value is Record<string, unknown> =>
@@ -227,6 +229,20 @@ export function parseBackup(text: string): AppState {
   for (const [id, value] of Object.entries(raw.completedTasks)) {
     if (!safeKey(id) || typeof value !== "boolean") return fail();
     state.completedTasks[id] = value;
+  }
+  // Optional: backups made before the kitchen list have no kitchenChecks.
+  if (raw.kitchenChecks !== undefined) {
+    if (
+      !record(raw.kitchenChecks) ||
+      Object.keys(raw.kitchenChecks).length > 1000
+    )
+      return fail();
+    for (const [id, value] of Object.entries(raw.kitchenChecks)) {
+      if (!safeKey(id) || typeof value !== "boolean") return fail();
+      // Items removed from the list in a later version are dropped, not rejected.
+      if (kitchenItems.some((item) => item.id === id))
+        state.kitchenChecks[id] = value;
+    }
   }
   return state;
 }

@@ -55,10 +55,11 @@ Next.js **16.3.5** en React **19.3.0** waren de stabiele npm-versies bij impleme
 3. Bewerk de zes eetmomenten. Bij 2.000 kcal starten ze op 400 / 130 / 600 / 120 / 600 / 150 kcal.
 4. Bekijk **Recepten**. Open een recept, vul je doelen en porties in en klik **Pas recept aan**.
 5. Voeg recepten aan **Batch samenstellen** toe. Tien recepten van zes porties geven 60 maaltijden, oftewel 30 dagen bij twee mealpreps per dag.
-6. Open **Boodschappen**: afvinken, kopiëren, printen of als tekst downloaden.
-7. Geef onder **Kookplan** je pitten, ovens en maximale porties per pan op.
-8. Open tijdens het koken **Opbrengst invoeren**. Voer het gemeten gekookte rijst- of pastagewicht in om het aantal grammen per bakje te krijgen.
-9. Maak regelmatig een JSON-back-up via **Instellingen → Exporteer gegevens**.
+6. Kijk onder **Keukenspullen** wat je nodig hebt en vink af wat je al hebt. De spullen met ‘Basis’ zijn genoeg om te beginnen. Meet eerst je oven, spoelbak, koelkast, aanrecht en vriezer.
+7. Open **Boodschappen**: afvinken, kopiëren, printen of als tekst downloaden.
+8. Geef onder **Kookplan** je pitten, ovens en maximale porties per pan op.
+9. Open tijdens het koken **Opbrengst invoeren**. Voer het gemeten gekookte rijst- of pastagewicht in om het aantal grammen per bakje te krijgen.
+10. Maak regelmatig een JSON-back-up via **Instellingen → Exporteer gegevens**.
 
 ## Projectstructuur
 
@@ -70,6 +71,7 @@ domain/                 TypeScript-modellen, grenzen en validatie
 calculations/           Pure functies voor energie, macro’s, recepten en planning
 data/ingredients.ts     Bewerkbare standaardvoedingswaarden en verpakkingen
 data/recipes.ts         Alle 30 receptdefinities en bereidingsinstructies
+data/kitchen.ts         Keukenspullen, meettips en wat je niet nodig hebt
 services/               StorageRepository, importvalidatie en tekstexport
 tests/                  Vitest-tests voor rekenregels en opslag
 .github/workflows/      Tests, typecheck, build en GitHub Pages-deployment
@@ -112,7 +114,7 @@ Alle vloeistoffen worden intern eveneens in gram gerekend. Waar een dichtheid be
 
 `services/storage.ts` definieert `StorageRepository`. De browserimplementatie gebruikt alleen de sleutel `mealprep-planner:v1`. Die sleutel houdt bewust de oude naam van vóór PrepPartner, zodat bestaande gegevens in je browser behouden blijven. React-schermen roepen deze repository aan via de centrale provider; zij gebruiken localStorage niet rechtstreeks.
 
-Opgeslagen worden profiel, overrides, eetmomenten, ingrediëntaanpassingen, batchinstellingen, winkelvinkjes, apparatuur, gekookte opbrengsten en afgevinkte kooktaken. Macrototalen en boodschappen worden afgeleid en niet opgeslagen.
+Opgeslagen worden profiel, overrides, eetmomenten, ingrediëntaanpassingen, batchinstellingen, winkelvinkjes, apparatuur, gekookte opbrengsten, afgevinkte kooktaken en afgevinkte keukenspullen. Back-ups van vóór de lijst met keukenspullen blijven geldig. Macrototalen en boodschappen worden afgeleid en niet opgeslagen.
 
 De JSON-back-up heeft een versie en wordt volledig gevalideerd, inclusief getalsgrenzen en bekende ID’s. Ongeldige of toekomstige versies worden geweigerd. Import vraagt bevestiging voordat bestaande gegevens worden vervangen. Opslagfouten worden zichtbaar gemeld. Bij beschadigde opgeslagen data wordt die inhoud niet automatisch overschreven door een lege startstatus.
 

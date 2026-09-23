@@ -50,6 +50,9 @@ export function Icon({ name, size = 20 }: { name: string; size?: number }) {
         <path d="M6 13a5 5 0 1 1 2-9 5 5 0 0 1 8 0 5 5 0 1 1 2 9v8H6zM6 17h12" />
       </>
     ),
+    kitchen: (
+      <path d="M5 11h14v6a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3zM2.5 11h19M8 11a4 4 0 0 1 8 0M12 7V5.5" />
+    ),
     ingredients: (
       <>
         <path d="M12 21V10M12 14C5 15 3 10 3 5c5 0 9 2 9 9ZM12 11C12 4 16 2 21 3c0 5-3 9-9 8Z" />
