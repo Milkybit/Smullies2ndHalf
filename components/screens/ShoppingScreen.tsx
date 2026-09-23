@@ -52,7 +52,7 @@ export function ShoppingScreen() {
               <button
                 className="button primary"
                 onClick={() =>
-                  downloadText(shoppingText(items), "mealprep-boodschappen.txt")
+                  downloadText(shoppingText(items), "preppartner-boodschappen.txt")
                 }
               >
                 Exporteer tekst

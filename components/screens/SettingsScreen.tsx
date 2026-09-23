@@ -56,7 +56,7 @@ export function SettingsScreen() {
               onClick={() =>
                 downloadText(
                   JSON.stringify(state, null, 2),
-                  `mealprep-backup-${new Date().toISOString().slice(0, 10)}.json`,
+                  `preppartner-backup-${new Date().toISOString().slice(0, 10)}.json`,
                   "application/json",
                 )
               }
@@ -106,7 +106,7 @@ export function SettingsScreen() {
         <Card className="danger-card">
           <h2>Opnieuw beginnen</h2>
           <p>
-            Verwijder alle gegevens van deze MealPrep Planner. De
+            Verwijder alle gegevens van deze PrepPartner. De
             standaardrecepten en -ingrediënten blijven beschikbaar.
           </p>
           <button
@@ -114,7 +114,7 @@ export function SettingsScreen() {
             onClick={() => {
               if (
                 window.confirm(
-                  "Alle MealPrep Planner-gegevens uit deze browser verwijderen? Dit kan alleen met een eigen back-up worden hersteld.",
+                  "Alle PrepPartner-gegevens uit deze browser verwijderen? Dit kan alleen met een eigen back-up worden hersteld.",
                 )
               ) {
                 reset();
@@ -128,7 +128,7 @@ export function SettingsScreen() {
           </button>
         </Card>
         <Card>
-          <h2>Over MealPrep Planner</h2>
+          <h2>Over PrepPartner</h2>
           <p>
             Versie 1.0 · 30 vriesvriendelijke recepten · metrische eenheden ·
             volledig Nederlandstalig.

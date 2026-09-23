@@ -1,10 +1,10 @@
-# MealPrep Planner
+# PrepPartner
 
 De productrichting is **premium sport & voeding**: een persoonlijke planner met warme typografie, culinaire sfeerbeelden en een duidelijke route van recepten naar boodschappen en kookdag. De startselectie voegt op verzoek drie recepten met zes porties toe; nieuwe recepten nemen het caloriedoel van je mealprep-eetmomenten over. Bestaande gegevens blijven bewaard.
 
 Zie [PRODUCT.md](PRODUCT.md) voor de commerciële productrichting en de stappen naar accounts en abonnementen. Deze versie bewaart gegevens nog lokaal. De drie gegenereerde receptbeelden en hun prompts staan in [public/images/README.md](public/images/README.md).
 
-Een bruikbare, Nederlandstalige mealprep-planner voor één persoon. Bereken je energie- en macrodoelen, pas 30 vriesvriendelijke recepten aan, maak een batch en werk met één boodschappenlijst en een kookplanning. Persoonlijke gegevens blijven in je browser.
+PrepPartner is een bruikbare, Nederlandstalige mealprep-planner voor één persoon. Bereken je energie- en macrodoelen, pas 30 vriesvriendelijke recepten aan, maak een batch en werk met één boodschappenlijst en een kookplanning. Persoonlijke gegevens blijven in je browser.
 
 Deze versie vervangt de eerdere Doel1-app volledig. De oude code blijft terug te vinden in de Git-geschiedenis. Er is geen Supabase, login, externe voedings-API, AI-API, analytics of cloudsynchronisatie.
 
@@ -110,7 +110,7 @@ Alle vloeistoffen worden intern eveneens in gram gerekend. Waar een dichtheid be
 
 ## Lokale opslag en herstel
 
-`services/storage.ts` definieert `StorageRepository`. De browserimplementatie gebruikt alleen de sleutel `mealprep-planner:v1`. React-schermen roepen deze repository aan via de centrale provider; zij gebruiken localStorage niet rechtstreeks.
+`services/storage.ts` definieert `StorageRepository`. De browserimplementatie gebruikt alleen de sleutel `mealprep-planner:v1`. Die sleutel houdt bewust de oude naam van vóór PrepPartner, zodat bestaande gegevens in je browser behouden blijven. React-schermen roepen deze repository aan via de centrale provider; zij gebruiken localStorage niet rechtstreeks.
 
 Opgeslagen worden profiel, overrides, eetmomenten, ingrediëntaanpassingen, batchinstellingen, winkelvinkjes, apparatuur, gekookte opbrengsten en afgevinkte kooktaken. Macrototalen en boodschappen worden afgeleid en niet opgeslagen.
 

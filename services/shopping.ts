@@ -7,5 +7,5 @@ export function shoppingText(items: ShoppingItem[]): string {
     if (!rows.length) return "";
     return `${label}\n${rows.map((item) => `□ ${item.ingredient.nameNl}: ${weight(item.grams)} (${WEIGHT_LABELS[item.ingredient.weightBasis]})${item.packages ? ` — ${number(item.packages)} × ${weight(item.ingredient.defaultPackageSize!)}` : ""}`).join("\n")}`;
   });
-  return `MealPrep Planner — boodschappen\nGewichten zijn rauw, droog of uitgelekt.\n\n${sections.filter(Boolean).join("\n\n")}\n`;
+  return `PrepPartner — boodschappen\nGewichten zijn rauw, droog of uitgelekt.\n\n${sections.filter(Boolean).join("\n\n")}\n`;
 }

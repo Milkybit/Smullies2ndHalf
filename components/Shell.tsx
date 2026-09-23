@@ -36,7 +36,7 @@ const groups = [
 export function Wordmark() {
   return (
     <span className="product-wordmark">
-      mealprep<span className="wordmark-dot">.</span>
+      PrepPartner<span className="wordmark-dot">.</span>
       <small>VOEDING DIE VOOR JE WERKT</small>
     </span>
   );
@@ -86,7 +86,7 @@ export function Shell({ children }: { children: ReactNode }) {
         <div className="product-sidebar-top">
           <Link
             href="/"
-            aria-label="MealPrep Planner — overzicht"
+            aria-label="PrepPartner — overzicht"
             onClick={() => setMenuOpen(false)}
           >
             <Wordmark />
@@ -163,7 +163,7 @@ export function Shell({ children }: { children: ReactNode }) {
           {storageError && <Notice tone="warning">{storageError}</Notice>}
           {children}
           <footer className="page-footer">
-            <span>MealPrep Planner</span>
+            <span>PrepPartner</span>
             <span>
               Voedingswaarden en energieverbruik zijn schattingen. Je gegevens
               worden in deze browser bewaard.
