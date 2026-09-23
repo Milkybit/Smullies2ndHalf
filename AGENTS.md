@@ -1,4 +1,4 @@
-# MealPrep Planner
+# PrepPartner
 
 - Use strict TypeScript, React, Next.js and Tailwind. UI in Dutch; identifiers in English.
 - Phase 1 is local-only. No authentication, cloud persistence, tracking, nutrition APIs or AI APIs.
