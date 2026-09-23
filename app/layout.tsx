@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { StoreProvider } from "@/components/store";
 import { Shell } from "@/components/Shell";
 import "./globals.css";
+import "./product.css";
 export const metadata: Metadata = {
-  title: "MealPrep Planner — jouw voeding, goed geregeld",
+  title: "MealPrep Planner — persoonlijke sportvoeding, goed voorbereid",
   description:
     "Persoonlijke voedingsdoelen, slimme mealprep en één praktische boodschappenlijst. Alles lokaal in je browser.",
 };

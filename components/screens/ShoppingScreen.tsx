@@ -11,6 +11,7 @@ import { CATEGORY_LABELS, WEIGHT_LABELS } from "@/domain/constants";
 import { downloadText, number, weight } from "@/services/format";
 import { shoppingText } from "@/services/shopping";
 import { Card, Empty, Icon, Notice, PageTitle } from "../ui";
+import { BatchJourney } from "../BatchJourney";
 export function ShoppingScreen() {
   const { batch, catalog, state, update } = usePlanner();
   const [message, setMessage] = useState("");
@@ -60,6 +61,7 @@ export function ShoppingScreen() {
           )
         }
       />
+      <BatchJourney active="shopping" />
       {message && <Notice>{message}</Notice>}
       {!items.length ? (
         <Empty title="Eerst een batch, dan je boodschappen">

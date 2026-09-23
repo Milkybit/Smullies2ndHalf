@@ -5,9 +5,9 @@ export function RecipesScreen() {
   return (
     <>
       <PageTitle
-        eyebrow="DE RECEPTENBIBLIOTHEEK"
-        title="Goed in de pan. Goed uit de vriezer."
-        description="30 eiwitrijke recepten. Pas een gerecht aan je doelen aan en plan zoveel porties als je nodig hebt."
+        eyebrow="Lekker eten, slim voorbereid"
+        title="Vind jouw volgende favoriet."
+        description="30 gerechten om naar uit te kijken. Eiwitrijk, geschikt voor de vriezer en aan te passen aan jouw voedingsdoelen."
       />
       <RecipeBrowser />
     </>

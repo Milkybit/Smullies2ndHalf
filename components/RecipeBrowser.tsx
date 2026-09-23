@@ -4,8 +4,10 @@ import Link from "next/link";
 import { recipes } from "@/data/recipes";
 import { PROTEIN_LABELS } from "@/domain/constants";
 import { recipeNutrition } from "@/calculations/nutrition";
+import { defaultMealprepCalories } from "@/calculations/planning";
 import { usePlanner } from "./store";
 import { Icon, NutritionLine } from "./ui";
+import { RecipeVisual } from "./RecipeVisual";
 
 export function RecipeBrowser({ compact = false }: { compact?: boolean }) {
   const { catalog, state, update } = usePlanner();
@@ -13,7 +15,8 @@ export function RecipeBrowser({ compact = false }: { compact?: boolean }) {
   const [source, setSource] = useState("");
   const [tag, setTag] = useState("");
   const [score, setScore] = useState(1);
-  const [sort, setSort] = useState("name");
+  const [sort, setSort] = useState("featured");
+  const featured = ["teriyaki", "red-curry-chicken", "beef-ragu"];
   const visible = recipes
     .filter(
       (recipe) =>
@@ -27,20 +30,44 @@ export function RecipeBrowser({ compact = false }: { compact?: boolean }) {
         ? b.freezerScore - a.freezerScore
         : sort === "microwave"
           ? b.microwaveScore - a.microwaveScore
-          : a.nameNl.localeCompare(b.nameNl, "nl"),
+          : sort === "featured"
+            ? (featured.includes(a.id) ? featured.indexOf(a.id) : 100) -
+              (featured.includes(b.id) ? featured.indexOf(b.id) : 100)
+            : a.nameNl.localeCompare(b.nameNl, "nl"),
     );
   function add(recipeId: string) {
     update((old) => ({
       ...old,
       batch: [
         ...old.batch,
-        { recipeId, servings: 6, targetCalories: 600, minimumProtein: 50 },
+        ...(old.batch.some((item) => item.recipeId === recipeId)
+          ? []
+          : [
+              {
+                recipeId,
+                servings: 6,
+                targetCalories: defaultMealprepCalories(old.meals),
+                minimumProtein: 50,
+              },
+            ]),
       ],
       completedTasks: {},
     }));
   }
   return (
     <>
+      <div className="recipe-collections" aria-label="Snelle receptfilters">
+        {["", "Aziatisch", "Curry", "Pasta", "Bonen"].map((value) => (
+          <button
+            type="button"
+            key={value}
+            aria-pressed={tag === value}
+            onClick={() => setTag(value)}
+          >
+            {value || "Alle gerechten"}
+          </button>
+        ))}
+      </div>
       <div className="recipe-filters">
         <div className="field search-field">
           <label htmlFor={`search-${compact}`}>Zoek een recept</label>
@@ -101,6 +128,7 @@ export function RecipeBrowser({ compact = false }: { compact?: boolean }) {
             value={sort}
             onChange={(e) => setSort(e.target.value)}
           >
+            <option value="featured">Startselectie eerst</option>
             <option value="name">Naam A–Z</option>
             <option value="freezer">Vriesscore</option>
             <option value="microwave">Magnetronscore</option>
@@ -111,31 +139,26 @@ export function RecipeBrowser({ compact = false }: { compact?: boolean }) {
         {visible.length} recepten <span>Voedingswaarden per basisportie</span>
       </div>
       <div className={`recipe-grid ${compact ? "compact-grid" : ""}`}>
-        {visible.map((recipe, index) => {
+        {visible.map((recipe) => {
           const selected = state.batch.some(
             (item) => item.recipeId === recipe.id,
           );
           const nutrition = recipeNutrition(recipe.ingredients, catalog);
           return (
             <article className="recipe-card" key={recipe.id}>
-              <div className={`recipe-card-top tone-${index % 4}`}>
-                <span className="cuisine-label">{recipe.cuisine}</span>
-                <Icon
-                  name={
-                    recipe.cookingGroup === "curry" ? "cooking" : "ingredients"
-                  }
-                  size={34}
-                />
-                <span className="freezer-label">
-                  <Icon name="snow" size={14} />
-                  {recipe.freezerScore}/5
-                </span>
-              </div>
+              <Link
+                href={`/recipes/${recipe.id}`}
+                tabIndex={-1}
+                aria-hidden="true"
+              >
+                <RecipeVisual recipe={recipe} />
+              </Link>
               <div className="recipe-card-body">
                 <div className="recipe-meta">
                   {PROTEIN_LABELS[recipe.proteinSource]}
                   <span>•</span>
                   {recipe.prepMinutes + recipe.cookMinutes} min
+                  <span>·</span> Vriezer {recipe.freezerScore}/5
                 </div>
                 <h3>
                   <Link href={`/recipes/${recipe.id}`}>{recipe.nameNl}</Link>

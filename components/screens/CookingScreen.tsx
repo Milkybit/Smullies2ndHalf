@@ -6,6 +6,7 @@ import { cookingPlan } from "@/calculations/cooking";
 import { number } from "@/services/format";
 import { Card, Empty, Notice, NumberField, PageTitle } from "../ui";
 import { YieldCalculator } from "../YieldCalculator";
+import { BatchJourney } from "../BatchJourney";
 const APPLIANCE_LABELS = {
   worktop: "Werkblad",
   burner: "Pit",
@@ -34,6 +35,7 @@ export function CookingScreen() {
         title="Je kookdag, stap voor stap"
         description="Een praktische volgorde voor jouw recepten en apparatuur. Werk in rondes en vink af wat klaar is."
       />
+      <BatchJourney active="cooking" />
       <div className="tabs no-print" role="tablist" aria-label="Kookmodus">
         <button
           role="tab"

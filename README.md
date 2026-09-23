@@ -1,5 +1,9 @@
 # MealPrep Planner
 
+De productrichting is **premium sport & voeding**: een persoonlijke planner met warme typografie, culinaire sfeerbeelden en een duidelijke route van recepten naar boodschappen en kookdag. De startselectie voegt op verzoek drie recepten met zes porties toe; nieuwe recepten nemen het caloriedoel van je mealprep-eetmomenten over. Bestaande gegevens blijven bewaard.
+
+Zie [PRODUCT.md](PRODUCT.md) voor de commerciële productrichting en de stappen naar accounts en abonnementen. Deze versie bewaart gegevens nog lokaal. De drie gegenereerde receptbeelden en hun prompts staan in [public/images/README.md](public/images/README.md).
+
 Een bruikbare, Nederlandstalige mealprep-planner voor één persoon. Bereken je energie- en macrodoelen, pas 30 vriesvriendelijke recepten aan, maak een batch en werk met één boodschappenlijst en een kookplanning. Persoonlijke gegevens blijven in je browser.
 
 Deze versie vervangt de eerdere Doel1-app volledig. De oude code blijft terug te vinden in de Git-geschiedenis. Er is geen Supabase, login, externe voedings-API, AI-API, analytics of cloudsynchronisatie.

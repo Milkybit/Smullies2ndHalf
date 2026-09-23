@@ -15,6 +15,8 @@ import { createMealSlots } from "@/calculations/meals";
 import { number } from "@/services/format";
 import { useStore } from "../store";
 import { Card, Icon, Notice, PageTitle, Stat } from "../ui";
+import { RecipeVisual } from "../RecipeVisual";
+import { recipes } from "@/data/recipes";
 
 export function ProfileScreen({
   onboarding = false,
@@ -139,16 +141,20 @@ export function ProfileScreen({
       <div className={onboarding ? "onboarding-grid" : "profile-grid"}>
         {onboarding && (
           <div className="onboarding-intro">
-            <div className="eyebrow">MINDER REGELEN. BETER ETEN.</div>
+            <div className="eyebrow">Jouw doel. Jouw smaak. Jouw plan.</div>
             <h1>
-              Goed eten begint
+              Voeding die werkt.
               <br />
-              met een plan<span>.</span>
+              Eten dat je wilt<span>.</span>
             </h1>
             <p>
-              Van jouw voedingsdoel naar een vriezer vol maaltijden. Stel je
-              basis in; wij rekenen met je mee.
+              Een persoonlijk voedingsplan, lekkere recepten en een kookdag die
+              je vooruithelpt. Begin bij jezelf; wij rekenen de rest uit.
             </p>
+            <RecipeVisual
+              recipe={recipes.find((recipe) => recipe.id === "teriyaki")!}
+              priority
+            />
             <div className={`onboarding-step ${step === 1 ? "active" : ""}`}>
               <b>01</b>
               <div>
@@ -165,7 +171,7 @@ export function ProfileScreen({
             </div>
             <div className="privacy-line">
               <Icon name="lock" />
-              Geen account. Alles blijft in je browser.
+              Je persoonlijke gegevens blijven op dit apparaat.
             </div>
           </div>
         )}

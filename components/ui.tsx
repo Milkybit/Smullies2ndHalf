@@ -5,6 +5,8 @@ import { number } from "@/services/format";
 
 export function Icon({ name, size = 20 }: { name: string; size?: number }) {
   const paths: Record<string, ReactNode> = {
+    menu: <path d="M4 6h16M4 12h16M4 18h16" />,
+    close: <path d="m6 6 12 12M6 18 18 6" />,
     dashboard: (
       <>
         <rect x="3" y="3" width="7" height="7" rx="1.5" />
@@ -202,6 +204,7 @@ export function NutritionLine({
 }
 export function NumberField({
   label,
+  accessibleLabel,
   value,
   onCommit,
   min = 0,
@@ -211,6 +214,7 @@ export function NumberField({
   compact = false,
 }: {
   label: string;
+  accessibleLabel?: string;
   value: number;
   onCommit: (value: number) => void;
   min?: number;
@@ -251,6 +255,7 @@ export function NumberField({
       </label>
       <input
         id={id}
+        aria-label={accessibleLabel}
         type="number"
         value={text}
         min={min}

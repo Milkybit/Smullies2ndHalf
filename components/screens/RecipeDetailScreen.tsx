@@ -4,6 +4,8 @@ import Link from "next/link";
 import { recipes } from "@/data/recipes";
 import { recipeNutrition } from "@/calculations/nutrition";
 import { scaleRecipe } from "@/calculations/scaling";
+import { defaultMealprepCalories } from "@/calculations/planning";
+import { RecipeVisual } from "../RecipeVisual";
 import { PROTEIN_LABELS, WEIGHT_LABELS } from "@/domain/constants";
 import { number, weight } from "@/services/format";
 import { usePlanner } from "../store";
@@ -20,11 +22,14 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
   const { catalog, state, update } = usePlanner();
   const recipe = recipes.find((r) => r.id === recipeId)!;
   const existing = state.batch.find((item) => item.recipeId === recipeId);
-  const [calories, setCalories] = useState(existing?.targetCalories ?? 600);
+  const defaultCalories = defaultMealprepCalories(state.meals);
+  const [calories, setCalories] = useState(
+    existing?.targetCalories ?? defaultCalories,
+  );
   const [protein, setProtein] = useState(existing?.minimumProtein ?? 50);
   const [servings, setServings] = useState(existing?.servings ?? 6);
   const [applied, setApplied] = useState({
-    calories: existing?.targetCalories ?? 600,
+    calories: existing?.targetCalories ?? defaultCalories,
     protein: existing?.minimumProtein ?? 50,
   });
   const [saved, setSaved] = useState(false);
@@ -59,6 +64,7 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
         title={recipe.nameNl}
         description={recipe.description}
       />
+      <RecipeVisual recipe={recipe} priority className="recipe-detail-photo" />
       <div className="detail-badges">
         <span className="badge">
           <Icon name="snow" size={15} />

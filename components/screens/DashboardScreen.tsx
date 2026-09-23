@@ -2,247 +2,182 @@
 import Link from "next/link";
 import { usePlanner } from "../store";
 import { batchSummary } from "@/calculations/batch";
+import { recipes } from "@/data/recipes";
 import { number } from "@/services/format";
-import { Card, Icon, PageTitle, Stat } from "../ui";
+import { Card, Icon, Notice } from "../ui";
+import { RecipeVisual } from "../RecipeVisual";
+import { StarterBatch } from "../StarterBatch";
+import { BatchJourney } from "../BatchJourney";
 
 export function DashboardScreen() {
   const { state, batch, targets } = usePlanner();
   if (!targets) return null;
   const summary = batchSummary(batch, state.mealprepsPerDay);
   const mealTotal = state.meals.reduce((sum, meal) => sum + meal.calories, 0);
+  const feature = recipes.find((recipe) => recipe.id === "teriyaki")!;
   return (
     <>
-      <PageTitle
-        eyebrow="OVERZICHT"
-        title="Een goed plan voor goed eten."
-        description="Je persoonlijke doelen, dagindeling en volgende kookdag op één plek."
-        action={
-          <Link className="button primary" href="/batch">
-            <Icon name="plus" />
-            Batch samenstellen
-          </Link>
-        }
-      />
-      <div className="dashboard-top">
-        <section className="goal-card">
-          <div className="section-heading">
-            <div>
-              <div className="eyebrow">JOUW DAGDOEL</div>
-              <h2>Voeding die bij je past</h2>
-            </div>
-            <Icon name="flame" size={26} />
-          </div>
-          <div className="goal-main">
-            <div>
-              <div className="goal-number">
-                {number(targets.calories)}
-                <span>kcal / dag</span>
-              </div>
-              <p>
-                Een persoonlijk startpunt.
-                <br />
-                Aanpasbaar wanneer jij dat wilt.
-              </p>
-              <Link href="/profile">
-                Bekijk je berekening <span aria-hidden="true">↗</span>
-              </Link>
-            </div>
-            <div
-              className="macro-ring"
-              role="img"
-              aria-label={`${number(targets.protein)} gram eiwit, ${number(targets.carbs)} gram koolhydraten en ${number(targets.fat)} gram vet`}
-              style={{
-                background: `conic-gradient(#c3d6b2 0 ${((targets.protein * 4) / Math.max(1, targets.macroCalories)) * 100}%, #f2c57c 0 ${((targets.protein * 4 + targets.carbs * 4) / Math.max(1, targets.macroCalories)) * 100}%, #8aa99e 0 100%)`,
-              }}
-            >
-              <div>
-                <Icon name="ingredients" size={30} />
-                <span>jouw balans</span>
-              </div>
-            </div>
-          </div>
-          <div className="goal-macros">
-            <div>
-              <i className="protein-dot" />
-              <span>Eiwit</span>
-              <strong>
-                {number(targets.protein)} <small>g</small>
-              </strong>
-            </div>
-            <div>
-              <i className="carbs-dot" />
-              <span>Koolhydraten</span>
-              <strong>
-                {number(targets.carbs)} <small>g</small>
-              </strong>
-            </div>
-            <div>
-              <i className="fat-dot" />
-              <span>Vet</span>
-              <strong>
-                {number(targets.fat)} <small>g</small>
-              </strong>
-            </div>
-          </div>
-        </section>
-        <Card className="next-step">
-          <div className="eyebrow">VAN PLAN NAAR VRIEZER</div>
-          <h2>
-            Eén kookdag.
+      <header className="overview-heading">
+        <div>
+          <div className="eyebrow">Eten voor jouw doelen</div>
+          <h1>Jouw plan, goed voorbereid.</h1>
+        </div>
+        <Link className="text-link" href="/profile">
+          Mijn voedingsdoelen <Icon name="arrow" size={16} />
+        </Link>
+      </header>
+      <section className="editorial-hero" aria-labelledby="hero-title">
+        <div className="editorial-copy">
+          <span className="hero-overline">
+            Persoonlijk gepland. Met smaak gemaakt.
+          </span>
+          <h2 id="hero-title">
+            Goed eten.
             <br />
-            Heel veel rust.
+            <em>Ook op drukke dagen.</em>
           </h2>
           <p>
-            Stel je batch samen, haal alles in huis en kook met een duidelijk
-            stappenplan.
+            {batch.length
+              ? `${number(summary.meals)} maaltijden, ${batch.length} recepten en één overzichtelijk plan. Je volgende kookdag begint hier.`
+              : "Van je voedingsdoel naar een vriezer vol lekkere maaltijden. Kies je gerechten; je porties, boodschappen en kookplan rekenen mee."}
           </p>
-          <ol className="workflow-list">
-            <li>
-              <b>1</b>
-              <Link href="/recipes">
-                Kies je recepten <Icon name="arrow" size={16} />
-              </Link>
-            </li>
-            <li>
-              <b>2</b>
-              <Link href="/shopping">
-                Verzamel je boodschappen <Icon name="arrow" size={16} />
-              </Link>
-            </li>
-            <li>
-              <b>3</b>
-              <Link href="/cooking">
-                Aan de slag in de keuken <Icon name="arrow" size={16} />
-              </Link>
-            </li>
-          </ol>
-        </Card>
-      </div>
-      <div className="stats-grid four">
-        <Stat
-          label="Maaltijden in je batch"
-          value={number(summary.meals)}
-          unit="porties"
-          icon="batch"
-          hint={`${state.batch.length} verschillende recepten`}
-        />
-        <Stat
-          label="Vooruit gepland"
-          value={number(summary.days, 1)}
-          unit="dagen"
-          icon="meals"
-          hint={`${state.mealprepsPerDay} mealpreps per dag`}
-        />
-        <Stat
-          label="Gemiddeld per maaltijd"
-          value={number(summary.averageCalories)}
-          unit="kcal"
-          icon="flame"
-          hint={
-            summary.meals
-              ? "Berekend uit jouw ingrediënten"
-              : "Stel je eerste batch samen"
-          }
-        />
-        <Stat
-          label="Gemiddeld eiwit"
-          value={number(summary.averageProtein)}
-          unit="g"
-          icon="ingredients"
-          hint="Per mealprep-portie"
-        />
-      </div>
-      <div className="dashboard-bottom">
-        <Card>
-          <div className="section-heading">
-            <div>
-              <div className="eyebrow">DAGELIJKSE STRUCTUUR</div>
-              <h2>Jouw eetmomenten</h2>
-            </div>
-            <Link className="text-link" href="/meals">
-              Bewerken ↗
-            </Link>
+          <Link
+            href={batch.length ? "/batch" : "/recipes"}
+            className="button primary"
+          >
+            {batch.length ? "Verder met mijn batch" : "Ontdek jouw recepten"}
+            <Icon name="arrow" size={18} />
+          </Link>
+          <span className="hero-footnote">
+            30 recepten · persoonlijke porties · samen vooruit koken
+          </span>
+        </div>
+        <Link
+          href="/recipes/teriyaki"
+          className="editorial-photo"
+          aria-label="Bekijk Teriyaki kippendij & broccoli"
+        >
+          <RecipeVisual recipe={feature} priority />
+          <div className="editorial-photo-label">
+            <span>Op het menu</span>
+            <strong>Teriyaki kippendij & broccoli</strong>
+            <Icon name="arrow" size={19} />
           </div>
-          <div className="meal-chart">
-            {state.meals.map((meal, index) => (
-              <div className="meal-chart-row" key={meal.id}>
-                <span className="meal-order">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <strong>{meal.name}</strong>
-                <div className="bar-track">
-                  <div
-                    style={{
-                      width: `${Math.min(100, (meal.calories / Math.max(1, targets.calories)) * 100 * 2.5)}%`,
-                    }}
-                  />
-                </div>
-                <span>
-                  {number(meal.calories)} <small>kcal</small>
-                </span>
-              </div>
-            ))}
-          </div>
-          <div className="card-total">
-            <span>Totaal ingepland</span>
+        </Link>
+      </section>
+      <BatchJourney active="batch" />
+      <section
+        className="daily-target-strip"
+        aria-label="Jouw dagelijkse voedingsdoelen"
+      >
+        <div className="target-strip-intro">
+          <span className="eyebrow">Afgestemd op jou</span>
+          <h2>Je dagelijkse basis</h2>
+          <Link href="/profile">Doelen aanpassen ↗</Link>
+        </div>
+        {[
+          [targets.calories, "kcal", "Energie"],
+          [targets.protein, "g", "Eiwit"],
+          [targets.carbs, "g", "Koolhydraten"],
+          [targets.fat, "g", "Vet"],
+        ].map(([value, unit, label]) => (
+          <div className="target-strip-value" key={String(label)}>
+            <span>{label}</span>
             <strong>
-              {number(mealTotal)} / {number(targets.calories)} kcal
+              {number(Number(value))}
+              <small>{unit}</small>
             </strong>
           </div>
-          {Math.abs(mealTotal - targets.calories) > 1 && (
-            <p className="error small">
-              Je eetmomenten wijken{" "}
-              {number(Math.abs(mealTotal - targets.calories))} kcal af van je
-              dagdoel.
-            </p>
-          )}
-        </Card>
-        <Card>
+        ))}
+      </section>
+      {batch.length > 0 ? (
+        <section className="active-batch-section">
           <div className="section-heading">
             <div>
-              <div className="eyebrow">KLAAR VOOR JE KOOKDAG</div>
+              <div className="eyebrow">Klaar voor de volgende stap</div>
               <h2>Je actieve batch</h2>
             </div>
-            <span className="badge">{summary.meals} porties</span>
+            <Link className="text-link" href="/batch">
+              Alle recepten <Icon name="arrow" size={16} />
+            </Link>
           </div>
-          {batch.length ? (
-            <div className="mini-recipes">
+          <div className="active-batch-layout">
+            <div className="active-recipe-list">
               {batch.slice(0, 4).map((item, index) => (
                 <Link href={`/recipes/${item.recipeId}`} key={item.recipeId}>
-                  <span className={`recipe-number tone-${index % 4}`}>
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
+                  <span className="active-recipe-index">0{index + 1}</span>
                   <span>
                     <strong>{item.recipe.nameNl}</strong>
                     <small>
                       {item.servings} porties ·{" "}
-                      {number(item.scaled.nutrition.kcal)} kcal
+                      {number(item.scaled.nutrition.kcal)} kcal ·{" "}
+                      {number(item.scaled.nutrition.protein)} g eiwit
                     </small>
                   </span>
-                  <Icon name="arrow" size={16} />
+                  <Icon name="arrow" size={17} />
                 </Link>
               ))}
               {batch.length > 4 && (
-                <p className="muted small">
-                  En nog {batch.length - 4} recepten in je batch.
-                </p>
+                <Link href="/batch">
+                  Nog {batch.length - 4} recepten bekijken →
+                </Link>
               )}
             </div>
-          ) : (
-            <div className="batch-empty">
-              <Icon name="snow" size={35} />
-              <h3>Je vriezerplan begint hier</h3>
-              <p>Kies uit 30 recepten die ook na het opwarmen goed smaken.</p>
+            <div className="batch-ready">
+              <span>Jouw voorbereiding</span>
+              <strong>
+                {number(summary.meals)}
+                <small>maaltijden</small>
+              </strong>
+              <p>
+                {number(summary.days, 1)} dagen vooruit bij{" "}
+                {state.mealprepsPerDay} maaltijden per dag.
+              </p>
+              <Link href="/shopping" className="button primary full-width">
+                Bekijk boodschappen <Icon name="arrow" size={17} />
+              </Link>
             </div>
-          )}
-          <Link href="/batch" className="button secondary full-width">
-            {batch.length
-              ? "Bekijk de hele batch"
-              : "Stel je eerste batch samen"}
-            <Icon name="arrow" />
+          </div>
+        </section>
+      ) : (
+        <StarterBatch />
+      )}
+      <Card className="daily-structure">
+        <div className="section-heading">
+          <div>
+            <div className="eyebrow">Een ritme dat bij je past</div>
+            <h2>Zo ziet je dag eruit</h2>
+          </div>
+          <Link className="text-link" href="/meals">
+            Dagindeling aanpassen <Icon name="arrow" size={16} />
           </Link>
-        </Card>
-      </div>
+        </div>
+        <div className="daily-meal-grid">
+          {state.meals.map((meal, index) => (
+            <div key={meal.id}>
+              <span className="meal-sequence">0{index + 1}</span>
+              <strong>{meal.name}</strong>
+              <span>
+                {number(meal.calories)} <small>kcal</small>
+              </span>
+              <div className="daily-meal-track">
+                <i
+                  style={{
+                    width: `${Math.min(100, (meal.calories / Math.max(1, targets.calories)) * 100 * 2.5)}%`,
+                  }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+        {Math.abs(mealTotal - targets.calories) > 1 && (
+          <Notice tone="warning">
+            Je dagindeling wijkt{" "}
+            {number(Math.abs(mealTotal - targets.calories))} kcal af van je
+            dagdoel. <Link href="/meals">Pas de verdeling aan.</Link>
+          </Notice>
+        )}
+      </Card>
     </>
   );
 }
