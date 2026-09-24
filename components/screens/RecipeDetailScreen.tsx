@@ -16,6 +16,7 @@ import {
   NumberField,
   NutritionLine,
   PageTitle,
+  WhyLink,
 } from "../ui";
 
 export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
@@ -198,7 +199,7 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
             <p className="muted small">
               Basisrecept: {number(base.kcal)} kcal · {number(base.protein)} g
               eiwit. Doel: {applied.calories} kcal / minimaal {applied.protein}{" "}
-              g eiwit.
+              g eiwit. <WhyLink section="scaling">Hoe we schalen</WhyLink>
             </p>
             {scaled.warnings.map((warning) => (
               <Notice key={warning} tone="warning">

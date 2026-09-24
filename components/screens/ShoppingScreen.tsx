@@ -10,7 +10,7 @@ import {
 import { CATEGORY_LABELS, WEIGHT_LABELS } from "@/domain/constants";
 import { downloadText, number, weight } from "@/services/format";
 import { shoppingText } from "@/services/shopping";
-import { Card, Empty, Icon, Notice, PageTitle } from "../ui";
+import { Card, Empty, Icon, Notice, PageTitle, WhyLink } from "../ui";
 import { BatchJourney } from "../BatchJourney";
 export function ShoppingScreen() {
   const { batch, catalog, state, update } = usePlanner();
@@ -52,7 +52,10 @@ export function ShoppingScreen() {
               <button
                 className="button primary"
                 onClick={() =>
-                  downloadText(shoppingText(items), "preppartner-boodschappen.txt")
+                  downloadText(
+                    shoppingText(items),
+                    "preppartner-boodschappen.txt",
+                  )
                 }
               >
                 Exporteer tekst
@@ -88,7 +91,7 @@ export function ShoppingScreen() {
           <p className="muted small">
             Rijst en pasta zijn droog; vlees is rauw; bonen en tonijn zijn
             uitgelekt. Een gewijzigde hoeveelheid maakt het vinkje automatisch
-            ongeldig.
+            ongeldig. <WhyLink section="nutrition" />
           </p>
           <div className="shopping-layout">
             <div className="stack">

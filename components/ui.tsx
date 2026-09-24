@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useEffect, useId, useState, type ReactNode } from "react";
 import type { Nutrition } from "@/domain/types";
 import { number } from "@/services/format";
@@ -64,6 +65,12 @@ export function Icon({ name, size = 20 }: { name: string; size?: number }) {
         <path d="m9 3-1 3-3 1-2 3 2 2-1 4 3 2 3-1 2 4 3-2 1-3 4-1 1-4-3-2V6l-4-2-2 2z" />
       </>
     ),
+    info: (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 11v6M12 7.5v.5" />
+      </>
+    ),
     arrow: <path d="M4 12h16m-6-6 6 6-6 6" />,
     check: <path d="m5 12 4 4L19 6" />,
     lock: (
@@ -123,11 +130,34 @@ export function PageTitle({
 export function Card({
   children,
   className = "",
+  id,
 }: {
   children: ReactNode;
   className?: string;
+  id?: string;
 }) {
-  return <section className={`card ${className}`}>{children}</section>;
+  return (
+    <section id={id} className={`card ${className}`}>
+      {children}
+    </section>
+  );
+}
+/** Links a screen to the matching background section on “Zo werkt het”. */
+export function WhyLink({
+  section,
+  children = "Waarom zo?",
+}: {
+  section?: string;
+  children?: ReactNode;
+}) {
+  return (
+    <Link
+      className="text-link why-link"
+      href={section ? `/how-it-works#${section}` : "/how-it-works"}
+    >
+      {children} →
+    </Link>
+  );
 }
 export function Stat({
   label,

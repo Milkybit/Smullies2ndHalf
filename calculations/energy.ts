@@ -1,8 +1,15 @@
 import type { Profile, TargetOverrides } from "@/domain/types";
 import {
   ACTIVITY_FACTORS,
+  FAT_ENERGY_FRACTION,
+  KATCH_MCARDLE,
+  KCAL_PER_GRAM,
   KCAL_PER_KG,
+  KCAL_TOLERANCE,
   MAX_DEFICIT_FRACTION,
+  MIFFLIN_ST_JEOR,
+  PROTEIN_PER_KG_BODY_WEIGHT,
+  PROTEIN_PER_KG_LEAN_MASS,
 } from "@/domain/constants";
 import {
   assertValid,
@@ -20,13 +27,15 @@ export function calculateBmr(profile: Profile): number {
   assertValid(profileErrors(profile));
   if (profile.bodyFatPercentage !== undefined)
     return (
-      370 + 21.6 * leanBodyMass(profile.weightKg, profile.bodyFatPercentage)
+      KATCH_MCARDLE.base +
+      KATCH_MCARDLE.perKgLeanMass *
+        leanBodyMass(profile.weightKg, profile.bodyFatPercentage)
     );
   return (
-    10 * profile.weightKg +
-    6.25 * profile.heightCm -
-    5 * profile.age +
-    (profile.sex === "male" ? 5 : -161)
+    MIFFLIN_ST_JEOR.perKg * profile.weightKg +
+    MIFFLIN_ST_JEOR.perCm * profile.heightCm -
+    MIFFLIN_ST_JEOR.perYear * profile.age +
+    MIFFLIN_ST_JEOR[profile.sex]
   );
 }
 export function calculateTdee(profile: Profile): number {
@@ -61,19 +70,28 @@ export function calculateTargets(
     overrides.protein ??
     Math.round(
       profile.bodyFatPercentage !== undefined
-        ? 2.2 * leanBodyMass(profile.weightKg, profile.bodyFatPercentage)
-        : 1.6 * profile.weightKg,
+        ? PROTEIN_PER_KG_LEAN_MASS *
+            leanBodyMass(profile.weightKg, profile.bodyFatPercentage)
+        : PROTEIN_PER_KG_BODY_WEIGHT * profile.weightKg,
     );
-  const fat = overrides.fat ?? Math.round((calories * 0.3) / 9);
-  const remaining = calories - protein * 4 - fat * 9;
-  const carbs = overrides.carbs ?? Math.max(0, Math.round(remaining / 4));
-  const macroCalories = protein * 4 + carbs * 4 + fat * 9;
+  const fat =
+    overrides.fat ??
+    Math.round((calories * FAT_ENERGY_FRACTION) / KCAL_PER_GRAM.fat);
+  const remaining =
+    calories - protein * KCAL_PER_GRAM.protein - fat * KCAL_PER_GRAM.fat;
+  const carbs =
+    overrides.carbs ?? Math.max(0, Math.round(remaining / KCAL_PER_GRAM.carbs));
+  const macroCalories =
+    protein * KCAL_PER_GRAM.protein +
+    carbs * KCAL_PER_GRAM.carbs +
+    fat * KCAL_PER_GRAM.fat;
   const warnings: string[] = [];
+  const cap = `${MAX_DEFICIT_FRACTION * 100}%`;
   if (profile.goal === "loss" && deficit.capped)
     warnings.push(
-      "Het gevraagde tekort is groter dan 25% van je geschatte verbruik. Het automatische advies is begrensd op 25%; een handmatig doel blijft mogelijk.",
+      `Het gevraagde tekort is groter dan ${cap} van je geschatte verbruik. Het automatische advies is begrensd op ${cap}; een handmatig doel blijft mogelijk.`,
     );
-  if (remaining < 0 || Math.abs(macroCalories - calories) > 20)
+  if (remaining < 0 || Math.abs(macroCalories - calories) > KCAL_TOLERANCE)
     warnings.push(
       "Je macrodoelen passen niet bij je caloriedoel. Pas calorieën of macro’s aan; negatieve koolhydraten worden op 0 gezet.",
     );
@@ -82,7 +100,7 @@ export function calculateTargets(
     overrides.calories !== undefined
   )
     warnings.push(
-      "Je handmatige doel geeft een tekort groter dan 25% van je geschatte verbruik.",
+      `Je handmatige doel geeft een tekort groter dan ${cap} van je geschatte verbruik.`,
     );
   return {
     bmr,

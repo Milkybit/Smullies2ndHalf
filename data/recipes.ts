@@ -7,6 +7,10 @@ import type {
 } from "@/domain/types";
 import { buildCatalog } from "./ingredients";
 import { scaleRecipe } from "@/calculations/scaling";
+import {
+  DEFAULT_MEAL_CALORIES,
+  DEFAULT_MEAL_PROTEIN,
+} from "@/domain/constants";
 
 type Part = [id: string, grams: number, role: Role];
 interface Seed {
@@ -766,7 +770,12 @@ export const recipes: Recipe[] = seeds.map((seed) => {
     ],
   };
   // Calibrate base portions once against the default catalog; totals are always derived.
-  const calibrated = scaleRecipe(recipe, seedCatalog, 600, 50);
+  const calibrated = scaleRecipe(
+    recipe,
+    seedCatalog,
+    DEFAULT_MEAL_CALORIES,
+    DEFAULT_MEAL_PROTEIN,
+  );
   return {
     ...recipe,
     ingredients: calibrated.ingredients.map((part) => ({
