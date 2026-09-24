@@ -56,7 +56,7 @@ export function SettingsScreen() {
               onClick={() =>
                 downloadText(
                   JSON.stringify(state, null, 2),
-                  `preppartner-backup-${new Date().toISOString().slice(0, 10)}.json`,
+                  `batchprepbaas-backup-${new Date().toISOString().slice(0, 10)}.json`,
                   "application/json",
                 )
               }
@@ -107,15 +107,15 @@ export function SettingsScreen() {
         <Card className="danger-card">
           <h2>Opnieuw beginnen</h2>
           <p>
-            Verwijder alle gegevens van deze PrepPartner. De standaardrecepten
-            en -ingrediënten blijven beschikbaar.
+            Verwijder alle BatchPrepBaas-gegevens uit deze browser. De
+            standaardrecepten en -ingrediënten blijven beschikbaar.
           </p>
           <button
             className="button danger"
             onClick={() => {
               if (
                 window.confirm(
-                  "Alle PrepPartner-gegevens uit deze browser verwijderen? Dit kan alleen met een eigen back-up worden hersteld.",
+                  "Alle BatchPrepBaas-gegevens uit deze browser verwijderen? Dit kan alleen met een eigen back-up worden hersteld.",
                 )
               ) {
                 reset();
@@ -129,7 +129,7 @@ export function SettingsScreen() {
           </button>
         </Card>
         <Card>
-          <h2>Over PrepPartner</h2>
+          <h2>Over BatchPrepBaas</h2>
           <p>
             Versie 1.0 · 30 vriesvriendelijke recepten · metrische eenheden ·
             volledig Nederlandstalig.
@@ -140,7 +140,7 @@ export function SettingsScreen() {
             voor planning, geen medisch advies.
           </p>
           <p>
-            <WhyLink>Zo werkt PrepPartner</WhyLink>
+            <WhyLink>Zo werkt BatchPrepBaas</WhyLink>
           </p>
           <a
             className="text-link"

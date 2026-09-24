@@ -40,7 +40,7 @@ const groups = [
 export function Wordmark() {
   return (
     <span className="product-wordmark">
-      PrepPartner<span className="wordmark-dot">.</span>
+      BatchPrepBaas<span className="wordmark-dot">.</span>
       <small>VOEDING DIE VOOR JE WERKT</small>
     </span>
   );
@@ -90,7 +90,7 @@ export function Shell({ children }: { children: ReactNode }) {
         <div className="product-sidebar-top">
           <Link
             href="/"
-            aria-label="PrepPartner — overzicht"
+            aria-label="BatchPrepBaas — overzicht"
             onClick={() => setMenuOpen(false)}
           >
             <Wordmark />
@@ -167,7 +167,7 @@ export function Shell({ children }: { children: ReactNode }) {
           {storageError && <Notice tone="warning">{storageError}</Notice>}
           {children}
           <footer className="page-footer">
-            <span>PrepPartner</span>
+            <span>BatchPrepBaas</span>
             <span>
               Voedingswaarden en energieverbruik zijn schattingen. Je gegevens
               worden in deze browser bewaard.
