@@ -7,6 +7,7 @@ import { RecipeBrowser } from "../RecipeBrowser";
 import { Card, Icon, Notice, NumberField, PageTitle } from "../ui";
 import { BatchJourney } from "../BatchJourney";
 import { StarterBatch } from "../StarterBatch";
+import { OptimizerPanel } from "../OptimizerPanel";
 import type { BatchItem } from "@/domain/types";
 
 export function BatchScreen() {
@@ -37,6 +38,7 @@ export function BatchScreen() {
         }
       />
       <BatchJourney active="batch" />
+      <OptimizerPanel />
       {batch.length > 0 ? (
         <div className="batch-summary-strip" aria-live="polite">
           <div>

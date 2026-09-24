@@ -92,13 +92,46 @@ export function CookingScreen() {
               </strong>
             </div>
           </Card>
+          <Card className="equipment-card">
+            <NumberField
+              label="Max. rauw eiwit per ovenronde (g)"
+              value={state.equipment.maxProteinGrams ?? 1500}
+              min={300}
+              max={5000}
+              onCommit={(value) => setEquipment("maxProteinGrams", value)}
+            />
+            <NumberField
+              label="Max. droge rijst/pasta per pan (g)"
+              value={state.equipment.maxDryCarbGrams ?? 1000}
+              min={100}
+              max={3000}
+              onCommit={(value) => setEquipment("maxDryCarbGrams", value)}
+            />
+            <p className="muted small">
+              Bakken in een pan: maximaal 750 g eiwit per ronde. Voorverwarmen
+              is onderdeel van de voorbereiding. Stem gewichten af op je eigen
+              schalen en pannen.
+            </p>
+          </Card>
           <Notice>
-            Dit is een globale planning: pitten en ovens overlappen, maar
-            handelingen vragen jouw aandacht. Controleer pan- en koelcapaciteit;
-            verdeel een grote kookdag zo nodig over meerdere dagen. Koel gare
-            gerechten direct, ook als de rijst nog niet klaar is.{" "}
-            <WhyLink section="cooking" />
+            Planning voor één kok: gedeelde voorbereiding, daarna maximaal twee
+            afwerkingspannen per ronde. Apparaten kunnen tegelijk werken;
+            actieve start-, afwerk- en verdeelhandelingen overlappen niet.
+            Roeren en gaarheid controleren blijven jouw verantwoordelijkheid.
+            Tijden zijn schattingen. Controleer koelcapaciteit; verdeel grote
+            batches zo nodig over twee dagen. Koel gare gerechten direct, ook
+            als de rijst nog niet klaar is. <WhyLink section="cooking" />
           </Notice>
+          {end > 300 && (
+            <Notice tone="warning">
+              Deze batch vraagt naar schatting {Math.floor(end / 60)} uur en{" "}
+              {end % 60} minuten met één kok. Plan hiervoor een hele kookdag of
+              verdeel de batch over twee dagen. Er kunnen twee productierondes
+              tegelijk in bewerking zijn; reserveer ruimte voor maximaal{" "}
+              {state.equipment.maxServingsPerPot * 4} ondiepe bakjes en
+              controleer de invriescapaciteit van je apparaat.
+            </Notice>
+          )}
           <div className="timeline">
             {tasks.map((task) => (
               <article

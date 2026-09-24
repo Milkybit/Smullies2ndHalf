@@ -1,6 +1,6 @@
 import type {
   IngredientCatalog,
-  Recipe,
+  RecipeDefinition,
   RecipeIngredient,
   ScaledRecipe,
 } from "@/domain/types";
@@ -14,7 +14,7 @@ const clamp = (value: number, min: number, max: number) =>
  * Seed recipes have one main protein, one starch and one optional correction fat.
  * Other ingredients remain at their preferred amount. No seed data is mutated. */
 export function scaleRecipe(
-  recipe: Recipe,
+  recipe: RecipeDefinition,
   catalog: IngredientCatalog,
   targetCalories: number,
   minimumProtein: number,

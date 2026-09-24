@@ -6,6 +6,8 @@ import { recipeNutrition } from "@/calculations/nutrition";
 import { scaleRecipe } from "@/calculations/scaling";
 import { defaultMealprepCalories } from "@/calculations/planning";
 import { RecipeVisual } from "../RecipeVisual";
+import { FamilyLabels, RecipeRelationships } from "../RecipeRelationships";
+import { withChickenCut } from "@/data/prep-components";
 import { PROTEIN_LABELS, WEIGHT_LABELS } from "@/domain/constants";
 import { number, weight } from "@/services/format";
 import { usePlanner } from "../store";
@@ -21,8 +23,15 @@ import {
 
 export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
   const { catalog, state, update } = usePlanner();
-  const recipe = recipes.find((r) => r.id === recipeId)!;
   const existing = state.batch.find((item) => item.recipeId === recipeId);
+  const recipe = useMemo(
+    () =>
+      withChickenCut(
+        recipes.find((r) => r.id === recipeId)!,
+        existing?.chickenCut,
+      ),
+    [recipeId, existing?.chickenCut],
+  );
   const defaultCalories = defaultMealprepCalories(state.meals);
   const [calories, setCalories] = useState(
     existing?.targetCalories ?? defaultCalories,
@@ -49,6 +58,7 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
           servings,
           targetCalories: applied.calories,
           minimumProtein: applied.protein,
+          ...(existing?.chickenCut ? { chickenCut: existing.chickenCut } : {}),
         },
       ],
       completedTasks: {},
@@ -66,6 +76,7 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
         description={recipe.description}
       />
       <RecipeVisual recipe={recipe} priority className="recipe-detail-photo" />
+      <FamilyLabels recipe={recipe} />
       <div className="detail-badges">
         <span className="badge">
           <Icon name="snow" size={15} />
@@ -238,6 +249,7 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
               Bewaaradvies van het Voedingscentrum ↗
             </a>
           </Card>
+          <RecipeRelationships recipe={recipe} />
         </div>
       </div>
     </>

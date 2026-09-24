@@ -2,11 +2,13 @@ import type {
   CookingGroup,
   ProteinSource,
   Recipe,
+  RecipeDefinition,
   RecipeIngredient,
   Role,
 } from "@/domain/types";
 import { buildCatalog } from "./ingredients";
 import { scaleRecipe } from "@/calculations/scaling";
+import { withPrepComponents } from "./prep-components";
 import {
   DEFAULT_MEAL_CALORIES,
   DEFAULT_MEAL_PROTEIN,
@@ -731,7 +733,7 @@ export const recipes: Recipe[] = seeds.map((seed) => {
     ...(asian ? [["ginger", 6, "seasoning"] as Part] : []),
     ["oil", 4, "fat"],
   ];
-  const recipe: Recipe = {
+  const recipe: RecipeDefinition = {
     id: seed.id,
     nameNl: seed.name,
     cuisine: seed.cuisine,
@@ -776,11 +778,11 @@ export const recipes: Recipe[] = seeds.map((seed) => {
     DEFAULT_MEAL_CALORIES,
     DEFAULT_MEAL_PROTEIN,
   );
-  return {
+  return withPrepComponents({
     ...recipe,
     ingredients: calibrated.ingredients.map((part) => ({
       ...part,
       preferredGrams: part.grams,
     })),
-  };
+  });
 });

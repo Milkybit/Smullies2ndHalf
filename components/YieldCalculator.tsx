@@ -1,88 +1,82 @@
 "use client";
 import { useState } from "react";
-import type { ResolvedBatchItem } from "@/domain/types";
-import { allocateCookedYield } from "@/calculations/yield";
+import {
+  aggregatePrepComponents,
+  allocateComponentYield,
+  productionYieldLots,
+  type AggregatedComponent,
+} from "@/calculations/components";
+import { cookingPlan } from "@/calculations/cooking";
 import { number, weight } from "@/services/format";
 import { usePlanner } from "./store";
 import { Card, Notice } from "./ui";
-function YieldComponent({
-  ingredientId,
-  batch,
+function ComponentYield({
+  entry,
+  storageKey,
+  label,
 }: {
-  ingredientId: string;
-  batch: ResolvedBatchItem[];
+  entry: AggregatedComponent;
+  storageKey?: string;
+  label?: string;
 }) {
-  const { state, update, catalog } = usePlanner();
-  const allocations = batch.flatMap((item) => {
-    const row = item.scaled.ingredients.find(
-      (r) => r.ingredientId === ingredientId,
-    );
-    return row
-      ? [
-          {
-            recipeId: item.recipeId,
-            name: item.recipe.nameNl,
-            dryGrams: row.grams * item.servings,
-            servings: item.servings,
-          },
-        ]
-      : [];
-  });
-  const dryGrams = allocations.reduce((sum, row) => sum + row.dryGrams, 0);
-  const saved = state.cookedYields[ingredientId];
-  const [text, setText] = useState(saved ? String(saved.cookedGrams) : "");
+  const { state, update } = usePlanner();
+  const id = storageKey ?? entry.component.id;
+  const saved = state.componentYields?.[id];
+  const legacyId =
+    id === "basmati-rice" ? "rice" : id === "pasta" ? "pasta" : undefined;
+  const legacy = legacyId ? state.cookedYields[legacyId] : undefined;
+  const legacyValid =
+    legacy && Math.abs(legacy.dryGrams - entry.inputGrams) < 0.01;
+  const [text, setText] = useState(
+    String(saved?.cookedGrams ?? (legacyValid ? legacy.cookedGrams : "")),
+  );
   const [error, setError] = useState("");
-  if (!allocations.length) return null;
-  const stale = saved && Math.abs(saved.dryGrams - dryGrams) > 0.01;
-  const results =
-    saved && !stale ? allocateCookedYield(allocations, saved.cookedGrams) : [];
+  const stale = saved
+    ? saved.signature !== entry.signature
+    : legacy && !legacyValid;
+  const cookedGrams =
+    saved && !stale
+      ? saved.cookedGrams
+      : !saved && legacyValid
+        ? legacy.cookedGrams
+        : undefined;
+  const results = cookedGrams ? allocateComponentYield(entry, cookedGrams) : [];
   return (
     <Card>
-      <div className="section-heading">
-        <div>
-          <h3>{catalog[ingredientId].nameNl}</h3>
-          <p className="muted">
-            {weight(dryGrams)} droog voor{" "}
-            {allocations.reduce((sum, row) => sum + row.servings, 0)} porties
-          </p>
-        </div>
-        <span className="badge">Voeding blijft op droog gewicht</span>
-      </div>
+      <h3>{label ?? entry.component.nameNl}</h3>
+      <p>
+        {weight(entry.inputGrams)} vóór bereiding ·{" "}
+        {entry.recipes.reduce((sum, r) => sum + r.servings, 0)} porties
+      </p>
       <form
         className="yield-form"
         onSubmit={(event) => {
           event.preventDefault();
-          const cookedGrams = Number(text);
-          if (
-            !Number.isFinite(cookedGrams) ||
-            cookedGrams <= 0 ||
-            cookedGrams > 5000000
-          ) {
-            setError("Vul een gekookt gewicht van 1 t/m 5.000.000 g in.");
+          const value = Number(text);
+          if (!Number.isFinite(value) || value < 1 || value > 5000000) {
+            setError("Vul een gewicht van 1 t/m 5.000.000 g in.");
             return;
           }
           setError("");
           update((old) => ({
             ...old,
-            cookedYields: {
-              ...old.cookedYields,
-              [ingredientId]: { dryGrams, cookedGrams },
+            componentYields: {
+              ...old.componentYields,
+              [id]: { signature: entry.signature, cookedGrams: value },
             },
           }));
         }}
       >
         <div className="field">
-          <label htmlFor={`yield-${ingredientId}`}>
-            Totaal gekookt gewicht {catalog[ingredientId].nameNl} (g)
+          <label htmlFor={`yield-${id}`}>
+            Werkelijke opbrengst {label ?? entry.component.nameNl} (g)
           </label>
           <input
-            id={`yield-${ingredientId}`}
+            id={`yield-${id}`}
             type="number"
             min="1"
             max="5000000"
-            step="1"
             required
-            placeholder="Bijvoorbeeld 4.850"
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
@@ -92,8 +86,7 @@ function YieldComponent({
       {error && <Notice tone="warning">{error}</Notice>}
       {stale && (
         <Notice tone="warning">
-          Je batch of ingrediënten zijn gewijzigd. Weeg de nieuwe totale
-          opbrengst en bereken opnieuw.
+          Samenstelling of verdeling is gewijzigd. Weeg deze component opnieuw.
         </Notice>
       )}
       {results.length > 0 && (
@@ -102,9 +95,9 @@ function YieldComponent({
             <thead>
               <tr>
                 <th>Recept</th>
-                <th>Droog totaal</th>
-                <th>Gekookt totaal</th>
-                <th>Per bakje</th>
+                <th>Vóór bereiding</th>
+                <th>Na bereiding totaal</th>
+                <th>{storageKey ? "Bijdrage per bakje" : "Per bakje"}</th>
               </tr>
             </thead>
             <tbody>
@@ -124,8 +117,10 @@ function YieldComponent({
             </tbody>
           </table>
           <p className="muted small">
-            Afgerond op hele grammen; verdeel het laatste restje over de bakjes.
-            Vul bij meerdere kookrondes de som van de gekookte gewichten in.
+            {storageKey
+              ? "Deze bijdrage geldt voor deze deelronde. Tel de bijdragen van hetzelfde recept binnen de productieronde op. "
+              : ""}
+            Rond alleen bij het afwegen af en verdeel het laatste restje.
           </p>
         </div>
       )}
@@ -133,22 +128,61 @@ function YieldComponent({
   );
 }
 export function YieldCalculator() {
-  const { batch } = usePlanner();
+  const { batch, state, catalog } = usePlanner();
+  const [mode, setMode] = useState("rounds");
+  const entries = aggregatePrepComponents(batch).filter(
+    (entry) => entry.component.yieldTrackingSupported,
+  );
+  const lots = productionYieldLots(
+    cookingPlan(batch, state.equipment, catalog),
+    entries,
+  );
   return (
     <div className="stack">
+      <div className="field">
+        <label htmlFor="yield-mode">Wat heb je gewogen?</label>
+        <select
+          id="yield-mode"
+          value={mode}
+          onChange={(e) => setMode(e.target.value)}
+        >
+          <option value="rounds">Per kookronde · direct verdelen</option>
+          <option value="whole">Hele component · alles samen gemengd</option>
+        </select>
+      </div>
       <Notice>
-        Weeg alleen de gekookte rijst of pasta, zonder pan, saus of groente. De
-        verdeling volgt het aandeel droog gewicht van ieder recept. Calorieën
-        veranderen hierdoor niet.
+        Weeg zonder pan, bij vlees inclusief bewaarde sappen. Per ronde kun je
+        direct verdelen en koelen. Gebruik ‘Hele component’ alleen als alle
+        gekookte deelrondes fysiek zijn samengevoegd. De voedingsberekening
+        blijft op rauw, droog of uitgelekt gewicht. Water verandert die
+        berekening niet.
       </Notice>
-      {["rice", "pasta"].map((id) => (
-        <YieldComponent key={id} ingredientId={id} batch={batch} />
-      ))}
-      {!batch.some((item) =>
-        item.scaled.ingredients.some((row) =>
-          ["rice", "pasta"].includes(row.ingredientId),
-        ),
-      ) && <p>Je batch bevat nog geen rijst of pasta.</p>}
+      {mode === "rounds" ? (
+        <>
+          {entries
+            .filter((e) =>
+              ["sauce_base", "aromatic_base"].includes(e.component.type),
+            )
+            .map((entry) => (
+              <ComponentYield key={entry.component.id} entry={entry} />
+            ))}
+          {lots.map((lot) => (
+            <ComponentYield
+              key={lot.key}
+              storageKey={lot.key}
+              label={lot.label}
+              entry={lot.entry}
+            />
+          ))}
+        </>
+      ) : (
+        entries.map((entry) => (
+          <ComponentYield key={entry.component.id} entry={entry} />
+        ))
+      )}
+      {!entries.length && (
+        <p>Je batch bevat nog geen componenten om te wegen.</p>
+      )}
     </div>
   );
 }

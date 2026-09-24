@@ -6,6 +6,8 @@ Zie [PRODUCT.md](PRODUCT.md) voor de commerciële productrichting en de stappen 
 
 PrepPartner is een bruikbare, Nederlandstalige mealprep-planner voor één persoon. Bereken je energie- en macrodoelen, pas 30 vriesvriendelijke recepten aan, maak een batch en werk met één boodschappenlijst en een kookplanning. Persoonlijke gegevens blijven in je browser.
 
+**Nieuw: component-first optimizer (fase 1B).** Selecteer kandidaten in Recepten, kies in Mijn batch bijvoorbeeld **60 maaltijden / 10 recepten / 6 porties** en druk op **Optimaliseer**. Vergelijk efficiëntie en variatie, pas het voorstel toe en open **Slim combineren → Voorbereidingslijst → Kookdag**. De knop **Laad scenario 60 maaltijden** vult de kippendij/Aziatisch-voorkeuren in. Zie [architectuur en gebruik](PHASE_1B.md) en [de praktische keukenreview](reports/kitchen-review.md).
+
 Deze versie vervangt de eerdere Doel1-app volledig. De oude code blijft terug te vinden in de Git-geschiedenis. Er is geen Supabase, login, externe voedings-API, AI-API, analytics of cloudsynchronisatie.
 
 ## Requirements
@@ -58,7 +60,7 @@ Next.js **16.3.5** en React **19.3.0** waren de stabiele npm-versies bij impleme
 6. Kijk onder **Keukenspullen** wat je nodig hebt en vink af wat je al hebt. De spullen met ‘Basis’ zijn genoeg om te beginnen. Meet eerst je oven, spoelbak, koelkast, aanrecht en vriezer.
 7. Open **Boodschappen**: afvinken, kopiëren, printen of als tekst downloaden.
 8. Geef onder **Kookplan** je pitten, ovens en maximale porties per pan op.
-9. Open tijdens het koken **Opbrengst invoeren**. Voer het gemeten gekookte rijst- of pastagewicht in om het aantal grammen per bakje te krijgen.
+9. Open tijdens het koken **Opbrengst invoeren**. Weeg eiwit, rijst/pasta en bases afzonderlijk. Meet per kookronde om meteen te verdelen; een hele-componentmeting geldt voor fysiek samengevoegde deelrondes.
 10. Maak regelmatig een JSON-back-up via **Instellingen → Exporteer gegevens**.
 
 Wil je weten hoe PrepPartner rekent en welke aannames erin zitten? Open **Zo werkt het**. Per onderwerp staat daar hoe het werkt, welke aannames er zijn (onderbouwd, vuistregel of eigen keuze, met bronnen), waarom het werkt en wanneer het niet klopt, met je eigen berekening erbij. Via ‘Waarom zo?’ op de schermen kom je direct bij het juiste stuk.
@@ -95,7 +97,7 @@ Alle rekenlogica staat buiten React, in `calculations/`. Voor gebruikers staat d
 - **Basisrecepten:** de ingrediënten uit de seed worden eenmaal met de standaardcatalogus op circa 600 kcal / 50 g eiwit gekalibreerd. Er zijn geen opgeslagen macrototalen; wijzigingen aan productwaarden werken door in alle berekeningen. De seed wordt niet aangepast door gebruikerswijzigingen.
 - **Boodschappen:** exacte gramgewichten worden per ingrediënt-ID opgeteld. Verpakkingen worden naar boven afgerond. Het vinkje is gekoppeld aan de benodigde hoeveelheid en vervalt bij een gewijzigde hoeveelheid.
 - **Gekookte opbrengst:** gekookt totaal × droog aandeel van het recept ÷ aantal porties. Dit verandert de voedingswaarden niet. Een gewijzigde droge batchhoeveelheid maakt een oude meting ongeldig.
-- **Kookplan:** een deterministische planning met afhankelijkheden en beschikbare pitten/ovens. Grote hoeveelheden worden gesplitst naar paninhoud. Lange bereidingen krijgen prioriteit; sauzen worden direct gekoeld terwijl andere componenten nog koken. Geen optimizer voor persoonlijke hands-on tijd.
+- **Kookplan:** componentproductie met afhankelijkheden, gewichtsgrenzen, vrije apparaatintervallen en gereserveerde aandacht voor één kok. Beginhandelingen, laatste afwerking en verdelen overlappen niet. Beperkte rondes voorkomen dat alle zestig maaltijden tegelijk warm staan. Tijden zijn nog niet in de keuken gekalibreerd.
 
 ## Recept toevoegen
 
@@ -119,6 +121,8 @@ Alle vloeistoffen worden intern eveneens in gram gerekend. Waar een dichtheid be
 
 Opgeslagen worden profiel, overrides, eetmomenten, ingrediëntaanpassingen, batchinstellingen, winkelvinkjes, apparatuur, gekookte opbrengsten, afgevinkte kooktaken en afgevinkte keukenspullen. Back-ups van vóór de lijst met keukenspullen blijven geldig. Macrototalen en boodschappen worden afgeleid en niet opgeslagen.
 
+Fase 1B bewaart ook kandidaten, kipkeuze per batchrecept, gewichtsgrenzen en component-/rondemetingen. Oude v1-back-ups worden automatisch aangevuld. Alleen oude receptgerichte kookvinkjes vervallen, omdat het nieuwe kookplan andere taken bevat.
+
 De JSON-back-up heeft een versie en wordt volledig gevalideerd, inclusief getalsgrenzen en bekende ID’s. Ongeldige of toekomstige versies worden geweigerd. Import vraagt bevestiging voordat bestaande gegevens worden vervangen. Opslagfouten worden zichtbaar gemeld. Bij beschadigde opgeslagen data wordt die inhoud niet automatisch overschreven door een lege startstatus.
 
 **Reset:** open Instellingen → Reset applicatie en bevestig. Alleen deze app-sleutel wordt verwijderd. Oude Doel1-localStorage blijft onaangeroerd; er is geen automatische migratie van het oude, andere datamodel.
@@ -139,7 +143,7 @@ De kleine `public/sw.js` is een eenmalige overgang voor browsers die nog de oude
 - Geen receptaanmaak in de UI; nieuwe recepten worden in de seed toegevoegd. Ingrediëntwaarden zijn wel in de UI bewerkbaar.
 - De maaltijdindeling plant calorieën; het is geen logboek voor werkelijk gegeten eten en geen datumkalender voor ingevroren porties.
 - De kookplanning is een praktische schatting. Pannen, werktempo, vriescapaciteit en actieve handelingen verschillen. Begin bij veel maaltijden met een kleinere proefbatch.
-- Meet de gekookte rijst/pasta als één gecombineerd component. Bij verschillende kookrondes kan wateropname verschillen; het totaal geeft een gemiddelde verdeling. Bewaar componenten intussen veilig gekoeld.
+- Meet standaard per kookronde en verdeel direct. Gebruik een hele-componentmeting alleen als alle gekookte deelrondes fysiek gemengd zijn. Bewaar componenten tussendoor veilig gekoeld.
 - De app bepaalt geen allergenen of dieetgeschiktheid. Controleer ingrediënten en productetiketten zelf.
 - Geen accounts, cloudsynchronisatie, multi-tab-conflictresolutie, dark mode of volledige offline-PWA.
 - Backup-import ondersteunt alleen versie 1. Voor een latere schemawijziging hoort een expliciete migratie te worden toegevoegd.

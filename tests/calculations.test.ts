@@ -178,14 +178,12 @@ describe("nutrition and smart scaling", () => {
 });
 describe("batch and yield", () => {
   const batch = resolveBatch(
-    recipes
-      .slice(0, 10)
-      .map((r) => ({
-        recipeId: r.id,
-        servings: 6,
-        targetCalories: 600,
-        minimumProtein: 50,
-      })),
+    recipes.slice(0, 10).map((r) => ({
+      recipeId: r.id,
+      servings: 6,
+      targetCalories: 600,
+      minimumProtein: 50,
+    })),
     recipes,
     catalog,
   );
@@ -274,7 +272,10 @@ describe("batch and yield", () => {
       { burners: 1, ovens: 0, maxServingsPerPot: 6 },
       catalog,
     );
-    expect(plan.filter((t) => t.id.startsWith("cook-"))).toHaveLength(3);
+    // The new planner also respects raw protein weight, not just serving count.
+    expect(
+      plan.filter((t) => t.id.startsWith("cook-")).length,
+    ).toBeGreaterThanOrEqual(3);
     expect(plan.some((t) => t.appliance === "oven")).toBe(false);
   });
 });

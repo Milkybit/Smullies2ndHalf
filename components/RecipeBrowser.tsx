@@ -8,6 +8,7 @@ import { defaultMealprepCalories } from "@/calculations/planning";
 import { usePlanner } from "./store";
 import { Icon, NutritionLine } from "./ui";
 import { RecipeVisual } from "./RecipeVisual";
+import { FamilyLabels } from "./RecipeRelationships";
 
 export function RecipeBrowser({ compact = false }: { compact?: boolean }) {
   const { catalog, state, update } = usePlanner();
@@ -164,6 +165,29 @@ export function RecipeBrowser({ compact = false }: { compact?: boolean }) {
                   <Link href={`/recipes/${recipe.id}`}>{recipe.nameNl}</Link>
                 </h3>
                 {!compact && <p>{recipe.description}</p>}
+                <FamilyLabels recipe={recipe} />
+                <label className="candidate-toggle">
+                  <input
+                    type="checkbox"
+                    aria-label={`Kandidaat ${recipe.nameNl}`}
+                    checked={(state.candidateRecipeIds ?? []).includes(
+                      recipe.id,
+                    )}
+                    onChange={() =>
+                      update((old) => ({
+                        ...old,
+                        candidateRecipeIds: (
+                          old.candidateRecipeIds ?? []
+                        ).includes(recipe.id)
+                          ? old.candidateRecipeIds!.filter(
+                              (id) => id !== recipe.id,
+                            )
+                          : [...(old.candidateRecipeIds ?? []), recipe.id],
+                      }))
+                    }
+                  />
+                  Kandidaat voor optimizer
+                </label>
                 <NutritionLine nutrition={nutrition} />
                 <div className="recipe-card-footer">
                   <Link className="text-link" href={`/recipes/${recipe.id}`}>

@@ -1700,6 +1700,219 @@ small {
     break-inside: avoid;
   }
 }
+
+/* Component-first batch planning */
+.optimizer-panel {
+  margin-block: 1.5rem;
+}
+.optimizer-panel > details,
+.components-grid details,
+.prep-sections details {
+  border-top: 1px solid var(--border, #deded3);
+  padding: 1rem 0;
+}
+.optimizer-panel summary,
+.components-grid summary,
+.prep-sections summary,
+.batch-scores summary,
+.optimized-recipes summary {
+  cursor: pointer;
+}
+.optimizer-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  gap: 1rem;
+  margin: 1.4rem 0;
+}
+.optimizer-panel > .field {
+  max-width: 32rem;
+  margin: 1rem 0;
+}
+.optimizer-panel > .button {
+  margin-top: 1rem;
+}
+.candidate-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem 1.5rem;
+  margin-top: 1rem;
+}
+.candidate-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  justify-content: space-between;
+  border-bottom: 1px solid #e8e7dd;
+  padding: 0.5rem 0;
+}
+.candidate-row label,
+.candidate-toggle,
+.preference-checks label {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.87rem;
+}
+.candidate-row select {
+  max-width: 8rem;
+  font-size: 0.8rem;
+}
+.candidate-cta {
+  position: sticky;
+  bottom: 1rem;
+  margin-top: 2rem;
+  box-shadow: 0 5px 25px #23352830;
+  z-index: 5;
+}
+.candidate-toggle {
+  margin: 0.9rem 0;
+  cursor: pointer;
+}
+.family-labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.6rem 0;
+}
+.family-labels span {
+  background: #eeeee4;
+  color: #4a5644;
+  font-size: 0.66rem;
+  border-radius: 3px;
+  padding: 0.25rem 0.45rem;
+  letter-spacing: 0.02em;
+}
+.preference-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-block: 1rem;
+}
+.batch-scores {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.batch-scores > details {
+  padding: 1.3rem;
+  border: 1px solid #d8ddcd;
+  border-radius: 10px;
+  background: #f3f4ec;
+}
+.batch-scores summary > strong {
+  font-size: 2rem;
+  color: #354b32;
+  margin-right: 0.5rem;
+}
+.batch-scores summary small {
+  font-size: 1rem;
+  font-weight: 400;
+}
+.batch-scores summary > span {
+  display: block;
+  color: #626959;
+  font-size: 0.75rem;
+  margin-top: 0.4rem;
+}
+.batch-scores ul {
+  padding-left: 1.2rem;
+  font-size: 0.85rem;
+}
+.optimizer-result {
+  margin-top: 2rem;
+  border-top: 1px solid #deded3;
+  padding-top: 2rem;
+}
+.component-highlights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.component-highlights > span {
+  padding: 1rem;
+  background: #f5f1e8;
+  font-size: 0.85rem;
+  border-left: 2px solid #bf7350;
+}
+.component-highlights strong {
+  display: block;
+  margin-bottom: 0.4rem;
+}
+.optimized-recipes {
+  margin-bottom: 1.5rem;
+}
+.optimized-recipes details {
+  border-bottom: 1px solid #e3e1d8;
+  padding: 1rem 0;
+}
+.optimized-recipes summary > span {
+  display: block;
+  margin-top: 0.3rem;
+  color: #65715d;
+  font-size: 0.85rem;
+}
+.components-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+  margin-block: 1.5rem;
+}
+.components-grid h2 {
+  font-size: 1.35rem;
+}
+.components-grid ul {
+  padding-left: 1.2rem;
+  font-size: 0.9rem;
+}
+.prep-rows > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid #eeeae1;
+}
+.prep-rows small {
+  display: block;
+  color: #70776a;
+}
+.prep-sections {
+  margin-block: 1.5rem;
+}
+@media (max-width: 720px) {
+  .candidate-grid,
+  .components-grid,
+  .batch-scores {
+    grid-template-columns: 1fr;
+  }
+  .optimizer-panel .section-heading {
+    display: block;
+  }
+  .optimizer-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .candidate-row {
+    align-items: flex-start;
+  }
+  .candidate-row label {
+    align-items: flex-start;
+  }
+  .candidate-row select {
+    width: 7rem;
+    flex-shrink: 0;
+  }
+}
+@media print {
+  .candidate-cta,
+  .optimizer-panel {
+    display: none;
+  }
+  .components-grid {
+    display: block;
+  }
+}
+
 .shopping-row.kitchen-row,
 .shopping-column-labels.kitchen-columns {
   grid-template-columns: minmax(0, 1fr) 130px;

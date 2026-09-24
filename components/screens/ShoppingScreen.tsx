@@ -112,6 +112,11 @@ export function ShoppingScreen() {
                         <span>Praktisch inkopen</span>
                       </div>
                       {group.map((item) => {
+                        const recipeCount = batch.filter((recipe) =>
+                          recipe.scaled.ingredients.some(
+                            (row) => row.ingredientId === item.ingredient.id,
+                          ),
+                        ).length;
                         const done =
                           state.shoppingChecks[item.ingredient.id] ===
                           item.signature;
@@ -138,6 +143,10 @@ export function ShoppingScreen() {
                               />
                               <span>
                                 <strong>{item.ingredient.nameNl}</strong>
+                                <small>
+                                  Gebruikt in {recipeCount}{" "}
+                                  {recipeCount === 1 ? "recept" : "recepten"}
+                                </small>
                                 <small>
                                   {WEIGHT_LABELS[item.ingredient.weightBasis]}
                                   {item.ingredient.notes &&
@@ -173,6 +182,9 @@ export function ShoppingScreen() {
               <Card className="combine-card">
                 <Icon name="ingredients" size={28} />
                 <h2>Slim combineren</h2>
+                <Link href="/combine" className="text-link">
+                  Bekijk bereidingscomponenten →
+                </Link>
                 <p>Een beetje voorbereiding scheelt heel veel dubbel werk.</p>
                 {shared.slice(0, 12).map((component) => (
                   <div className="shared-item" key={component.ingredientId}>

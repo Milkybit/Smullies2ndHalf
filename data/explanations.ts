@@ -272,12 +272,12 @@ export const explanationSections: ExplanationSection[] = [
     id: "cooking",
     title: "Kookplan en opbrengst",
     how: [
-      "Het kookplan zet alle stappen in volgorde voor jouw pitten, ovens en maximale porties per pan. Gerechten met de langste kooktijd beginnen eerst; grote hoeveelheden worden gesplitst in rondes.",
-      "Rijst of pasta voor meerdere recepten kook je samen, zo getimed dat ze klaar zijn als de saus klaar is. Gare saus koel je direct; die wacht niet op de rijst.",
-      "Bij ‘Opbrengst invoeren’ weeg je de gekookte rijst of pasta. De app verdeelt die naar de droge verhouding per recept en rekent het gewicht per bakje uit.",
+      "Het kookplan begint met gedeeld snijwerk en sausbases. Daarna volgen eiwit- en graanrondes, eigen afwerking, verdelen en koelen. Pitten, ovens, porties per pan en gewichtscapaciteit begrenzen iedere ronde.",
+      "Rijst en eiwit worden binnen productierondes gedeeld. Maximaal twee rondes zijn tegelijk in bewerking. Apparaten kunnen parallel werken; start, laatste afwerking en portioneren reserveren aandacht voor één kok. Koel gare onderdelen direct.",
+      "Bij ‘Opbrengst invoeren’ weeg je per kookronde het bereide eiwit, de rijst/pasta of een gemengde bereiding. Verdeling gebeurt naar de oorspronkelijke rauwe, droge of uitgelekte verhouding. Een hele-componentmeting geldt alleen als je alle deelrondes fysiek samenvoegt.",
     ],
     formulas: [
-      "Gekookt per bakje = gekookt totaal × (droog gewicht van het recept ÷ droog gewicht totaal) ÷ aantal porties",
+      "Bereid per bakje = gemeten rondeopbrengst × (grondstofgewicht voor het recept ÷ grondstofgewicht van de ronde) ÷ aantal porties",
     ],
     assumptions: [
       {
@@ -286,7 +286,7 @@ export const explanationSections: ExplanationSection[] = [
       },
       {
         level: "choice",
-        text: `Zonder oven gaar je ovengerechten in een pan, met ${percent(OVEN_FALLBACK_TIME_FACTOR - 1)} extra tijd.`,
+        text: `Eigen geïntegreerde ovenbereidingen krijgen zonder oven ${percent(OVEN_FALLBACK_TIME_FACTOR - 1)} extra tijd. Neutrale eiwitcomponenten gebruiken afzonderlijke pan- en oventijden.`,
       },
       {
         level: "rule-of-thumb",
@@ -298,10 +298,38 @@ export const explanationSections: ExplanationSection[] = [
         sources: [SOURCES.mealPrep],
       },
     ],
-    why: "Met een vaste volgorde staan je pitten niet stil en hoeft niets lang warm te wachten. Door na het koken te wegen klopt de portie per bakje, ook als de rijst meer of minder water opnam.",
+    why: "Gedeelde bereidingen beperken herhaald werk. Begrensde rondes voorkomen dat alle rijst of kip uren op afwerking wacht. Wegen per ronde maakt de eerste bakjes verdeelbaar voordat de laatste ronde klaar is.",
     limits: [
-      "Het plan telt pitten en ovens, niet je handen: stappen kunnen tegelijk vallen. Werk in je eigen tempo.",
-      "De opbrengst verandert de voedingswaarden niet: die blijven gebaseerd op het droge gewicht.",
+      "Tijden zijn niet in een echte keuken gekalibreerd. Roeren, gaarheid en temperatuur controleren blijven jouw verantwoordelijkheid. Koel- en vriescapaciteit worden niet doorgerekend; een grote batch kan twee kookdagen vragen.",
+      "De opbrengst verandert de voedingswaarden niet: die blijven gebaseerd op rauwe, droge en uitgelekte grondstoffen. Verander je hoeveelheden of receptverdeling, dan vervalt de oude meting.",
+    ],
+  },
+  {
+    id: "optimizer",
+    title: "Slim combineren en variatie",
+    how: [
+      "Selecteer kandidaat-recepten en stel maaltijden, recepten, porties en voedingsdoelen in. De optimizer controleert eerst uitgesloten ingrediënten, verplichte recepten en voedingshaalbaarheid.",
+      "Het voorstel beoordeelt gedeelde sausbases, aromaten, eiwitbereiding, koolhydraten en snijwerk. Efficiëntie en variatie blijven twee aparte scores. De gekozen modus bepaalt hun gewicht; Aziatisch, peulvruchten en favorieten geven een voorkeur.",
+      "Slim combineren toont hoeveel je gezamenlijk voorbereidt en naar welke recepten het gaat. Het voorstel vervangt je batch pas wanneer je het toepast.",
+    ],
+    assumptions: [
+      {
+        level: "choice",
+        text: "Scores en voorkeurgewichten zijn ontwerpkeuzes, geen gemeten minuten tijdwinst. Standaard liggen de gewichten voor efficiëntie en variatie op 60/40.",
+      },
+      {
+        level: "choice",
+        text: "Gelijke basisverhoudingen kunnen samen; eigen kruiden en afwerkingen blijven apart. Voorraadkastkruiden tellen niet als belangrijke ingrediëntoverlap.",
+      },
+      {
+        level: "rule-of-thumb",
+        text: "Vriezer- en magnetronscores zijn redactionele inschattingen. Ze zijn nog niet door proefbatches gevalideerd.",
+      },
+    ],
+    why: "Tien losse lekkere recepten zijn niet vanzelf een handige kookdag. Samenhang in de voorbereiding scheelt herhaling, terwijl afzonderlijke afwerkingen verschillende smaken behouden.",
+    limits: [
+      "De zoekmethode probeert meerdere startpunten en verbeterende wissels. Ze garandeert geen globaal optimum; een mislukte zoekactie bewijst niet dat iedere mogelijke combinatie onmogelijk is.",
+      "Apparatuur bepaalt de uiteindelijke kookplanning. Receptselectie gebruikt een eenvoudige werkmaat, geen volledige simulatie van iedere mogelijke keukenplanning.",
     ],
   },
   {

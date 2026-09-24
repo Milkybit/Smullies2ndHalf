@@ -18,6 +18,8 @@ const groups = [
   {
     name: "In de keuken",
     links: [
+      ["/combine", "Slim combineren", "ingredients"],
+      ["/prep", "Voorbereidingslijst", "batch"],
       ["/shopping", "Boodschappen", "shopping"],
       ["/cooking", "Kookdag", "cooking"],
       ["/kitchen", "Keukenspullen", "kitchen"],

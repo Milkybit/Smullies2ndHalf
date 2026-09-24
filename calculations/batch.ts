@@ -7,6 +7,7 @@ import type {
   ShoppingItem,
 } from "@/domain/types";
 import { scaleRecipe } from "./scaling";
+import { withChickenCut } from "@/data/prep-components";
 
 export function resolveBatch(
   batch: BatchItem[],
@@ -14,8 +15,9 @@ export function resolveBatch(
   catalog: IngredientCatalog,
 ): ResolvedBatchItem[] {
   return batch.map((item) => {
-    const recipe = recipes.find((r) => r.id === item.recipeId);
-    if (!recipe) throw new Error("Dit recept bestaat niet meer.");
+    const original = recipes.find((r) => r.id === item.recipeId);
+    if (!original) throw new Error("Dit recept bestaat niet meer.");
+    const recipe = withChickenCut(original, item.chickenCut);
     if (
       !Number.isInteger(item.servings) ||
       item.servings < 1 ||

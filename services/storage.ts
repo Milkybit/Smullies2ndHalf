@@ -7,6 +7,7 @@ import {
 } from "@/domain/validation";
 import { ingredients } from "@/data/ingredients";
 import { recipes } from "@/data/recipes";
+import { withChickenCut } from "@/data/prep-components";
 import { kitchenItems } from "@/data/kitchen";
 
 /** Keeps the pre-PrepPartner name so existing browser data still loads. */
@@ -30,6 +31,9 @@ export function initialState(): AppState {
     equipment: { burners: 4, ovens: 1, maxServingsPerPot: 6 },
     cookedYields: {},
     completedTasks: {},
+    candidateRecipeIds: [],
+    componentYields: {},
+    cookingPlanVersion: 2,
     kitchenChecks: {},
   };
 }
@@ -171,7 +175,9 @@ export function parseBackup(text: string): AppState {
       !inRange(row.servings, 1, 100) ||
       !Number.isInteger(row.servings) ||
       !inRange(row.targetCalories, 100, 2000) ||
-      !inRange(row.minimumProtein, 0, 200)
+      !inRange(row.minimumProtein, 0, 200) ||
+      (row.chickenCut !== undefined &&
+        !["chicken-thigh", "chicken-breast"].includes(String(row.chickenCut)))
     )
       return fail();
     recipeIds.add(row.recipeId);
@@ -180,6 +186,9 @@ export function parseBackup(text: string): AppState {
       servings: row.servings,
       targetCalories: row.targetCalories,
       minimumProtein: row.minimumProtein,
+      ...(row.chickenCut
+        ? { chickenCut: row.chickenCut as "chicken-thigh" | "chicken-breast" }
+        : {}),
     });
   }
   if (
@@ -203,6 +212,67 @@ export function parseBackup(text: string): AppState {
     ovens: e.ovens,
     maxServingsPerPot: e.maxServingsPerPot,
   };
+  for (const key of ["maxProteinGrams", "maxDryCarbGrams"] as const) {
+    if (e[key] !== undefined) {
+      if (
+        !inRange(
+          e[key],
+          key === "maxProteinGrams" ? 300 : 100,
+          key === "maxProteinGrams" ? 5000 : 3000,
+        )
+      )
+        return fail();
+      state.equipment[key] = e[key];
+    }
+  }
+  if (raw.candidateRecipeIds !== undefined) {
+    if (
+      !Array.isArray(raw.candidateRecipeIds) ||
+      raw.candidateRecipeIds.length > recipes.length ||
+      raw.candidateRecipeIds.some(
+        (id) => typeof id !== "string" || !recipes.some((r) => r.id === id),
+      )
+    )
+      return fail();
+    state.candidateRecipeIds = [...new Set(raw.candidateRecipeIds as string[])];
+  }
+  if (raw.componentYields !== undefined) {
+    if (
+      !record(raw.componentYields) ||
+      Object.keys(raw.componentYields).length > 2000
+    )
+      return fail();
+    const knownIds = new Set(
+      recipes.flatMap((r) =>
+        [
+          r,
+          withChickenCut(r, "chicken-thigh"),
+          withChickenCut(r, "chicken-breast"),
+        ].flatMap((variant) =>
+          variant.componentRefs.map((ref) => ref.component.id),
+        ),
+      ),
+    );
+    for (const [id, value] of Object.entries(raw.componentYields)) {
+      const lot = /^lot-component-[1-9][0-9]*-(.+)-[1-9][0-9]*$/.exec(id);
+      const mixedLot = /^lot-cook-(.+)-[1-9][0-9]*$/.exec(id);
+      if (
+        !safeKey(id) ||
+        (!knownIds.has(id) &&
+          !(lot && knownIds.has(lot[1])) &&
+          !(mixedLot && knownIds.has(`mixed-${mixedLot[1]}`))) ||
+        !record(value) ||
+        typeof value.signature !== "string" ||
+        value.signature.length > 20000 ||
+        !inRange(value.cookedGrams, 1, 5000000)
+      )
+        return fail();
+      state.componentYields![id] = {
+        signature: value.signature,
+        cookedGrams: value.cookedGrams,
+      };
+    }
+  }
   for (const [id, value] of Object.entries(raw.shoppingChecks)) {
     if (
       !ingredients.some((item) => item.id === id) ||
@@ -226,9 +296,12 @@ export function parseBackup(text: string): AppState {
     };
   }
   if (Object.keys(raw.completedTasks).length > 10000) return fail();
+  if (raw.cookingPlanVersion !== undefined && raw.cookingPlanVersion !== 2)
+    return fail();
   for (const [id, value] of Object.entries(raw.completedTasks)) {
     if (!safeKey(id) || typeof value !== "boolean") return fail();
-    state.completedTasks[id] = value;
+    // Recipe-first checklist IDs must not mark different component tasks done.
+    if (raw.cookingPlanVersion === 2) state.completedTasks[id] = value;
   }
   // Optional: backups made before the kitchen list have no kitchenChecks.
   if (raw.kitchenChecks !== undefined) {

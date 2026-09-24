@@ -90,7 +90,7 @@ export type CookingGroup =
   | "oven"
   | "chili"
   | "stir-fry";
-export interface Recipe {
+export interface RecipeDefinition {
   id: string;
   nameNl: string;
   cuisine: string;
@@ -109,6 +109,53 @@ export interface Recipe {
   tags: string[];
   minimumSauceGrams: number;
 }
+export type PrepComponentType =
+  | "protein"
+  | "carbohydrate"
+  | "vegetable"
+  | "aromatic_base"
+  | "sauce_base"
+  | "finisher"
+  | "garnish"
+  | "mixed_base";
+export interface IngredientQuantity {
+  ingredientId: string;
+  grams: number;
+}
+export interface PrepComponent {
+  id: string;
+  nameNl: string;
+  type: PrepComponentType;
+  description: string;
+  ingredientQuantities: IngredientQuantity[];
+  instructions: string[];
+  cookingMethod: "chop" | "mix" | "boil" | "roast" | "pan" | "drain" | "simmer";
+  equipment: "burner" | "oven" | "no-heat";
+  burnerCount: number;
+  ovenSlots: number;
+  activeMinutes: number;
+  passiveMinutes: number;
+  batchable: boolean;
+  freezerSuitable: boolean;
+  yieldTrackingSupported: boolean;
+  tags: string[];
+}
+export interface ComponentRef {
+  component: PrepComponent;
+  multiplier: number;
+}
+export interface Recipe extends RecipeDefinition {
+  componentRefs: ComponentRef[];
+  proteinIngredientId: string;
+  proteinPrepMethod: string;
+  carbBase: string;
+  sauceFamily: string;
+  aromaticBase: string;
+  vegetablePrepFamily: string;
+  flavourProfile: string;
+  batchTags: string[];
+  ingredientIds: string[];
+}
 export interface MealSlot {
   id: string;
   name: string;
@@ -120,6 +167,7 @@ export interface BatchItem {
   servings: number;
   targetCalories: number;
   minimumProtein: number;
+  chickenCut?: "chicken-thigh" | "chicken-breast";
 }
 export type KitchenCategory =
   | "gastronorm"
@@ -166,6 +214,8 @@ export interface Equipment {
   burners: number;
   ovens: number;
   maxServingsPerPot: number;
+  maxProteinGrams?: number;
+  maxDryCarbGrams?: number;
 }
 export interface AppState {
   version: 1;
@@ -179,6 +229,9 @@ export interface AppState {
   equipment: Equipment;
   cookedYields: Record<string, { dryGrams: number; cookedGrams: number }>;
   completedTasks: Record<string, boolean>;
+  candidateRecipeIds?: string[];
+  componentYields?: Record<string, { signature: string; cookedGrams: number }>;
+  cookingPlanVersion?: 2;
   kitchenChecks: Record<string, boolean>;
 }
 export interface ScaledRecipe {
@@ -219,4 +272,15 @@ export interface CookingTask {
   startMinute: number;
   endMinute: number;
   resource: number;
+  activeMinutes?: number;
+  componentId?: string;
+  inputGrams?: number;
+  applianceReleaseMinute?: number;
+  attentionWindows?: { offset: number; minutes: number }[];
+  componentAllocations?: {
+    recipeId: string;
+    name: string;
+    grams: number;
+    servings: number;
+  }[];
 }
