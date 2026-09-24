@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { useStore } from "./store";
 import { Icon, Notice } from "./ui";
+import { MonkeyLogo } from "./MonkeyLogo";
 import { ProfileScreen } from "./screens/ProfileScreen";
 
 const groups = [
@@ -40,7 +41,10 @@ const groups = [
 export function Wordmark() {
   return (
     <span className="product-wordmark">
-      BatchPrepBaas<span className="wordmark-dot">.</span>
+      <MonkeyLogo className="wordmark-logo" />
+      <span>
+        BatchPrepBaas<span className="wordmark-dot">.</span>
+      </span>
       <small>VOEDING DIE VOOR JE WERKT</small>
     </span>
   );

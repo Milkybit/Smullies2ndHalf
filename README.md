@@ -70,6 +70,7 @@ Wil je weten hoe BatchPrepBaas rekent en welke aannames erin zitten? Open **Zo w
 ```text
 app/                    Next.js-routes, layout en responsieve styling
 components/             Herbruikbare UI en schermcomponenten
+  MonkeyLogo.tsx        Het logo: de aap met koksmuts (app/icon.svg is dezelfde tekening als favicon)
   screens/              Afzonderlijke schermen, geen monolithische appcomponent
 domain/                 TypeScript-modellen, grenzen en validatie
 calculations/           Pure functies voor energie, macro’s, recepten en planning

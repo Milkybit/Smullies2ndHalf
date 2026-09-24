@@ -157,6 +157,12 @@ small {
 .wordmark-dot {
   color: var(--clay);
 }
+.wordmark-logo {
+  display: block;
+  width: 60px;
+  height: 60px;
+  margin: 0 0 10px -4px;
+}
 .product-wordmark small {
   display: block;
   font-size: 8px;
@@ -1240,11 +1246,22 @@ small {
     padding: 0 0 17px;
   }
   .product-wordmark {
-    font-size: 30px;
+    font-size: 26px;
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 10px;
+    align-items: center;
+  }
+  .wordmark-logo {
+    grid-row: 1 / span 2;
+    width: 44px;
+    height: 44px;
+    margin: 0;
   }
   .product-wordmark small {
     font-size: 7px;
-    margin-top: 7px;
+    margin-top: 5px;
+    align-self: start;
   }
   .mobile-menu-button {
     display: flex;
@@ -2123,5 +2140,14 @@ small {
   .explain-aside,
   .why-link {
     display: none !important;
+  }
+}
+@media (max-width: 380px) {
+  .product-wordmark {
+    font-size: 21px;
+  }
+  .wordmark-logo {
+    width: 38px;
+    height: 38px;
   }
 }
