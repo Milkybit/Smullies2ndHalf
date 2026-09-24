@@ -54,7 +54,7 @@ export function ShoppingScreen() {
                 onClick={() =>
                   downloadText(
                     shoppingText(items),
-                    "preppartner-boodschappen.txt",
+                    "batchprepbaas-boodschappen.txt",
                   )
                 }
               >

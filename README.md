@@ -1,10 +1,10 @@
-# PrepPartner
+# BatchPrepBaas
 
 De productrichting is **premium sport & voeding**: een persoonlijke planner met warme typografie, culinaire sfeerbeelden en een duidelijke route van recepten naar boodschappen en kookdag. De startselectie voegt op verzoek drie recepten met zes porties toe; nieuwe recepten nemen het caloriedoel van je mealprep-eetmomenten over. Bestaande gegevens blijven bewaard.
 
 Zie [PRODUCT.md](PRODUCT.md) voor de commerciële productrichting en de stappen naar accounts en abonnementen. Deze versie bewaart gegevens nog lokaal. De drie gegenereerde receptbeelden en hun prompts staan in [public/images/README.md](public/images/README.md).
 
-PrepPartner is een bruikbare, Nederlandstalige mealprep-planner voor één persoon. Bereken je energie- en macrodoelen, pas 30 vriesvriendelijke recepten aan, maak een batch en werk met één boodschappenlijst en een kookplanning. Persoonlijke gegevens blijven in je browser.
+BatchPrepBaas is een bruikbare, Nederlandstalige mealprep-planner voor één persoon. Bereken je energie- en macrodoelen, pas 30 vriesvriendelijke recepten aan, maak een batch en werk met één boodschappenlijst en een kookplanning. Persoonlijke gegevens blijven in je browser.
 
 **Nieuw: component-first optimizer (fase 1B).** Selecteer kandidaten in Recepten, kies in Mijn batch bijvoorbeeld **60 maaltijden / 10 recepten / 6 porties** en druk op **Optimaliseer**. Vergelijk efficiëntie en variatie, pas het voorstel toe en open **Slim combineren → Voorbereidingslijst → Kookdag**. De knop **Laad scenario 60 maaltijden** vult de kippendij/Aziatisch-voorkeuren in. Zie [architectuur en gebruik](PHASE_1B.md) en [de praktische keukenreview](reports/kitchen-review.md).
 
@@ -63,7 +63,7 @@ Next.js **16.3.5** en React **19.3.0** waren de stabiele npm-versies bij impleme
 9. Open tijdens het koken **Opbrengst invoeren**. Weeg eiwit, rijst/pasta en bases afzonderlijk. Meet per kookronde om meteen te verdelen; een hele-componentmeting geldt voor fysiek samengevoegde deelrondes.
 10. Maak regelmatig een JSON-back-up via **Instellingen → Exporteer gegevens**.
 
-Wil je weten hoe PrepPartner rekent en welke aannames erin zitten? Open **Zo werkt het**. Per onderwerp staat daar hoe het werkt, welke aannames er zijn (onderbouwd, vuistregel of eigen keuze, met bronnen), waarom het werkt en wanneer het niet klopt, met je eigen berekening erbij. Via ‘Waarom zo?’ op de schermen kom je direct bij het juiste stuk.
+Wil je weten hoe BatchPrepBaas rekent en welke aannames erin zitten? Open **Zo werkt het**. Per onderwerp staat daar hoe het werkt, welke aannames er zijn (onderbouwd, vuistregel of eigen keuze, met bronnen), waarom het werkt en wanneer het niet klopt, met je eigen berekening erbij. Via ‘Waarom zo?’ op de schermen kom je direct bij het juiste stuk.
 
 ## Projectstructuur
 
@@ -117,7 +117,7 @@ Alle vloeistoffen worden intern eveneens in gram gerekend. Waar een dichtheid be
 
 ## Lokale opslag en herstel
 
-`services/storage.ts` definieert `StorageRepository`. De browserimplementatie gebruikt alleen de sleutel `mealprep-planner:v1`. Die sleutel houdt bewust de oude naam van vóór PrepPartner, zodat bestaande gegevens in je browser behouden blijven. React-schermen roepen deze repository aan via de centrale provider; zij gebruiken localStorage niet rechtstreeks.
+`services/storage.ts` definieert `StorageRepository`. De browserimplementatie gebruikt alleen de sleutel `mealprep-planner:v1`. Die sleutel houdt bewust de oorspronkelijke naam van de app, zodat bestaande gegevens in je browser behouden blijven. React-schermen roepen deze repository aan via de centrale provider; zij gebruiken localStorage niet rechtstreeks.
 
 Opgeslagen worden profiel, overrides, eetmomenten, ingrediëntaanpassingen, batchinstellingen, winkelvinkjes, apparatuur, gekookte opbrengsten, afgevinkte kooktaken en afgevinkte keukenspullen. Back-ups van vóór de lijst met keukenspullen blijven geldig. Macrototalen en boodschappen worden afgeleid en niet opgeslagen.
 

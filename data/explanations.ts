@@ -62,7 +62,7 @@ export const explanationSections: ExplanationSection[] = [
     id: "energy",
     title: "Je energieverbruik",
     how: [
-      "Eerst schat PrepPartner hoeveel energie je lichaam in rust verbruikt: je rustverbruik (BMR). Heb je een vetpercentage ingevuld, dan gebruiken we de formule van Katch–McArdle; anders die van Mifflin–St Jeor.",
+      "Eerst schat BatchPrepBaas hoeveel energie je lichaam in rust verbruikt: je rustverbruik (BMR). Heb je een vetpercentage ingevuld, dan gebruiken we de formule van Katch–McArdle; anders die van Mifflin–St Jeor.",
       "Daarna vermenigvuldigen we je rustverbruik met een activiteitsfactor. Dat is je geschatte verbruik per dag (TDEE). Je trainingen zitten in die factor; we tellen ze niet nog een keer op.",
     ],
     formulas: [
@@ -198,7 +198,7 @@ export const explanationSections: ExplanationSection[] = [
     title: "Recepten op maat",
     how: [
       "Elk recept heeft per ingrediënt een voorkeurshoeveelheid met een minimum en maximum.",
-      "Groente, saus en smaakmakers blijven op hun voorkeurshoeveelheid. PrepPartner zoekt de hoeveelheid van de eiwitbron in stappen van 1 gram en rekent daarbij de rijst of pasta uit.",
+      "Groente, saus en smaakmakers blijven op hun voorkeurshoeveelheid. BatchPrepBaas zoekt de hoeveelheid van de eiwitbron in stappen van 1 gram en rekent daarbij de rijst of pasta uit.",
       `Olie mag als kleine correctie maximaal ${number(FAT_CORRECTION_GRAMS)} gram afwijken. Het doel: binnen ${number(KCAL_TOLERANCE)} kcal van je caloriedoel, met minstens je eiwitdoel. Eiwit gaat voor.`,
     ],
     assumptions: [

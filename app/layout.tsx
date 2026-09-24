@@ -4,7 +4,7 @@ import { Shell } from "@/components/Shell";
 import "./globals.css";
 import "./product.css";
 export const metadata: Metadata = {
-  title: "PrepPartner — persoonlijke sportvoeding, goed voorbereid",
+  title: "BatchPrepBaas — persoonlijke sportvoeding, goed voorbereid",
   description:
     "Persoonlijke voedingsdoelen, slimme mealprep en één praktische boodschappenlijst. Alles lokaal in je browser.",
 };

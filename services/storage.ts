@@ -10,7 +10,7 @@ import { recipes } from "@/data/recipes";
 import { withChickenCut } from "@/data/prep-components";
 import { kitchenItems } from "@/data/kitchen";
 
-/** Keeps the pre-PrepPartner name so existing browser data still loads. */
+/** Keeps the app's original name so existing browser data still loads. */
 export const STORAGE_KEY = "mealprep-planner:v1";
 export const MAX_BACKUP_BYTES = 2_000_000;
 export interface StorageRepository {
@@ -41,7 +41,7 @@ const record = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 const fail = (): never => {
   throw new Error(
-    "Dit bestand bevat geen geldige PrepPartner-back-up (versie 1). Je huidige gegevens zijn behouden.",
+    "Dit bestand bevat geen geldige BatchPrepBaas-back-up (versie 1). Je huidige gegevens zijn behouden.",
   );
 };
 const safeKey = (key: string) =>

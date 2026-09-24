@@ -71,7 +71,7 @@ export const kitchenItems: KitchenItem[] = [
     "measuring",
     "Keukenweegschaal tot 5 kg, per 1 g, met tarra",
     "1 stuk",
-    "Alle hoeveelheden in PrepPartner zijn in gram.",
+    "Alle hoeveelheden in BatchPrepBaas zijn in gram.",
     true,
   ),
   item(

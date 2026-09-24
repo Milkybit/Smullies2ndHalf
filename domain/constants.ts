@@ -40,7 +40,7 @@ export const KITCHEN_CATEGORY_LABELS: Record<KitchenCategory, string> = {
 export const EVIDENCE_LABELS: Record<EvidenceLevel, string> = {
   evidence: "Onderbouwd",
   "rule-of-thumb": "Vuistregel",
-  choice: "Keuze van PrepPartner",
+  choice: "Keuze van BatchPrepBaas",
 };
 export const EVIDENCE_DESCRIPTIONS: Record<EvidenceLevel, string> = {
   evidence: "Steunt op onderzoek of een officieel advies. De bron staat erbij.",

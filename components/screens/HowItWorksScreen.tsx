@@ -25,7 +25,7 @@ export function HowItWorksScreen() {
       <PageTitle
         eyebrow="ACHTERGROND"
         title="Zo werkt het"
-        description="Hoe PrepPartner rekent, welke aannames erin zitten, waarom dat werkt en wanneer het niet klopt. PrepPartner is een hulpmiddel voor planning, geen medisch advies."
+        description="Hoe BatchPrepBaas rekent, welke aannames erin zitten, waarom dat werkt en wanneer het niet klopt. BatchPrepBaas is een hulpmiddel voor planning, geen medisch advies."
       />
       <div className="explain-layout">
         <aside className="stack explain-aside">
