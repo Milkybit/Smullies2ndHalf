@@ -1,4 +1,9 @@
 node_modules/
-dist/
-.env
-.env.*
+next-env.d.ts
+.next/
+.next-export/
+out/
+coverage/
+*.tsbuildinfo
+.env*
+npm-debug.log*
