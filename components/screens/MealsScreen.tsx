@@ -3,7 +3,7 @@ import { useState } from "react";
 import { usePlanner } from "../store";
 import { redistributeMeals } from "@/calculations/meals";
 import { number } from "@/services/format";
-import { Card, Icon, Notice, NumberField, PageTitle } from "../ui";
+import { Card, Icon, Notice, NumberField, PageTitle, WhyLink } from "../ui";
 export function MealsScreen() {
   const { state, update, targets } = usePlanner();
   const [warning, setWarning] = useState("");
@@ -120,7 +120,8 @@ export function MealsScreen() {
       <Notice>
         Bij herverdelen blijven vastgezette eetmomenten gelijk. De overige
         calorieën worden naar verhouding verdeeld. Je dagindeling bepaalt niet
-        automatisch welke recepten in je batch zitten.
+        automatisch welke recepten in je batch zitten.{" "}
+        <WhyLink section="meals" />
       </Notice>
     </>
   );

@@ -32,8 +32,8 @@ describe("kitchen equipment list", () => {
     });
     expect(progress.owned).toBe(2);
     expect(progress.essentialOwned).toBe(1);
-    expect(
-      kitchenProgress(kitchenItems, { [essential.id]: false }).owned,
-    ).toBe(0);
+    expect(kitchenProgress(kitchenItems, { [essential.id]: false }).owned).toBe(
+      0,
+    );
   });
 });

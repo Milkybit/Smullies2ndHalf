@@ -61,6 +61,8 @@ Next.js **16.3.5** en React **19.3.0** waren de stabiele npm-versies bij impleme
 9. Open tijdens het koken **Opbrengst invoeren**. Voer het gemeten gekookte rijst- of pastagewicht in om het aantal grammen per bakje te krijgen.
 10. Maak regelmatig een JSON-back-up via **Instellingen → Exporteer gegevens**.
 
+Wil je weten hoe PrepPartner rekent en welke aannames erin zitten? Open **Zo werkt het**. Per onderwerp staat daar hoe het werkt, welke aannames er zijn (onderbouwd, vuistregel of eigen keuze, met bronnen), waarom het werkt en wanneer het niet klopt, met je eigen berekening erbij. Via ‘Waarom zo?’ op de schermen kom je direct bij het juiste stuk.
+
 ## Projectstructuur
 
 ```text
@@ -72,6 +74,7 @@ calculations/           Pure functies voor energie, macro’s, recepten en plann
 data/ingredients.ts     Bewerkbare standaardvoedingswaarden en verpakkingen
 data/recipes.ts         Alle 30 receptdefinities en bereidingsinstructies
 data/kitchen.ts         Keukenspullen, meettips en wat je niet nodig hebt
+data/explanations.ts    Uitleg voor ‘Zo werkt het’: aannames, bronnen en grenzen
 services/               StorageRepository, importvalidatie en tekstexport
 tests/                  Vitest-tests voor rekenregels en opslag
 .github/workflows/      Tests, typecheck, build en GitHub Pages-deployment
@@ -80,7 +83,7 @@ public/sw.js            Alleen migratie: ruimt de oude Doel1-serviceworker op
 
 ## Hoe de berekeningen werken
 
-Alle rekenlogica staat buiten React, in `calculations/`.
+Alle rekenlogica staat buiten React, in `calculations/`. Voor gebruikers staat dezelfde uitleg in de app onder **Zo werkt het**. Getallen en factoren staan in `domain/constants.ts`; de berekening en de uitleg lezen ze allebei daar, zodat ze niet uit elkaar lopen. `services/explanation.ts` schrijft de berekening uit met de eigen gegevens van de gebruiker. Verander je een rekenregel, controleer dan ook de tekst in `data/explanations.ts`.
 
 - **BMR:** Katch–McArdle wanneer vetpercentage is ingevuld; anders Mifflin–St Jeor. TDEE = BMR × activiteitsfactor. Trainingen zitten in de gekozen factor en worden niet nogmaals toegevoegd.
 - **Afvallen:** gewenst kg/week × 7.700 / 7. Automatische tekorten zijn begrensd op 25% van geschat TDEE. De app toont een waarschuwing als de wens daarboven ligt; handmatig overschrijven blijft mogelijk.

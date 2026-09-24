@@ -11,7 +11,7 @@ import {
 } from "@/data/kitchen";
 import { KITCHEN_CATEGORY_LABELS } from "@/domain/constants";
 import type { KitchenCategory } from "@/domain/types";
-import { Card, Icon, PageTitle } from "../ui";
+import { Card, Icon, PageTitle, WhyLink } from "../ui";
 export function KitchenScreen() {
   const { state, update, batch } = usePlanner();
   const [essentialOnly, setEssentialOnly] = useState(false);
@@ -34,10 +34,7 @@ export function KitchenScreen() {
         description="Wat je nodig hebt voor een soepele kookdag. Vink af wat je al hebt; met de spullen onder ‘Basis’ kun je beginnen."
         action={
           <div className="button-group no-print">
-            <button
-              className="button secondary"
-              onClick={() => window.print()}
-            >
+            <button className="button secondary" onClick={() => window.print()}>
               Print
             </button>
           </div>
@@ -150,6 +147,7 @@ export function KitchenScreen() {
             <p className="muted">
               Dit levert thuis weinig op. Een extra pan helpt meer.
             </p>
+            <WhyLink section="kitchen">Waarom deze spullen?</WhyLink>
           </Card>
         </div>
       </div>

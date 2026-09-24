@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import { useStore } from "../store";
 import { MAX_BACKUP_BYTES, parseBackup } from "@/services/storage";
 import { downloadText } from "@/services/format";
-import { Card, Icon, Notice, PageTitle } from "../ui";
+import { Card, Icon, Notice, PageTitle, WhyLink } from "../ui";
 export function SettingsScreen() {
   const { state, replace, reset } = useStore();
   const [message, setMessage] = useState("");
@@ -102,12 +102,13 @@ export function SettingsScreen() {
             Gebruik de planner op één tab tegelijk om elkaar overschrijvende
             wijzigingen te voorkomen.
           </p>
+          <WhyLink section="storage" />
         </Card>
         <Card className="danger-card">
           <h2>Opnieuw beginnen</h2>
           <p>
-            Verwijder alle gegevens van deze PrepPartner. De
-            standaardrecepten en -ingrediënten blijven beschikbaar.
+            Verwijder alle gegevens van deze PrepPartner. De standaardrecepten
+            en -ingrediënten blijven beschikbaar.
           </p>
           <button
             className="button danger"
@@ -137,6 +138,9 @@ export function SettingsScreen() {
             Voedingswaarden en energieverbruik zijn benaderingen. Receptscores
             zijn redactionele inschattingen. De rekenregels zijn een hulpmiddel
             voor planning, geen medisch advies.
+          </p>
+          <p>
+            <WhyLink>Zo werkt PrepPartner</WhyLink>
           </p>
           <a
             className="text-link"

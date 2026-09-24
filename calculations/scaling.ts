@@ -4,7 +4,7 @@ import type {
   RecipeIngredient,
   ScaledRecipe,
 } from "@/domain/types";
-import { KCAL_TOLERANCE } from "@/domain/constants";
+import { FAT_CORRECTION_GRAMS, KCAL_TOLERANCE } from "@/domain/constants";
 import { recipeNutrition } from "./nutrition";
 
 const clamp = (value: number, min: number, max: number) =>
@@ -63,8 +63,12 @@ export function scaleRecipe(
   const cMin = carbohydrate?.minGrams ?? 0,
     cMax = carbohydrate?.maxGrams ?? 0;
   // Correction fat is never used as an unrestricted calorie lever.
-  const fMin = fat ? Math.max(fat.minGrams, fat.preferredGrams - 4) : 0;
-  const fMax = fat ? Math.min(fat.maxGrams, fat.preferredGrams + 4) : 0;
+  const fMin = fat
+    ? Math.max(fat.minGrams, fat.preferredGrams - FAT_CORRECTION_GRAMS)
+    : 0;
+  const fMax = fat
+    ? Math.min(fat.maxGrams, fat.preferredGrams + FAT_CORRECTION_GRAMS)
+    : 0;
   const fPreferred = fat?.preferredGrams ?? 0;
   let bestScore = Infinity;
   let best = { p: pMin, c: cMin, f: fMin };

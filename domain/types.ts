@@ -137,6 +137,31 @@ export interface KitchenItem {
   category: KitchenCategory;
   essential: boolean;
 }
+/** How well an assumption is backed: research or official advice, a common approximation, or our own design choice. */
+export type EvidenceLevel = "evidence" | "rule-of-thumb" | "choice";
+export interface Source {
+  label: string;
+  url: string;
+}
+export interface Assumption {
+  text: string;
+  level: EvidenceLevel;
+  sources?: Source[];
+}
+export interface ExplanationSection {
+  id: string;
+  title: string;
+  how: string[];
+  formulas?: string[];
+  assumptions: Assumption[];
+  why: string;
+  limits: string[];
+}
+export interface WorkedStep {
+  label: string;
+  expression: string;
+  result: string;
+}
 export interface Equipment {
   burners: number;
   ovens: number;

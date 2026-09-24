@@ -29,6 +29,7 @@ const groups = [
       ["/profile", "Profiel & doelen", "profile"],
       ["/meals", "Dagindeling", "meals"],
       ["/ingredients", "Ingrediënten", "ingredients"],
+      ["/how-it-works", "Zo werkt het", "info"],
       ["/settings", "Instellingen", "settings"],
     ],
   },

@@ -1,5 +1,6 @@
 import type { MealSlot } from "@/domain/types";
-const DEFAULTS = [400, 130, 600, 120, 600, 150];
+/** Starting split at 2,000 kcal; scaled proportionally to the daily target. */
+export const DEFAULT_MEAL_SLOT_CALORIES = [400, 130, 600, 120, 600, 150];
 const NAMES = [
   "Ontbijt",
   "Snack 1",
@@ -10,7 +11,7 @@ const NAMES = [
 ];
 export function createMealSlots(calories: number): MealSlot[] {
   return redistributeMeals(
-    DEFAULTS.map((value, i) => ({
+    DEFAULT_MEAL_SLOT_CALORIES.map((value, i) => ({
       id: `meal-${i + 1}`,
       name: NAMES[i],
       calories: value,

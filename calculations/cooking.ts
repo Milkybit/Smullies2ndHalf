@@ -5,6 +5,7 @@ import type {
   IngredientCatalog,
   ResolvedBatchItem,
 } from "@/domain/types";
+import { OVEN_FALLBACK_TIME_FACTOR } from "@/domain/constants";
 
 export function cookingPlan(
   batch: ResolvedBatchItem[],
@@ -103,7 +104,7 @@ export function cookingPlan(
       const appliance = ovenWanted && equipment.ovens > 0 ? "oven" : "burner";
       const duration = Math.ceil(
         item.recipe.cookMinutes *
-          (ovenWanted && equipment.ovens === 0 ? 1.2 : 1),
+          (ovenWanted && equipment.ovens === 0 ? OVEN_FALLBACK_TIME_FACTOR : 1),
       );
       const task = add(
         `cook-${item.recipeId}-${round}`,

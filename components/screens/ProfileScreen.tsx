@@ -8,13 +8,17 @@ import type {
   Sex,
   TargetOverrides,
 } from "@/domain/types";
-import { ACTIVITY_LABELS } from "@/domain/constants";
+import {
+  ACTIVITY_LABELS,
+  DEFAULT_SURPLUS_CALORIES,
+  MAX_DEFICIT_FRACTION,
+} from "@/domain/constants";
 import { profileErrors, overrideErrors } from "@/domain/validation";
 import { calculateTargets } from "@/calculations/energy";
 import { createMealSlots } from "@/calculations/meals";
 import { number } from "@/services/format";
 import { useStore } from "../store";
-import { Card, Icon, Notice, PageTitle, Stat } from "../ui";
+import { Card, Icon, Notice, PageTitle, Stat, WhyLink } from "../ui";
 import { RecipeVisual } from "../RecipeVisual";
 import { recipes } from "@/data/recipes";
 
@@ -37,7 +41,7 @@ export function ProfileScreen({
     workoutsPerWeek: p ? String(p.workoutsPerWeek) : "",
     goal: String(p?.goal ?? "maintenance"),
     weeklyWeightLossKg: String(p?.weeklyWeightLossKg ?? 0.5),
-    surplusCalories: String(p?.surplusCalories ?? 250),
+    surplusCalories: String(p?.surplusCalories ?? DEFAULT_SURPLUS_CALORIES),
   });
   const [manual, setManual] = useState(
     Object.fromEntries(
@@ -412,9 +416,10 @@ export function ProfileScreen({
               </p>
               <p className="muted">
                 Dit is een schatting van je energieverbruik, geen exacte meting.
-                Voor automatisch afvallen begrenzen we het tekort op 25% van dat
-                verbruik.
+                Voor automatisch afvallen begrenzen we het tekort op{" "}
+                {MAX_DEFICIT_FRACTION * 100}% van dat verbruik.
               </p>
+              <WhyLink section="energy">Uitleg en jouw berekening</WhyLink>
               {targets && (
                 <div className="stats-grid two">
                   <Stat label="BMR" value={number(targets.bmr)} unit="kcal" />

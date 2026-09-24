@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePlanner } from "../store";
 import { cookingPlan } from "@/calculations/cooking";
 import { number } from "@/services/format";
-import { Card, Empty, Notice, NumberField, PageTitle } from "../ui";
+import { Card, Empty, Notice, NumberField, PageTitle, WhyLink } from "../ui";
 import { YieldCalculator } from "../YieldCalculator";
 import { BatchJourney } from "../BatchJourney";
 const APPLIANCE_LABELS = {
@@ -96,7 +96,8 @@ export function CookingScreen() {
             Dit is een globale planning: pitten en ovens overlappen, maar
             handelingen vragen jouw aandacht. Controleer pan- en koelcapaciteit;
             verdeel een grote kookdag zo nodig over meerdere dagen. Koel gare
-            gerechten direct, ook als de rijst nog niet klaar is.
+            gerechten direct, ook als de rijst nog niet klaar is.{" "}
+            <WhyLink section="cooking" />
           </Notice>
           <div className="timeline">
             {tasks.map((task) => (
